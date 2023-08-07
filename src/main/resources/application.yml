@@ -1,0 +1,178 @@
+server:
+  port: 8900
+
+spring:
+  application:
+    useOTP: false
+    otpProd: false
+    otpTestMail: elsiewambui16@gmail.com
+    name: E&MTCHURCH_APP_SOLUTION
+  #    jasper_report_path: src/main/resources/reports
+  #    logo_path: src/main/resources/logo.png
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: false
+    show-sql: false
+
+    properties:
+      hibernate:
+        format_sql: true
+  #        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  datasource:
+
+#    url:  jdbc:mariadb://localhost/emt_church
+#    username: Encoder
+#    password: root6223
+    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
+    username: emtech
+    password: emtech@2022
+    driverClassName: org.mariadb.jdbc.Driver
+
+  others:
+    filePath: src/main/resources/templates
+    logo: src/main/resources/logo.png
+
+    fcm_api: https://fcm.googleapis.com/fcm/send
+    server_key: AAAAmKVL4-c:APA91bEqa4M3x2s7vISTKo9tGOTdvNuSWlofT3y-yZKUydYZ9EQj9Tb7Mw8kkhtlWRU6H80jqpmBjZyDV87Yg0iote0PmJSkd0DI2ae6u0Xom7Q1tinqWVasLkwy5PY8nL0cLk4B4rLk
+
+
+  # EMAIL CONFIGURATIONS
+  mail:
+    protocol: smtps
+    host: mail.emtechhouse.co.ke
+    port: 465
+    username: no-reply@emtechhouse.co.ke
+    password: Pass123$$
+    properties:
+      mail:
+        smtps:
+          auth: true
+          ssl:
+            enable: true
+            trust: mail.emtechhouse.co.ke
+
+    organisation:
+    emailRegards: Regards Mwamba Imara Sacco Society Limited
+    emailMessage: Find the attached information from our partnership.
+    emailOrganizationName: Mwamba Imara Sacco Society Limited
+    image_banner: src/main/resources/logo.png
+    emailRemarks: Thank You.
+    emailOrganizationLocation: Makupa along Mwachofi Road, off Kenyatta Avenue.
+    emailOrganizationPhone: +254 7** *** ***
+    emailOrganizationWebsite: https://mwambaimarasacco.co.ke
+    emailOrganizationMail: mwambaimara2010@gmail.com
+    emailOrganizationAddress: P.O Box 80196, 80100 GPO Mombasa
+    from_mail: no-reply@emtechhouse.co.ke
+    company_logo_path: src/main/resources/logo.png
+    emailSalutation: Dear Sir/Madam,
+users:
+  app:
+    jwtSecret: /buCOEjS/+H7ZwekxyLKLdDeegHUGEytjxuivosdrzjRG4g4E+kA3uXO5lvGBVsl2NwqsgiGUUI5bjgY/6WG/VSIIG+22b1Rvdb59BY0YRod6Dnjnp0REsPn//hshs6ucnOVCBRp0lbVb1kP+EDOM7W7N72/+t+R1d8JQ4pjisoJZI4e0MV3PlZtzXKI0SY2EQUtI
+    jwtExpirationMs: 43200000
+
+    client:
+      origin: http://localhost:4200/
+emtech:
+  sms:
+    sendSmsUrl: https://api.tililtech.com/sms/v3/sendsms
+    api_key:  i7eo93sSVfhPUZalcH62zwkF8GprMXjQygWY5DELNKTI1BnCuqRbdtJ0mxAO4v
+    service_id: 0
+    response_type: json
+    shortcode:  Tilil
+organisation:
+  email: no-reply@emtechhouse.co.ke
+
+
+  #  fams.email.sender = no-reply@emtechhouse.co.ke
+  #  fams.email.host = mail.emtechhouse.co.ke
+  #  fams.email.port = 25
+  #  fams.email.password = Pass123$$
+  #  fams.email.protocol = smtp
+
+  #  Super User Details
+
+
+
+
+  superUserEmail: no-reply@emtechhouse.co.ke
+  superUserFirstName: Superuser
+  superUserLastName: Admin
+  superUserUserName: ChurchAdmin
+  superUserCommunity: 00
+  superUserPhone: 07xxxxxxxx
+  superUserSolCode: 000
+  superUserPassword: Admin
+  maxNoOfTellers: 2
+
+firebase:
+  fcm_api: https://fcm.googleapis.com/fcm/send
+  server_key: BKC-plauTOUBExqbLzVGCK0WydzgYJyTW1BlIHIXOyGuHOZzcVgA_jmkOdg-ghfwqhlLoxcG-aqDja6eQ5XDJjI
+
+
+  #mpesa
+
+#mpesa:
+#  daraja:
+#    #Access token
+#    consumerKey:  KPepbzwvw1iaKIBpG6g7Ey5QMyxMsKNd
+#    consumerSecret: qh5Pnu8bPOYgtEhS
+#    grantType: client_credentials
+#    oauthEndpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
+#    #C2B transaction
+#    shortCode: 600989
+#    responseType: Completed
+#    confirmationUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/confirmation
+#    validationUrl:  https://76ec-52-15-152-26.ngrok.io/mobile-money/validation
+#    registerUrl: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl
+#    c2bTransaction: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate
+#    requestType: Pull
+#    registerPullTransaction: https://sandbox.safaricom.co.ke/pulltransactions/v1/register
+#    pullTransaction: https://sandbox.safaricom.co.ke/pulltransactions/v1/query
+#
+#    #B2C Transaction
+#    b2cTransactionEndpoint: https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest
+#    b2cResultUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/b2c-transaction-result
+#    b2cQueueTimeoutUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/b2c-queue-timeout
+#    b2cInitiatorName: testapi
+#    b2cInitiatorPassword: Safaricom999!*!
+#    #Results
+#    transactionResultUrl: https://sandbox.safaricom.co.ke/mpesa/transactionstatus/v1/query
+#    checkAccountBalanceUrl: https://sandbox.safaricom.co.ke/mpesa/accountbalance/v1/query
+#    #Mpesa Express
+#    stkPassKey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+#    stkPushShortCode: 174379
+#    stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+#    stkPushRequestCallbackUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/stk-transaction-result
+#    stkPushTransactionStatus: https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query
+#    stkPushTransactionCallback: https://76ec-52-15-152-26.ngrok.io/mobile-money/stk-status
+
+transaction:
+  mpesa:
+    mpesaexpress:
+      requesturl: https://4c4c-197-254-24-10.ngrok-free.app/mobile-money/stk-transaction-request
+      #      consumerkey: PAmUGFDekbdxAufx3oScwqn45frJOal5
+      stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+      #      consumersecret: 470LauKZZAOPm2BZ
+      #      password: MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwNTA3MTIyMjE0
+      #      environment: prod
+      #      bussinessshortcode: 174379
+      #      transactiontype: CustomerPayBillOnline
+      callbackurl: https://4c4c-197-254-24-10.ngrok-free.app/mobile-money/stk-transaction-result
+    mpesawithdraw:
+      requesturl: https://4c4c-197-254-24-10.ngrok-free.app/mobile-money/stk-transaction-request
+      consumerkey: PAmUGFDekbdxAufx3oScwqn45frJOal5
+      consumersecret: 470LauKZZAOPm2BZ
+      securitycredential: DDyCmThnmd0HUhJL7U8T1NTl8CoRHt2mSYwPstZxUgnR/LnYdgMbBTTbT9oJc7YP0fhY
+      commandid: BusinessPayment
+      queuetimeouturl: https://mydomain.com/b2c/queue
+      resulturl: https://mydomain.com/b2c/result
+      initiatorname: TestApi
+      part_a: 600987
+      occassion: Cash Withdrawal
