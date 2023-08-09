@@ -28,7 +28,6 @@ public class Notification {
     private Date DateCreated;
     private Date nextNotificationDate;
     private String icon;
-    @JsonIgnore
     private Character firebaseFLag = 'N';
 
 
@@ -46,5 +45,6 @@ public class Notification {
     @ToString.Exclude
     @JsonIgnore
     List<TokenNotifications> tokenNotifications=new ArrayList<>();
+
 }
 

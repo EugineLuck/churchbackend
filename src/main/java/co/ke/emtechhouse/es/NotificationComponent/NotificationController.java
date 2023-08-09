@@ -36,10 +36,11 @@ public class NotificationController {
         }
     }
 
-    @PostMapping("/add/notification")
-    public ResponseEntity<?> createNotification(@RequestBody NotificationRequest request) {
+    @PostMapping("/add/notification/{groupId}")
+    public ResponseEntity<?> createNotification(@PathVariable("groupId") Long groupId,
+                                                @RequestBody Notification notification) {
         try {
-            ApiResponse apiResponse = notificationService.CreateServiceNotification(request);
+            ApiResponse apiResponse = notificationService.CreateServiceNotification(groupId, notification);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -48,9 +49,9 @@ public class NotificationController {
         }
     }
 
-    @GetMapping("/get/notification/by/memberNumber/{memberNumber}")
+    @GetMapping("/get/notification/by/memberNumber/{memberNumber}")    public ResponseEntity<?> getNotificationsByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
 
-    public ResponseEntity<?> getNotificationsByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
+
         try {
             ApiResponse response = notificationService.getNotificationByMemberNumber(memberNumber);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -82,15 +83,15 @@ public class NotificationController {
 //        return  null;
 //    }
 //    }
-    @PostMapping("/update/status/{notificationId}/{notificationStatus}")
-    public ResponseEntity<?> updateNotification(@PathVariable("notificationId") Long notificationId, @PathVariable("notificationStatus") NotificationStatus notificationStatus) {
-        try {
-            ApiResponse apiResponse = notificationService.updateNotificationStatus(notificationId, notificationStatus);
-            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-
-        } catch (Exception e) {
-            log.info("Error" + e);
-            return null;
-        }
-    }
+//    @PostMapping("/update/status/{notificationId}/{notificationStatus}")
+//    public ResponseEntity<?> updateNotification(@PathVariable("notificationId") Long notificationId, @PathVariable("notificationStatus") NotificationStatus notificationStatus) {
+//        try {
+//            ApiResponse apiResponse = notificationService.updateNotificationStatus(notificationId, notificationStatus);
+//            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+//
+//        } catch (Exception e) {
+//            log.info("Error" + e);
+//            return null;
+//        }
+//    }
 }

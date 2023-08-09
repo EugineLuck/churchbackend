@@ -8,6 +8,8 @@ public class NotificationRequest {
         private Notification notification;
         private List<String> memberNumbers;
 
+        private String groupId;
+
         public List<String> getmemberNumbers() {
                 return memberNumbers;
         }

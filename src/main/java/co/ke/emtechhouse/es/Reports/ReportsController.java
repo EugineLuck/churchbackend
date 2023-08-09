@@ -42,8 +42,6 @@ public class ReportsController {
     @Value("${spring.datasource.password}")
     private String password;
 
-    @Autowired
-    MembersRepository membersRepository;
 
 
 
@@ -122,6 +120,54 @@ public class ReportsController {
         byte[] data = JasperExportManager.exportReportToPdf(report);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=group_members.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
+    @GetMapping("/transactions")
+    public ResponseEntity<ByteArrayResource> transactionsReports() throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path+"/transactionsAll.jrxml"));
+        Map<String, Object> parameter = new HashMap<String, Object>();
+        parameter.put("logo", logo);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transactions.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
+
+    @GetMapping("/statement/{memberNumber}")
+    public ResponseEntity<ByteArrayResource> memberStatementReports(@PathVariable String memberNumber) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/membersStatement.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("memberNumber", memberNumber);
+        parameter.put("logo", logo);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+memberNumber+"_statement.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
+    @GetMapping("/transactions/{givingId}")
+    public ResponseEntity<ByteArrayResource> categoryReports(@PathVariable Long givingId) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/transactionsType.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("givingId", givingId);
+        parameter.put("logo", logo);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=giving_"+givingId+"_statement.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
         ByteArrayResource byteArrayResource = new ByteArrayResource(data);
         return ResponseEntity.ok().headers(headers).body(byteArrayResource);

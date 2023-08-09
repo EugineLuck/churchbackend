@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="membersAll" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13acf49e-4913-4d1b-bccc-113817ad15d1">
-    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="EmTechOnline"/>
-    <style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false"/>
-    <style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false"/>
-    <style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true"/>
-    <style name="Detail" mode="Transparent" fontName="Times New Roman"/>
-    <style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
-        <conditionalStyle>
-            <conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
-            <style mode="Opaque" backcolor="#F0EFEF"/>
-        </conditionalStyle>
-    </style>
-    <parameter name="groupId" class="java.lang.Long"/>
-    <parameter name="logo" class="java.io.InputStream"/>
-    <queryString language="SQL">
-        <![CDATA[SELECT
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3a081027-db98-4dbc-afe1-9c3521a70e2c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="online"/>
+	<parameter name="groupId" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
     m.posted_time,
     m.logged_in,
     m.id AS id,
@@ -55,277 +44,406 @@ JOIN
 WHERE
     mr.role_id = 1
     AND g.id = $P{groupId}]]>
-    </queryString>
-    <field name="posted_time" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="posted_time"/>
-        <property name="com.jaspersoft.studio.field.label" value="posted_time"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="logged_in" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="logged_in"/>
-        <property name="com.jaspersoft.studio.field.label" value="logged_in"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="id" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id"/>
-        <property name="com.jaspersoft.studio.field.label" value="id"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="mor" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="mode_of_registration"/>
-        <property name="com.jaspersoft.studio.field.label" value="mor"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="roleId" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="role_id"/>
-        <property name="com.jaspersoft.studio.field.label" value="roleId"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members_roles"/>
-    </field>
-    <field name="dob" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="date_of_birth"/>
-        <property name="com.jaspersoft.studio.field.label" value="dob"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="groupsId" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id"/>
-        <property name="com.jaspersoft.studio.field.label" value="groupsId"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="member_groups"/>
-    </field>
-    <field name="communityId" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id"/>
-        <property name="com.jaspersoft.studio.field.label" value="communityId"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="community"/>
-    </field>
-    <field name="familyId" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id"/>
-        <property name="com.jaspersoft.studio.field.label" value="familyId"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="family"/>
-    </field>
-    <field name="churchId" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="id"/>
-        <property name="com.jaspersoft.studio.field.label" value="churchId"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="out_station"/>
-    </field>
-    <field name="firstname" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="first_name"/>
-        <property name="com.jaspersoft.studio.field.label" value="firstname"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="appId" class="java.lang.Long">
-        <property name="com.jaspersoft.studio.field.name" value="app_id"/>
-        <property name="com.jaspersoft.studio.field.label" value="appId"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="lastname" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="last_name"/>
-        <property name="com.jaspersoft.studio.field.label" value="lastname"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="number" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="member_number"/>
-        <property name="com.jaspersoft.studio.field.label" value="number"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="phone" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="phone_number"/>
-        <property name="com.jaspersoft.studio.field.label" value="phone"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="nation" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="nationalid"/>
-        <property name="com.jaspersoft.studio.field.label" value="nation"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="email" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="email"/>
-        <property name="com.jaspersoft.studio.field.label" value="email"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="members"/>
-    </field>
-    <field name="family" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="family_name"/>
-        <property name="com.jaspersoft.studio.field.label" value="family"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="family"/>
-    </field>
-    <field name="community" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="community_name"/>
-        <property name="com.jaspersoft.studio.field.label" value="community"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="community"/>
-    </field>
-    <field name="church" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="out_station_name"/>
-        <property name="com.jaspersoft.studio.field.label" value="church"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="out_station"/>
-    </field>
-    <field name="groups" class="java.lang.String">
-        <property name="com.jaspersoft.studio.field.name" value="group_name"/>
-        <property name="com.jaspersoft.studio.field.label" value="groups"/>
-        <property name="com.jaspersoft.studio.field.tree.path" value="groups"/>
-    </field>
-    <group name="Group1">
-        <groupHeader>
-            <band/>
-        </groupHeader>
-        <groupFooter>
-            <band/>
-        </groupFooter>
-    </group>
-    <background>
-        <band splitType="Stretch"/>
-    </background>
-    <title>
-        <band height="132" splitType="Stretch">
-            <frame>
-                <reportElement mode="Opaque" x="0" y="0" width="451" height="95" backcolor="#000000" uuid="6c6ca4e1-17cd-4913-93d6-5e670ea9ae8a"/>
-                <staticText>
-                    <reportElement style="Title" x="0" y="0" width="440" height="66" uuid="a2a2cac8-5a7d-4487-8c54-dab235ce4e21"/>
-                    <textElement>
-                        <font size="44" isBold="false"/>
-                    </textElement>
-                    <text><![CDATA[Group Members]]></text>
-                </staticText>
-                <staticText>
-                    <reportElement style="SubTitle" x="157" y="66" width="249" height="29" uuid="8978eac3-c578-41c9-837e-48d2b0184642"/>
-                    <textElement>
-                        <font size="22" isBold="false"/>
-                    </textElement>
-                    <text><![CDATA[Emtech Church]]></text>
-                </staticText>
-            </frame>
-            <frame>
-                <reportElement mode="Opaque" x="0" y="100" width="451" height="32" forecolor="#000000" backcolor="#CC0000" uuid="e3c14156-5b51-4201-918b-97fdc012e5d4"/>
-                <textField pattern="EEEEE dd MMMMM yyyy">
-                    <reportElement x="307" y="12" width="144" height="20" forecolor="#FFFFFF" uuid="5c3301e7-a737-4c59-8a2f-a6c79fd1adb8"/>
-                    <textElement textAlignment="Right">
-                        <font size="12"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-                </textField>
-                <textField>
-                    <reportElement x="7" y="6" width="100" height="21" forecolor="#FAF7F7" uuid="31e2f844-e34d-4666-b1b8-e06428bbf27b"/>
-                    <textElement>
-                        <font size="14" isBold="true"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[$F{groups}]]></textFieldExpression>
-                </textField>
-            </frame>
-        </band>
-    </title>
-    <pageHeader>
-        <band splitType="Stretch"/>
-    </pageHeader>
-    <columnHeader>
-        <band height="36" splitType="Stretch">
-            <staticText>
-                <reportElement style="Column header" x="5" y="5" width="81" height="30" forecolor="#0A0A0A" backcolor="#A69E9D" uuid="2faa8b49-e8a4-41b9-95fe-b8074206c5e1"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="14" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Name]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" x="86" y="5" width="108" height="30" forecolor="#0A0A0A" backcolor="#DEDEDE" uuid="b32b6fdd-f487-4ee3-b969-cd642730d225"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="14" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Phone No.]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" x="197" y="5" width="85" height="30" forecolor="#0A0A0A" backcolor="#DEDEDE" uuid="8e3a54ef-ac47-4891-a3bf-9b40b6aeef71"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="14" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Member No.]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" x="284" y="5" width="88" height="30" forecolor="#0A0A0A" backcolor="#DEDEDE" uuid="6e0a341a-d0bd-45f9-a5a5-2736cf5fc7ee"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="14" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Church]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" x="375" y="5" width="87" height="30" forecolor="#0A0A0A" backcolor="#DEDEDE" uuid="feb03b8d-bb2c-4a85-8db0-fb07b8fb02cd"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="14" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Family]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" x="464" y="5" width="87" height="30" forecolor="#0A0A0A" backcolor="#DEDEDE" uuid="90aa3ea2-0248-4683-8229-535b3e3373d7"/>
-                <textElement textAlignment="Left" verticalAlignment="Middle">
-                    <font size="14" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Group]]></text>
-            </staticText>
-        </band>
-    </columnHeader>
-    <detail>
-        <band height="23" splitType="Stretch">
-            <textField>
-                <reportElement x="5" y="2" width="81" height="20" uuid="f35faa6a-8622-48bf-86eb-b860f0a9a714"/>
-                <textFieldExpression><![CDATA[$F{firstname} +" "+$F{lastname}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="88" y="2" width="106" height="20" uuid="1beac771-1181-42a2-88d6-f21d2595a47b"/>
-                <textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="197" y="2" width="85" height="20" uuid="56eef1df-5a66-4107-b5fe-2a160eb72b84"/>
-                <textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="285" y="3" width="87" height="20" uuid="4aa30b57-1d2f-4e06-a09d-37f9cc858caf"/>
-                <textFieldExpression><![CDATA[$F{church}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="375" y="3" width="87" height="20" uuid="014eceef-77e4-4575-9eb5-8133913ae198"/>
-                <textFieldExpression><![CDATA[$F{family}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="464" y="3" width="87" height="20" uuid="1aed15da-636c-44df-8385-3dcebe02c9a3"/>
-                <textFieldExpression><![CDATA[$F{groups}]]></textFieldExpression>
-            </textField>
-        </band>
-    </detail>
-    <columnFooter>
-        <band height="7" splitType="Stretch">
-            <line>
-                <reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="1133a906-5b71-476e-9f3e-bc97c97058c1"/>
-                <graphicElement>
-                    <pen lineWidth="0.5" lineColor="#999999"/>
-                </graphicElement>
-            </line>
-        </band>
-    </columnFooter>
-    <pageFooter>
-        <band height="25" splitType="Stretch">
-            <frame>
-                <reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#000000" uuid="729c3539-f946-4d0e-a0a7-bda2815ea1b0"/>
-                <textField evaluationTime="Report">
-                    <reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="4834e99c-7f6c-485a-b098-50e5187f2ab4"/>
-                    <textElement verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-                </textField>
-                <textField>
-                    <reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="9825b46e-76f1-469a-abb8-a1cc27aad685"/>
-                    <textElement textAlignment="Right" verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-                </textField>
-                <textField pattern="EEEEE dd MMMMM yyyy">
-                    <reportElement style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF" uuid="137d38c7-1a83-4fc5-b156-9d5f1b1a0ddc"/>
-                    <textElement verticalAlignment="Middle">
-                        <font size="10" isBold="false"/>
-                    </textElement>
-                    <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-                </textField>
-            </frame>
-        </band>
-    </pageFooter>
-    <summary>
-        <band splitType="Stretch"/>
-    </summary>
+	</queryString>
+	<field name="posted_time" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="posted_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="posted_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="logged_in" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="logged_in"/>
+		<property name="com.jaspersoft.studio.field.label" value="logged_in"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="mor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="mode_of_registration"/>
+		<property name="com.jaspersoft.studio.field.label" value="mor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="roleId" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="roleId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members_roles"/>
+	</field>
+	<field name="dob" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="date_of_birth"/>
+		<property name="com.jaspersoft.studio.field.label" value="dob"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="groupsId" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="groupsId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="member_groups"/>
+	</field>
+	<field name="communityId" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="communityId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="community"/>
+	</field>
+	<field name="familyId" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="familyId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="family"/>
+	</field>
+	<field name="churchId" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="churchId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="out_station"/>
+	</field>
+	<field name="firstname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="first_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="firstname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="appId" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="app_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="appId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="lastname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="last_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lastname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="member_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phone_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="nation" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nationalid"/>
+		<property name="com.jaspersoft.studio.field.label" value="nation"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email"/>
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="members"/>
+	</field>
+	<field name="family" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="family_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="family"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="family"/>
+	</field>
+	<field name="community" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="community_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="community"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="community"/>
+	</field>
+	<field name="church" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="out_station_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="church"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="out_station"/>
+	</field>
+	<field name="groups" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="group_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="groups"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="groups"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="178" splitType="Stretch">
+			<frame>
+				<reportElement x="252" y="2" width="48" height="43" uuid="23f5c092-4f47-467b-9b50-fc08437cd287"/>
+				<image>
+					<reportElement x="0" y="0" width="48" height="43" uuid="c3feec1d-2146-4105-b3c6-a117221577f6"/>
+					<imageExpression><![CDATA["logo.png"]]></imageExpression>
+				</image>
+			</frame>
+			<rectangle>
+				<reportElement x="298" y="21" width="262" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="1850a019-4eec-427c-9151-97c85a40f307"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="21" width="249" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="062f07e3-1201-4492-8842-b9103ef730b7"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="211" y="47" width="133" height="17" forecolor="#0066FF" backcolor="#75C6F8" uuid="054744c7-b903-4dab-aa73-95e2868c74b0"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E&M Technology House]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="64" width="100" height="13" forecolor="#0066FF" backcolor="#75C6F8" uuid="55b39b7f-af62-42c2-8ab7-fea23cb2276d"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tel: 254711223344]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="78" width="100" height="13" forecolor="#0066FF" backcolor="#75C6F8" uuid="c94452e0-5b67-4db1-8416-38f2f61beac1"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Email: info@emtech.co.ke]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="211" y="90" width="134" height="13" forecolor="#0066FF" backcolor="#75C6F8" uuid="8c391852-d74d-4ca8-b1e5-c23d970fc596"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Website: www.emtech.co.ke]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="104" width="189" height="27" forecolor="#0066FF" backcolor="#75C6F8" uuid="f438a204-7764-41f4-a309-134604eb17dd"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Group Members Report]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="158" y="130" width="249" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="f2ec7270-335f-4ca2-bb14-5e57c30e8a55"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="157" y="162" width="249" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="9fea691e-b3ee-4804-b859-6f9a4b0c7e1c"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="160" y="141" width="73" height="20" forecolor="#0066FF" uuid="890100f7-8011-47dc-a614-77dd35549ee1"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date Created: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="140" width="40" height="20" forecolor="#0066FF" uuid="1135de1b-7b2d-4bb4-ac68-f0a4071629f0"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="238" y="141" width="89" height="15" forecolor="#0066FF" uuid="70935bae-6981-4816-887e-99201c76d3ae"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="375" y="140" width="100" height="16" forecolor="#0066FF" uuid="5593bcb6-e94b-406a-8d0a-e9a3c268c568"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="81" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="8bbf49e9-f8f9-4ba3-9590-eed0ce342cfd"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="81" y="0" width="79" height="22" forecolor="#0066FF" backcolor="#030303" uuid="9bd857c6-833f-4ace-a293-cec335e56cfe"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="79" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="2eb3ea70-346b-4149-93f7-65e8a765eb69"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Member No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="239" y="0" width="79" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="fea93e60-334a-452a-ac5a-361727b3d39e"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="0" width="79" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="20be46f6-70ea-4deb-ab09-9474580769d6"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Church]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="0" width="79" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="e0bf6a69-141a-4528-95d0-6dc218eb5cd9"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Family]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="0" width="79" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="b780e4b4-70a0-4266-886d-806e6de18985"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Group]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<textField>
+				<reportElement x="0" y="0" width="81" height="16" backcolor="#5C96ED" uuid="2ac697d6-be0f-4224-bd97-2fdc9686553a"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="0" width="79" height="16" backcolor="#5C96ED" uuid="880681f6-deea-48ca-8520-2bab56e21cc9"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{firstname} +" "+ $F{lastname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="79" height="16" backcolor="#5C96ED" uuid="71813230-d374-4d4d-b629-dd5c153f79e1"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="0" width="79" height="16" backcolor="#5C96ED" uuid="f3069f72-f40a-4902-a437-87bb580c2331"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="0" width="79" height="16" backcolor="#5C96ED" uuid="b2c20748-ca39-46d3-8c9e-93f02132b4dc"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{church}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="397" y="0" width="79" height="16" backcolor="#5C96ED" uuid="010eebb5-9f6b-48d9-85fa-283692d38fd8"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{family}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="476" y="0" width="79" height="16" backcolor="#5C96ED" uuid="b115a3e1-60a3-463d-b1c0-d33adf19bd53"/>
+				<box>
+					<pen lineColor="#5C96ED"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{groups}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="102" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="58" width="555" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="88b15b47-9dff-4652-a3d2-2b9dd527a968"/>
+			</rectangle>
+			<textField>
+				<reportElement x="430" y="64" width="125" height="20" uuid="295f749c-44e0-4620-8f5b-a8cb7ca10017"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}+" of  " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="69" width="100" height="15" uuid="13e1304d-259a-4bd1-8df1-e18f95565771"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Emtech Church]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="75" splitType="Stretch"/>
+	</summary>
 </jasperReport>

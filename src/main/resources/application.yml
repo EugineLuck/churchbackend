@@ -26,6 +26,7 @@ spring:
   #        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
   datasource:
+
 #
     url:  jdbc:mariadb://localhost/emt_church
     username: root
@@ -33,6 +34,7 @@ spring:
 #    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
 #    username: emtech
 #    password: emtech@2022
+
     driverClassName: org.mariadb.jdbc.Driver
 
   others:
