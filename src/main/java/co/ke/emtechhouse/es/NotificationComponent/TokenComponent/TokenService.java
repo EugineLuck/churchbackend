@@ -28,7 +28,7 @@ public class TokenService{
         this.membersRepository = membersRepository;
     }
 
-    public ApiResponse addToken(Token token){
+    public ApiResponse <?> addToken(Token token){
         try {
             ApiResponse apiResponse = new ApiResponse();
             Optional<Members> checkMember = membersRepository.findByMemberNumber(token.getMemberNumber());

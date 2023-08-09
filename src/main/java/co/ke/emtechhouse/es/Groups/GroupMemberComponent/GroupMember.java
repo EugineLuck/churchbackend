@@ -2,6 +2,7 @@ package co.ke.emtechhouse.es.Groups.GroupMemberComponent;
 
 import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Groups.Groups;
+import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,7 +38,6 @@ public class GroupMember {
 
     @JsonIgnore
     private Date updationTime;
-
 
 
 }

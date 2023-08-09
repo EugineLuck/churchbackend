@@ -58,6 +58,11 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
     @Query(value = "SELECT  * FROM `members` order by id desc limit 1 ", nativeQuery = true)
     Optional<Members> getMemberNumber();
     Optional<Members> findByMemberNumber(String memberNumber);
+
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT * FROM members WHERE member_number =:memberNumber")
+    List<Members> searchByMemberNumbers(@Param(value = "memberNumber") String memberNumber);
+
     @Transactional
     @Modifying
     @Query(nativeQuery = true,value = "update members set loggedin = :loggedin,modified_on= :modified_on,modified_by = :modified_by where member_number = :memberNumber")

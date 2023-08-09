@@ -37,9 +37,4 @@ public class Token {
     @ToString.Exclude
     @JsonIgnore
     List<TokenNotifications> tokenNotifications;
-
-    @OneToMany(mappedBy = "token", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @JsonIgnore
-    List<TokenConsents> tokenConsents;
 }

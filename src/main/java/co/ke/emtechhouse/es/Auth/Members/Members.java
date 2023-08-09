@@ -2,6 +2,7 @@ package co.ke.emtechhouse.es.Auth.Members;
 
 import co.ke.emtechhouse.es.AppUser.AppUser;
 import co.ke.emtechhouse.es.Auth.Roles.Role;
+import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,8 +36,9 @@ public class Members {
     private String modeOfRegistration;
     private String memberRole;
 
-    @Transient
-    private String accessToken;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "token_id")
+    private Token token;
 
 //    @Transient
 //    private List<GroupNameDTO> groupNames;
