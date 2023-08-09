@@ -27,13 +27,14 @@ spring:
 
   datasource:
 
-#    url:  jdbc:mariadb://localhost/emt_church
-#    username: Encoder
-#    password: root6223
 #
-    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
-    username: emtech
-    password: emtech@2022
+    url:  jdbc:mariadb://localhost/emt_church
+    username: root
+    password:
+#    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
+#    username: emtech
+#    password: emtech@2022
+
     driverClassName: org.mariadb.jdbc.Driver
 
   others:
@@ -119,45 +120,45 @@ firebase:
 
   #mpesa
 
-#mpesa:
-#  daraja:
-#    #Access token
-#    consumerKey:  KPepbzwvw1iaKIBpG6g7Ey5QMyxMsKNd
-#    consumerSecret: qh5Pnu8bPOYgtEhS
-#    grantType: client_credentials
-#    oauthEndpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
-#    #C2B transaction
-#    shortCode: 600989
-#    responseType: Completed
-#    confirmationUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/confirmation
-#    validationUrl:  https://76ec-52-15-152-26.ngrok.io/mobile-money/validation
-#    registerUrl: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl
-#    c2bTransaction: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate
-#    requestType: Pull
-#    registerPullTransaction: https://sandbox.safaricom.co.ke/pulltransactions/v1/register
-#    pullTransaction: https://sandbox.safaricom.co.ke/pulltransactions/v1/query
-#
-#    #B2C Transaction
-#    b2cTransactionEndpoint: https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest
-#    b2cResultUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/b2c-transaction-result
-#    b2cQueueTimeoutUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/b2c-queue-timeout
-#    b2cInitiatorName: testapi
-#    b2cInitiatorPassword: Safaricom999!*!
-#    #Results
-#    transactionResultUrl: https://sandbox.safaricom.co.ke/mpesa/transactionstatus/v1/query
-#    checkAccountBalanceUrl: https://sandbox.safaricom.co.ke/mpesa/accountbalance/v1/query
-#    #Mpesa Express
-#    stkPassKey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
-#    stkPushShortCode: 174379
-#    stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
-#    stkPushRequestCallbackUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/stk-transaction-result
-#    stkPushTransactionStatus: https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query
-#    stkPushTransactionCallback: https://76ec-52-15-152-26.ngrok.io/mobile-money/stk-status
+mpesa:
+  daraja:
+    #Access token
+    consumerKey:  KPepbzwvw1iaKIBpG6g7Ey5QMyxMsKNd
+    consumerSecret: qh5Pnu8bPOYgtEhS
+    grantType: client_credentials
+    oauthEndpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
+    #C2B transaction
+    shortCode: 600989
+    responseType: Completed
+    confirmationUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/confirmation
+    validationUrl:  https://76ec-52-15-152-26.ngrok.io/mobile-money/validation
+    registerUrl: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl
+    c2bTransaction: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate
+    requestType: Pull
+    registerPullTransaction: https://sandbox.safaricom.co.ke/pulltransactions/v1/register
+    pullTransaction: https://sandbox.safaricom.co.ke/pulltransactions/v1/query
+
+    #B2C Transaction
+    b2cTransactionEndpoint: https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest
+    b2cResultUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/b2c-transaction-result
+    b2cQueueTimeoutUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/b2c-queue-timeout
+    b2cInitiatorName: testapi
+    b2cInitiatorPassword: Safaricom999!*!
+    #Results
+    transactionResultUrl: https://sandbox.safaricom.co.ke/mpesa/transactionstatus/v1/query
+    checkAccountBalanceUrl: https://sandbox.safaricom.co.ke/mpesa/accountbalance/v1/query
+    #Mpesa Express
+    stkPassKey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+    stkPushShortCode: 174379
+    stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+    stkPushRequestCallbackUrl: https://76ec-52-15-152-26.ngrok.io/mobile-money/stk-transaction-result
+    stkPushTransactionStatus: https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query
+    stkPushTransactionCallback: https://76ec-52-15-152-26.ngrok.io/mobile-money/stk-status
 
 transaction:
   mpesa:
     mpesaexpress:
-      requesturl: https://4c4c-197-254-24-10.ngrok-free.app/mobile-money/stk-transaction-request
+      requesturl: https://99f1-52-15-152-26.ngrok.io/mobile-money/stk-transaction-request
       #      consumerkey: PAmUGFDekbdxAufx3oScwqn45frJOal5
       stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
       #      consumersecret: 470LauKZZAOPm2BZ
@@ -165,9 +166,9 @@ transaction:
       #      environment: prod
       #      bussinessshortcode: 174379
       #      transactiontype: CustomerPayBillOnline
-      callbackurl: https://4c4c-197-254-24-10.ngrok-free.app/mobile-money/stk-transaction-result
+      callbackurl: https://99f1-52-15-152-26.ngrok.io/mobile-money/stk-transaction-result
     mpesawithdraw:
-      requesturl: https://4c4c-197-254-24-10.ngrok-free.app/mobile-money/stk-transaction-request
+      requesturl: https://99f1-52-15-152-26.ngrok.io/mobile-money/stk-transaction-request
       consumerkey: PAmUGFDekbdxAufx3oScwqn45frJOal5
       consumersecret: 470LauKZZAOPm2BZ
       securitycredential: DDyCmThnmd0HUhJL7U8T1NTl8CoRHt2mSYwPstZxUgnR/LnYdgMbBTTbT9oJc7YP0fhY

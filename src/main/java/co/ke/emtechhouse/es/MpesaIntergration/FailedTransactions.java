@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @ToString
 @Entity
-public class Transaction {
+public class FailedTransactions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +33,3 @@ public class Transaction {
     private String resultDesc;
     private String status;
 }
-
-
-

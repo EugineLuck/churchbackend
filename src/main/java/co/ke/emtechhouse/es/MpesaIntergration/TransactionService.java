@@ -10,6 +10,7 @@ import co.ke.emtechhouse.es.Giving.Giving;
 import co.ke.emtechhouse.es.Giving.GivingRepo;
 
 
+import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushStatusResponse;
 import co.ke.emtechhouse.es.NotificationComponent.*;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
@@ -43,7 +44,7 @@ public class TransactionService {
 
 
 //    @Autowired
-//    MpesaCallerService mpesaCallerService;
+//    StkPushStatusResponse stkPushStatusResponse;
 
     @Autowired
     GivingRepo givingRepo;
@@ -119,11 +120,11 @@ public class TransactionService {
                             System.out.println("cheeeeeeetsssssss");
                             System.out.println(mpesaresponse);
 //                  TODO: Update the transaction entry with transaction details
-                            transaction.setMerchantRequestID(mpesaresponse.getMerchantRequestID());
-                            transaction.setCheckoutRequestID(mpesaresponse.getCheckoutRequestID());
-                            transaction.setResponseCode(mpesaresponse.getResponseCode());
-                            transaction.setResponseDescription(mpesaresponse.getResponseDescription());
-                            transaction.setCustomerMessage(mpesaresponse.getCustomerMessage());
+//                            transaction.setMerchantRequestID(mpesaresponse.getMerchantRequestID());
+//                            transaction.setCheckoutRequestID(mpesaresponse.getCheckoutRequestID());
+//                            transaction.setResponseCode(mpesaresponse.getResponseCode());
+//                            transaction.setResponseDescription(mpesaresponse.getResponseDescription());
+//                            transaction.setCustomerMessage(mpesaresponse.getCustomerMessage());
                             transaction.setStatus("Processing");
                             //upishi
 
@@ -157,21 +158,20 @@ public class TransactionService {
 
 
 
-    public ApiResponse callback(MpesaexpresscallbackDTO mpesaexpresscallbackDTO) {
+    public ApiResponse callback(StkPushStatusResponse StkPushStatusResponse) {
         ApiResponse apiResponse = new ApiResponse();
         try {
-            System.out.println("check0000"+ mpesaexpresscallbackDTO);
-            JSONObject joRes = new JSONObject(mpesaexpresscallbackDTO);
+            System.out.println("check0000"+ StkPushStatusResponse);
+            JSONObject joRes = new JSONObject(StkPushStatusResponse);
             System.out.println("shhhhshhshhs" + joRes);
             JSONObject joRespBody = joRes.getJSONObject("body"); // new JSONObject(mpesaexpresscallbackDTO);
             System.out.println("kskskksks1"+ joRespBody);
             JSONObject joResp = joRespBody.getJSONObject("stkCallback");
             String resultCode = joResp.getString("resultCode");
             System.out.println("resultcose" + resultCode);
-            String merchantRequestID = joResp.getString("merchantRequestID");
-            System.out.println("merchantId" + merchantRequestID);
-            String checkoutRequestID = joResp.getString("checkoutRequestID");
-            System.out.println("checkoutId" + checkoutRequestID);
+
+            String resultDesc = joResp.getString("checkoutRequestID");
+            System.out.println("ResultDesc" + resultDesc);
             if (resultCode.equalsIgnoreCase("0")) {
                 JSONObject CallbackMetadata = joResp.getJSONObject("callbackMetadata");
                 JSONArray Item = CallbackMetadata.getJSONArray("item");
@@ -179,29 +179,10 @@ public class TransactionService {
                 String mpesaReceipt = mpesaReceiptData.getString("value");
                 JSONObject mpesaDateData = Item.getJSONObject(3);
                 String mpesaDate = mpesaDateData.getString("value");
-                Optional<Transaction> transactionCheck = transactionRepo.findByMerchantRequestIDAndCheckoutRequestID(merchantRequestID, checkoutRequestID);
-                if (transactionCheck.isPresent()) {
 
-                    System.out.println(transactionCheck);
-                    Transaction transaction = transactionCheck.get();
-                    transaction.setStatus("Successful");
-                    transaction.setMpesaReceiptNumber(mpesaReceipt);
-                    transaction.setPaymentTransactionDate(mpesaDate);
-                    transactionRepo.save(transaction);
-//                    TODO: Update wallet balance
 
-        ;
-
-                    notifySuccessMember(transaction);
-                }
-            } else {
-                Optional<Transaction> transactionCheck = transactionRepo.findByMerchantRequestIDAndCheckoutRequestID(merchantRequestID, checkoutRequestID);
-                if (transactionCheck.isPresent()) {
-                    Transaction transaction = transactionCheck.get();
-                    transaction.setStatus("Failed");
-                    transactionRepo.save(transaction);
-                }
             }
+
             return apiResponse;
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
@@ -268,19 +249,6 @@ public class TransactionService {
 
 
 
-    private String getMember(Transaction transaction) {
-        String memberNo = null;
-        Optional<Giving> checkGiving = givingRepo.findById(givingRepo.findById(transaction.getGivingId()).get().getGroupId());
-        if (checkGiving.isPresent()) {
-            Giving giving = checkGiving.get();
-            Optional<Members> checkMember = membersRepository.findByMemberNumber(transaction.getMemberNumber());
-
-            memberNo = checkMember.get().getMemberNumber();
-                }
-
-
-        return memberNo;
-    }
 
     public ApiResponse<?> getAllTransactions() {
         ApiResponse response = new ApiResponse();
@@ -291,6 +259,26 @@ public class TransactionService {
                     response.setMessage(HttpStatus.FOUND.getReasonPhrase());
                     response.setStatusCode(HttpStatus.FOUND.value());
                     response.setEntity(transactions);
+                } else {
+                    response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                    response.setStatusCode(HttpStatus.NOT_FOUND.value());
+                }
+//            }
+            return response;
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+    public ApiResponse<?> getMemberTransactions() {
+        ApiResponse response = new ApiResponse();
+        try {
+
+                List<SuccessfullyTransactions> successfullyTransactions = transactionRepo.getAllSucessfullyTransactions();
+                if (successfullyTransactions.size() > 0) {
+                    response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                    response.setStatusCode(HttpStatus.FOUND.value());
+                    response.setEntity(successfullyTransactions);
                 } else {
                     response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
                     response.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -323,12 +311,32 @@ public class TransactionService {
             return null;
         }
     }
+    public ApiResponse<Transaction> getTransactionsByPhoneNumber(String phoneNumber) {
+        ApiResponse response = new ApiResponse();
+        try {
+
+                Optional<Transaction> transaction = transactionRepo.findByPhoneNumber(phoneNumber);
+                if (transaction.isPresent()) {
+                    response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                    response.setStatusCode(HttpStatus.FOUND.value());
+                    response.setEntity(transaction);
+                } else {
+                    response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                    response.setStatusCode(HttpStatus.NOT_FOUND.value());
+                }
+//            }
+            return response;
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
 
 
-    public ApiResponse getTransactionsByMemberNumberAndGivingIdAndStatus(String memberNumber, Long givingId, String status) {
+    public ApiResponse getTransactionsByMemberNumber(String memberNumber) {
         ApiResponse apiResponse = new ApiResponse<>();
         try {
-            List<Transaction> transactions = transactionRepo.findByMemberNumberAndGivingIdAndStatus(memberNumber, givingId, status);
+            Optional<Transaction> transactions = transactionRepo.findByMemberNumber(memberNumber);
             apiResponse.setEntity(transactions);
             apiResponse.setMessage("List of transactions ");
             apiResponse.setStatusCode(200);
