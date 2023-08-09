@@ -1,12 +1,14 @@
 package co.ke.emtechhouse.es.Subscriptions;
 
 
+import co.ke.emtechhouse.es.Subscribers.Subscibers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -22,8 +24,14 @@ public class Subscriptions {
     private String phoneNumber;
     private  String fullName;
     private String memberNumber;
-    private Long charges;
+    private String subscriptionType;
+    private Double charges;
     private  String dateCreated;
     @Column(name = "isActive")
     private boolean isActive = true;
+
+    //A list of all subscribers subcribed
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    List<Subscibers> subscibers;
+    
 }

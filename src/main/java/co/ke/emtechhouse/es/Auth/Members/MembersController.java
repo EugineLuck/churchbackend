@@ -209,6 +209,8 @@ public class MembersController {
 
 
 
+//        @PostMapping("/update/{memberNumber}")
+
 
     @PostMapping("/addFamilyMember")
     public ResponseEntity<?> addFamilyMember(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
@@ -305,18 +307,32 @@ public class MembersController {
     public List<Members> findByIsAdminAndDeletedFlag() {
         return membersRepository.findByIsAdminAndDeletedFlag(true, 'N');
     }
-    @PutMapping("/update/Members/{memberNumber}")
-    public ResponseEntity<?> updateGroup(@PathVariable String memberNumber,
 
-                                         @RequestBody MemberUpdateDTO memberUpdateDTO) {
-        try {
-            ApiResponse response = membersService.updateMember(memberNumber, memberUpdateDTO);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("Catched Error {} " + e);
-            return null;
-        }
-    }
+
+
+
+
+//    @PutMapping("/update/{memberNumber}")
+//    public ResponseEntity<?> updateMember(@PathVariable String memberNumber,
+//
+//                                         @RequestBody MemberDetails memberUpdateDTO) {
+//        try {
+//            ApiResponse response = membersService.updateMember(memberNumber, memberUpdateDTO);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.info("Catched Error {} " + e);
+//            return null;
+//        }
+//
+//
+//    }
+
+
+
+
+
+
+
 
     @GetMapping(path = "/active/sessions")
     public ResponseEntity<?> getActiveSession() throws JsonProcessingException {
@@ -421,30 +437,6 @@ public class MembersController {
         return ResponseEntity.ok().body(roleRepository.findAll());
     }
 
-//    @PostMapping(path = "/reset-password")
-//    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) throws MessagingException {
-//        if (passwordResetRequest.getPassword().length() < 6 || passwordResetRequest.getPassword().isEmpty() || passwordResetRequest.getPassword() == null) {
-//            return ResponseEntity.badRequest().body(new MessageResponse("Password Can not be less than 6 characters"));
-//        } else {
-//            if (!membersRepository.existsByEmail(passwordResetRequest.getEmailAddress())) {
-//                return ResponseEntity.badRequest().body(new MessageResponse("No such member exists"));
-//            } else {
-//                Members members = membersRepository.findByEmail(passwordResetRequest.getEmailAddress()).orElse(null);
-//                if (passwordResetRequest.getPassword().equals(passwordResetRequest.getConfirmPassword())) {
-//                    members.setPassword(encoder.encode(passwordResetRequest.getPassword()));
-//                    members.setFirstLogin('N');
-//                    membersRepository.save(members);
-//                    String mailMessage = "Dear " + members.getFirstName() + " your password has been updated successfully! These are your new Credentials. Username <b> " + members.getUsername()
-//                            + " </b> and password <b>" + passwordResetRequest.getPassword() + " </b>.";
-////                mailService.sendEmail(user.getEmail(), mailMessage, "Password Reset Successful");
-//                    return ResponseEntity.ok().body(new MessageResponse("User Password updated successfully"));
-//                } else {
-//                    return ResponseEntity.badRequest().body(new MessageResponse("Password mismatch. Try Again"));
-//                }
-//            }
-//        }
-//    }
-//    Sign Out
     @PostMapping("/logout")
     public ResponseEntity<?> signOut(@RequestBody LogOutRequest logOutRequest, Authentication auth, HttpServletRequest request) {
         if(membersRepository.searchByMemberNumber(logOutRequest.getMemberNumber()).isEmpty()){
@@ -459,47 +451,6 @@ public class MembersController {
             return ResponseEntity.ok(new MessageResponse("Account not Found!"));
         }
     }
-//    @PostMapping(path = "/forgot-password")
-//    public ResponseEntity<?> forgotPassword(@RequestBody Forgotpassword forgotpassword) throws MessagingException, IOException {
-//        ApiResponse response = new ApiResponse();
-//        if (!membersRepository.existsByEmail(forgotpassword.getEmailAddress())) {
-//            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-//            response.setStatusCode(HttpStatus.NOT_FOUND.value());
-//            response.setEntity("");
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } else {
-//            PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
-//            String generatedPassword = passwordGeneratorUtil.generatePassayPassword();
-//            Optional<Members> members = membersRepository.findByEmail(forgotpassword.getEmailAddress());
-//            if (members.isPresent()) {
-//                Members members1 = members.get();
-//                members1.setPassword(encoder.encode(generatedPassword));
-////                user1.setModifiedBy(user.get().getUsername());
-////                user1.setModifiedFlag('Y');
-////                user1.setModifiedTime(new Date());
-//                membersRepository.save(members1);
-//                String mailMessage = "Dear " + members1.getFirstName() + " your password has been updated successfully! These are your new Credentials. Username <b> " + members1.getUsername()
-//                        + " </b> and password <b>" + generatedPassword + " </b> Login in to change your password.";
-//                mailService.sendNotification(forgotpassword.getEmailAddress(), mailMessage, "Password Reset Successfully");
-//
-//
-//                Mailparams mailsample = new Mailparams();
-//                mailsample.setEmail(members1.getEmail());
-//                mailsample.setSubject("Password Reset Successfully");
-//                mailsample.setMessage(mailMessage);
-//                response.setMessage("Dear " + members1.getFirstName() + " your password has been updated successfully! These are your new Credentials. Username <b> " + members1.getUsername()
-//                        + " </b> and password <b>" + generatedPassword + " </b> Login in to change your password.");
-//                response.setStatusCode(HttpStatus.OK.value());
-//                response.setEntity("");
-//                return new ResponseEntity<>(response, HttpStatus.OK);
-//            } else {
-//                response.setMessage("Member with email address not found!");
-//                response.setStatusCode(HttpStatus.NOT_FOUND.value());
-//                response.setEntity("");
-//                return new ResponseEntity<>(response, HttpStatus.OK);
-//            }
-//        }
-//    }
 
     @PutMapping(path = "/lock/{id}")
     public ApiResponse lock(@PathVariable Long id) {

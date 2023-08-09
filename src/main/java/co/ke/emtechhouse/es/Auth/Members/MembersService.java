@@ -7,6 +7,7 @@ import co.ke.emtechhouse.es.utils.HttpInterceptor.UserRequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ import java.util.Optional;
 public class MembersService {
     @Autowired
     private MembersRepository membersRepository;
+
+//    @Autowired
+//    MemberUpdateDTO memberUpdateDTO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -96,37 +100,53 @@ public class MembersService {
 
     }
 
-    public ApiResponse<Members> updateMember(String memberNumber, MemberUpdateDTO memberUpdateDTO) {
-        try {
-            ApiResponse response = new ApiResponse<>();
-            Optional<Members> member = membersRepository.findByMemberNumber(memberNumber);
-            if (member.isPresent()) {
-             
-                                Members existingMember = member.get();
-                                existingMember.setCommunityId(memberUpdateDTO.getCommunityId());
-                                existingMember.setEmail(memberUpdateDTO.getEmail());
-//                                existingMember.setGroups(memberUpdateDTO.getGroups());
-                               existingMember.setOutStationId(memberUpdateDTO.getOutStationId());
-                                existingMember.setPhoneNumber(memberUpdateDTO.getPhoneNumber());
 
 
-                                Members savedMember = membersRepository.save(existingMember);
-                                response.setMessage("Member with Member Number " + existingMember.getMemberNumber() + " updated successfully");
-                                response.setStatusCode(HttpStatus.OK.value());
-                                response.setEntity(savedMember);
-                                return response;
-                            } else {
-                                response.setMessage("Member Not found");
-                                response.setStatusCode(HttpStatus.NOT_FOUND.value());
-                            }
+//    public ApiResponse<Members> updateMember(String memberNumber, MemberDetails details) {
+//        try {
+//            ApiResponse response = new ApiResponse<>();
+//            List<Members> member = membersRepository.searchByMemberNumbers(memberNumber);
+//            if (member.isPresent()) {
+//                Members existingMember = member.get();
+//
+//
+//
+//
+////                existingMember.se(memberUpdateDTO.getCommunityId());
+////                existingMember.setEmail(memberUpdateDTO.getEmail());
+//////              existingMember.setGroups(memberUpdateDTO.getGroups());
+////                existingMember.setOutStationId(memberUpdateDTO.getOutStationId());
+////                existingMember.setPhoneNumber(memberUpdateDTO.getPhoneNumber());
+//
+//
+//
+//                Members savedMember = membersRepository.save(existingMember);
+//                response.setMessage("Member with Member Number " + existingMember.getMemberNumber() + " updated successfully");
+//                response.setStatusCode(HttpStatus.OK.value());
+//                response.setEntity(savedMember);
+//
+//                return response;
+//            } else {
+//                response.setMessage("Member Not found");
+//                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+//            }
+//
+//
+//            return response;
+//        } catch (Exception e) {
+//            log.info("Catched Error {}" + e);
+//            return null;
+//        }
+//
+//    }
 
 
-            return response;
-        } catch (Exception e) {
-            log.info("Catched Error {}" + e);
-            return null;
-        }
 
-    }
+
+
+
+
+
+    
 
 }

@@ -1,4 +1,5 @@
-package co.ke.emtechhouse.es.Subscriptions;
+package co.ke.emtechhouse.es.Subscribers;
+
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -9,18 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/subscriptions")
-public class SubscriptionController {
-
+@RequestMapping("/api/v1/subscribers")
+public class SubscribersController {
     @Autowired
-    private SubscriptionService subscriptionService;
+    private SubscribersService subscribersService;
     @PostMapping("/add")
-    public ResponseEntity<Object> addSubscription(@RequestBody Subscriptions subS) {
+    public ResponseEntity<Object> addSubscription(@RequestBody Subscibers subS) {
         try {
-            Subscriptions save = subscriptionService.saveSubscription(subS);
+            Subscibers save = subscribersService.saveSubscriber(subS);
             return new ResponseEntity<>(save, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
@@ -29,9 +28,9 @@ public class SubscriptionController {
     }
 
     @GetMapping("/get/all")
-    public ResponseEntity<Object> getAllSubscriptions() {
+    public ResponseEntity<Object> getAllSubscribers() {
         try {
-            List<Subscriptions> allsubs= subscriptionService.getAll();
+            List<Subscibers> allsubs= subscribersService.getAll();
             return new ResponseEntity<>(allsubs, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
@@ -42,7 +41,7 @@ public class SubscriptionController {
     @GetMapping("/get/by/{memberNumber}")
     public ResponseEntity<Object> getByIdAd(@PathVariable String memberNumber) {
         try {
-            Subscriptions sub = subscriptionService.findByMemberNumbers(memberNumber);
+            Subscibers sub = subscribersService.findSubscriptionsByMemberNumber(memberNumber);
             return new ResponseEntity<>(sub, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
@@ -50,12 +49,10 @@ public class SubscriptionController {
         }
     }
 
-
-
-    @DeleteMapping("/delete/id")
-    public ResponseEntity<Object> delete(Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         try {
-            subscriptionService.delete(id);
+            subscribersService.delete(id);
 
         } catch (Exception e) {
             log.info("Error" + e);
@@ -63,7 +60,6 @@ public class SubscriptionController {
         }
         return null;
     }
-
 
 
 
