@@ -65,20 +65,29 @@ public class  TransactionController {
             return null;
         }
     }
-    @GetMapping("/get/by/Phone/{phoneNumber}")
-    public ResponseEntity<?> fetchTransactionsByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
+
+//    @GetMapping("/get/by/phoneNumber/{number}")
+//    public ResponseEntity<?> fetchTransactionByPhoneNumber(@PathVariable("number") String number) {
+//        try {
+//            ApiResponse response = transactionService.getByNumber(number);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.info("Catched Error {} " + e);
+//            return null;
+//        }
+     @GetMapping("/get/by/givingId/{givingId}")
+    public ResponseEntity<?> fetchTransactionByGivingId(@PathVariable("givingId") String givingId) {
         try {
-            ApiResponse response = transactionService.getTransactionsByPhoneNumber(phoneNumber);
+            ApiResponse response = transactionService.getByGivingId(Long.valueOf(givingId));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
             return null;
         }
-    }
-    @GetMapping("/get/by/MemberNumber/{memberNumber}")
-    public ResponseEntity<?> fetchTransactionsByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
+    } @GetMapping("/get/by/memberNumber/{memberNumber}")
+    public ResponseEntity<?> fetchTransactionByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
         try {
-            ApiResponse response = transactionService.getTransactionsByMemberNumber(memberNumber);
+            ApiResponse response = transactionService.getByMemberNumber(memberNumber);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
@@ -87,17 +96,5 @@ public class  TransactionController {
     }
 
 
-    @GetMapping("/get/by/giving/{givingId}")
-    public ResponseEntity<?> getTransactionsByGivingId(@PathVariable("givingId") Long givingId)
-            {
-        try {
-            ApiResponse apiResponse = transactionService.getTransactionsByGivingId(givingId);
-            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("Caught Error", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred: " + e.getMessage());
-        }
-    }
 
 }

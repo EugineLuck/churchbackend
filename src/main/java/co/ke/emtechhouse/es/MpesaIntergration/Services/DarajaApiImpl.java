@@ -230,7 +230,25 @@ public class DarajaApiImpl implements DarajaApi {
             InternalStkPushStatusRequest chid = new InternalStkPushStatusRequest();
             chid.setCheckoutRequestID(v.getCheckoutRequestID());
             StkPushStatusResponse res = this.stkPushStatus(chid);
-            if (res.getResultCode() == "1032") {
+            if (res.getResultCode() == "0") {
+
+                Transaction transaction = new Transaction();
+                transaction.setResultDesc(res.getResultDesc());
+                transaction.setStatus("Processing");
+                transaction.setResultCode(res.getResultCode());
+
+                transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
+                transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+
+                transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                transaction.setGivingId(internalStkPushRequest.getGivingId());
+                transaction.setTransactionDate(new Date());
+                transactionRepo.save(transaction);
+
+                if (!transactionRepo.save(transaction).equals(null)) ;
+
+                return res;
+            } else {
 
 
                 FailedTransactions failed = new FailedTransactions();
@@ -249,24 +267,6 @@ public class DarajaApiImpl implements DarajaApi {
                 if (!failedRepo.save(failed).equals(null)) ;
 
                 return res;
-            } else {
-
-
-                Transaction transaction = new Transaction();
-                transaction.setResultDesc(res.getResultDesc());
-                transaction.setStatus("Processing");
-                transaction.setResultCode(res.getResultCode());
-
-                transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
-                transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
-
-                transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
-                transaction.setGivingId(internalStkPushRequest.getGivingId());
-                transaction.setTransactionDate(new Date());
-                transactionRepo.save(transaction);
-
-                if (!transactionRepo.save(transaction).equals(null)) ;
-                return null;
             }
 
         } catch (IOException e) {
@@ -274,6 +274,7 @@ public class DarajaApiImpl implements DarajaApi {
             return null;
         }
     }
+
 
 
     @Override
