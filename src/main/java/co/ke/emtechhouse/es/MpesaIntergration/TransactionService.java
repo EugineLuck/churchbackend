@@ -17,6 +17,7 @@ import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import co.ke.emtechhouse.es.Stages.Stages;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -311,41 +312,95 @@ public class TransactionService {
             return null;
         }
     }
-    public ApiResponse<Transaction> getTransactionsByPhoneNumber(String phoneNumber) {
+//    public ApiResponse<Transaction> getTransactionsByPhoneNumber(String phoneNumber) {
+//        ApiResponse response = new ApiResponse();
+//        try {
+//
+//                List<Transaction> transaction = transactionRepo.findByPhoneNumber(phoneNumber);
+//                if (transaction.isPresent()) {
+//                    response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+//                    response.setStatusCode(HttpStatus.FOUND.value());
+//                    response.setEntity(transaction);
+//                } else {
+//                    response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+//                    response.setStatusCode(HttpStatus.NOT_FOUND.value());
+//                }
+////            }
+//            return response;
+//        } catch (Exception e) {
+//            log.info("Catched Error {} " + e);
+//            return null;
+//        }
+//    }
+//
+//
+//    public ApiResponse getTransactionsByMemberNumber(String memberNumber) {
+//        ApiResponse apiResponse = new ApiResponse<>();
+//        try {
+//            Optional<Transaction> transactions = transactionRepo.findByMemberNumber(memberNumber);
+//            apiResponse.setEntity(transactions);
+//            apiResponse.setMessage("List of transactions ");
+//            apiResponse.setStatusCode(200);
+//        } catch (Exception e) {
+//            apiResponse.setMessage("Error fetching transactions");
+//            apiResponse.setStatusCode(404);
+//        }
+//        return apiResponse;
+//    }
+public ApiResponse<Stages> getByMemberNumber(String memberNumber) {
+    try {
         ApiResponse response = new ApiResponse();
-        try {
+        Optional<Members> member = membersRepository.findByMemberNumber(memberNumber);
+        if (member.isPresent()) {
+            Members presentMembers = member.get();
+            System.out.println(member);
 
-                Optional<Transaction> transaction = transactionRepo.findByPhoneNumber(phoneNumber);
-                if (transaction.isPresent()) {
-                    response.setMessage(HttpStatus.FOUND.getReasonPhrase());
-                    response.setStatusCode(HttpStatus.FOUND.value());
-                    response.setEntity(transaction);
-                } else {
-                    response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-                    response.setStatusCode(HttpStatus.NOT_FOUND.value());
-                }
-//            }
-            return response;
-        } catch (Exception e) {
-            log.info("Catched Error {} " + e);
-            return null;
+            List<SuccessfullyTransactions> transactions = transactionRepo.findByMemberNumber(memberNumber);
+            if (transactions.size() > 0) {
+                response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.FOUND.value());
+                response.setEntity(transactions);
+            } else {
+                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+        } else {
+            response.setMessage("Transaction not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
         }
+
+        return response;
+    } catch (Exception e) {
+        log.info("Catched Error {} " + e);
+        return null;
     }
+}public ApiResponse<Stages> getByGivingId(Long givingId) {
+    try {
+        ApiResponse response = new ApiResponse();
+        Optional<Giving> giving = givingRepo.findById(givingId);
+        if (giving.isPresent()) {
+            Giving presentGiving = giving.get();
+            System.out.println(presentGiving);
 
-
-    public ApiResponse getTransactionsByMemberNumber(String memberNumber) {
-        ApiResponse apiResponse = new ApiResponse<>();
-        try {
-            Optional<Transaction> transactions = transactionRepo.findByMemberNumber(memberNumber);
-            apiResponse.setEntity(transactions);
-            apiResponse.setMessage("List of transactions ");
-            apiResponse.setStatusCode(200);
-        } catch (Exception e) {
-            apiResponse.setMessage("Error fetching transactions");
-            apiResponse.setStatusCode(404);
+            List<SuccessfullyTransactions> transactions = transactionRepo.findByGivingId(givingId);
+            if (transactions.size() > 0) {
+                response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.FOUND.value());
+                response.setEntity(transactions);
+            } else {
+                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+        } else {
+            response.setMessage("Transaction not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
         }
-        return apiResponse;
-    }
 
+        return response;
+    } catch (Exception e) {
+        log.info("Catched Error {} " + e);
+        return null;
+    }
+}
 
 }
