@@ -9,11 +9,15 @@ import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.*;
 import co.ke.emtechhouse.es.MpesaIntergration.Register_URL.RegisterUrlResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.AcknowledgeResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApi;
+import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
+import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +29,8 @@ public class MpesaController {
     private final DarajaApi darajaApi;
     private final AcknowledgeResponse acknowledgeResponse;
     private final ObjectMapper objectMapper;
+    @Autowired
+    private TransactionRepo transactionRepo;
 
     public MpesaController(DarajaApi darajaApi, AcknowledgeResponse acknowledgeResponse, ObjectMapper objectMapper) {
         this.darajaApi = darajaApi;
@@ -82,7 +88,14 @@ public class MpesaController {
 
     @PostMapping(path = "/stk-transaction-request", produces = "application/json")
     public ResponseEntity<StkPushSyncResponse> stkPushTransaction(@RequestBody InternalStkPushRequest internalStkPushRequest){
-        return ResponseEntity.ok(darajaApi.stkPushTransaction(internalStkPushRequest));
+        log.info("Resonse");
+        StkPushSyncResponse response = darajaApi.stkPushTransaction(internalStkPushRequest);
+        System.out.println("Response" + response);
+        String pushedAmount = internalStkPushRequest.getTransactionAmount();
+        String transactionNumber = internalStkPushRequest.getTransactionNumber();
+
+
+        return ResponseEntity.ok(response);
     }
 
     @SneakyThrows

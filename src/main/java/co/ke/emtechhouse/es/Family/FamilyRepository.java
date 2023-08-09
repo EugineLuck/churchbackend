@@ -35,6 +35,7 @@ public interface FamilyRepository extends JpaRepository<Family,Long> {
     List<Members> findByFamilyId(Long familyId);
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT  f.id as familyId,f.family_number as fn,c.community_name as communities,f.family_name as families,o.out_station_name as church,COUNT(DISTINCT m.family_id) as members from community c, out_station o ,family f, members m where c.out_station_id=o.id and f.community_id=c.id group by f.id")
+    @Query(nativeQuery = true, value = "SELECT f.id AS familyId,m.member_role as role, f.family_number AS fn, c.community_name AS communities, f.family_name AS families, o.out_station_name AS church, COUNT(m.id) AS members FROM community c, out_station o, family f LEFT JOIN members m ON f.id = m.family_id WHERE c.out_station_id = o.id AND f.community_id = c.id GROUP BY f.id")
     List<Familydata> getAllFamilies();
+
 }

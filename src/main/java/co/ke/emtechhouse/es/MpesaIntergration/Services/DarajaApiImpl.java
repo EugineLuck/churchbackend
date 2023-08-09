@@ -10,9 +10,12 @@ import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.*;
 import co.ke.emtechhouse.es.MpesaIntergration.OAUTH_Token.AccessTokenResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Register_URL.RegisterUrlRequest;
 import co.ke.emtechhouse.es.MpesaIntergration.Register_URL.RegisterUrlResponse;
+import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
+import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
+import co.ke.emtechhouse.es.MpesaIntergration.FailedRepo;
+import co.ke.emtechhouse.es.MpesaIntergration.FailedTransactions;
 import co.ke.emtechhouse.es.MpesaIntergration.Utils.HelperUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 
 import static co.ke.emtechhouse.es.MpesaIntergration.Utils.Constants.*;
@@ -33,6 +39,12 @@ public class DarajaApiImpl implements DarajaApi {
     private final MpesaConfiguration mpesaConfiguration;
     private final OkHttpClient okHttpClient;
     private final ObjectMapper objectMapper;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    @Autowired
+    private TransactionRepo transactionRepo;
+    @Autowired
+    private FailedRepo failedRepo;
 
     @Autowired
     public DarajaApiImpl(MpesaConfiguration mpesaConfiguration, OkHttpClient okHttpClient, ObjectMapper objectMapper) {
@@ -175,6 +187,7 @@ public class DarajaApiImpl implements DarajaApi {
 
     @Override
     public StkPushSyncResponse stkPushTransaction(InternalStkPushRequest internalStkPushRequest) {
+
         ExternalStkPushRequest externalStkPushRequest = new ExternalStkPushRequest();
         externalStkPushRequest.setBusinessShortCode(mpesaConfiguration.getStkPushShortCode());
 
@@ -208,11 +221,53 @@ public class DarajaApiImpl implements DarajaApi {
             Response response = okHttpClient.newCall(request).execute();
             assert response.body() != null;
             var v = objectMapper.readValue(response.body().string(), StkPushSyncResponse.class);
-            return v;
-//            return objectMapper.readValue(response.body().string(), StkPushSyncResponse.class);
-//            InternalStkPushStatusRequest request1 =new  InternalStkPushStatusRequest();
-//            request1.setCheckoutRequestID(v.getCheckoutRequestID());
-//            StkPushStatusResponse response1 = this.stkPushStatus(request1);
+
+            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            InternalStkPushStatusRequest chid = new InternalStkPushStatusRequest();
+            chid.setCheckoutRequestID(v.getCheckoutRequestID());
+            StkPushStatusResponse res = this.stkPushStatus(chid);
+            if (res.getResultCode() == "1032") {
+
+
+                FailedTransactions failed = new FailedTransactions();
+                failed.setResultDesc(res.getResultDesc());
+                failed.setStatus("Processing");
+                failed.setResultCode(res.getResultCode());
+
+                failed.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
+                failed.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+
+                failed.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                failed.setGivingId(internalStkPushRequest.getGivingId());
+                failed.setTransactionDate(new Date());
+                failedRepo.save(failed);
+
+                if (!failedRepo.save(failed).equals(null)) ;
+
+                return res;
+            } else {
+
+
+                Transaction transaction = new Transaction();
+                transaction.setResultDesc(res.getResultDesc());
+                transaction.setStatus("Processing");
+                transaction.setResultCode(res.getResultCode());
+
+                transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
+                transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+
+                transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                transaction.setGivingId(internalStkPushRequest.getGivingId());
+                transaction.setTransactionDate(new Date());
+                transactionRepo.save(transaction);
+
+                if (!transactionRepo.save(transaction).equals(null)) ;
+                return null;
+            }
 
         } catch (IOException e) {
             log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));
@@ -223,7 +278,8 @@ public class DarajaApiImpl implements DarajaApi {
 
     @Override
     public StkPushStatusResponse stkPushStatus(InternalStkPushStatusRequest internalStkPushStatusRequest) {
-        StkPushStatusResponse stkPushStatusResponse = new StkPushStatusResponse();
+
+//        StkPushStatusResponse stkPushStatusResponse = new StkPushStatusResponse();
         StkPushStatusRequest stkPushStatusRequest = new StkPushStatusRequest();
         String transactionTimestamp = HelperUtility.getTransactionTimestamp();
         String stkPushPassword = HelperUtility.getStkPushPassword(mpesaConfiguration.getStkPushShortCode(),
@@ -247,10 +303,10 @@ public class DarajaApiImpl implements DarajaApi {
 
         try {
             Response response = okHttpClient.newCall(request).execute();
-            assert response.body() !=null;
+            assert response.body() != null;
             return objectMapper.readValue(response.body().string(), StkPushStatusResponse.class);
 
-        }catch (IOException e){
+        } catch (IOException e) {
             log.error(String.format("Could not confirm transaction status->%s", e.getLocalizedMessage()));
             return null;
         }

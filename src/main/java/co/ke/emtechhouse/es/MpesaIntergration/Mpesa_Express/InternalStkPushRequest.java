@@ -15,4 +15,6 @@ public class InternalStkPushRequest {
     private String transactionCode;
     @JsonProperty("transactionDate")
     private String transactionDate;
+    @JsonProperty("givingId")
+    private String givingId;
 }
