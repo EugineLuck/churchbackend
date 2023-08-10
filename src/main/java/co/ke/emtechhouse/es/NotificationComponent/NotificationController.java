@@ -49,6 +49,18 @@ public class NotificationController {
         }
     }
 
+    @PostMapping("/add/notification/all")
+    public ResponseEntity<?> createNotificationAll(@RequestBody Notification notification) {
+        try {
+            ApiResponse apiResponse = notificationService.CreateServiceNotificationAll(notification);
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.info("Error:" + e);
+            return null;
+        }
+    }
+
     @GetMapping("/get/notification/by/memberNumber/{memberNumber}")    public ResponseEntity<?> getNotificationsByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
 
 

@@ -14,6 +14,7 @@ import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 import co.ke.emtechhouse.es.NotificationComponent.TokenNotifications.TokenNotificationKey;
 import co.ke.emtechhouse.es.NotificationComponent.TokenNotifications.TokenNotifications;
+import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -95,6 +96,51 @@ public class NotificationService {
             return null;
         }
     }
+
+    public ApiResponse CreateServiceNotificationAll(Notification notification ) {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            System.out.println("Checking here......");
+            List<Members> members  = membersRepository.findAll();
+            if(members.isEmpty()){
+                return null;
+            }
+            for(Members member1 : members){
+               Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
+                System.out.println("Checking here......" + member1.getMemberNumber());
+                    if (tokenOptional.isPresent()) {
+
+                            Notification notification1 = new Notification();
+                            notification1.setTitle(notification.getTitle());
+                            notification1.setMessage(notification.getMessage());
+                            notification1.setSubtitle(notification.getSubtitle());
+                            notification1.setDateCreated(new Date());
+                            notification1.setNextNotificationDate(new Date());
+                            notification1.setNotificationCategory(NotificationCategory.SERVICE);
+                            notification1.setNotificationType(notification.getNotificationType());
+                            notification1.setNotificationFrequency(notification.getNotificationFrequency());
+                            String token = tokenOptional.get().getDeviceToken();
+                            notification1.setNotificationStatus(notification.getNotificationStatus());
+                            Notification savedNotification = notificationRepo.save(notification1);
+//                            sendPushNotification(savedNotification,tokenOptional.get().getDeviceToken());
+//                        System.out.println("Cheking token if its getting "+ );
+                            saveTokensInNotification(savedNotification, tokenOptional.get());
+                            apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                            apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                            apiResponse.setEntity(savedNotification);
+
+
+                    } else {
+                        log.info("Member's token  does not exist");
+                    }
+                }
+            return apiResponse;
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
+
 
     public ApiResponse CreateServiceNotification(Long groupId, Notification notification ) {
         try {
@@ -263,9 +309,10 @@ public class NotificationService {
             Map<String, Object> notifications = new HashMap<>();
             notifications.put("title", notification.getTitle());
             notifications.put("body", notification.getMessage());
-            notifications.put("android_channel_id", "EMT CHURCH");
+            notifications.put("android_channel_id", "EMT CHURCH");                        System.out.println("Notification Sent: " + notification.getTitle());
 
-            Map<String, Object> requestBody = new HashMap<>();
+
+        Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("priority", "high");
             requestBody.put("data", data);
             requestBody.put("notification", notifications);
@@ -286,7 +333,6 @@ public class NotificationService {
                     if (notification1.isPresent()) {
                         notification.setFirebaseFLag('Y');
                         notificationRepo.save(notification);
-                        System.out.println("Notification Sent: " + notification.getTitle());
                     }
                 } else {
                     log.info("An error occurred while trying to send a notification");

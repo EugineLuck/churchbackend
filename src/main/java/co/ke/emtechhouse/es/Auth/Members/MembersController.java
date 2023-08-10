@@ -1,4 +1,7 @@
 package co.ke.emtechhouse.es.Auth.Members;
+import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
+import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
+import com.google.api.client.auth.oauth2.TokenRequest;
 import org.apache.commons.text.WordUtils;
 
 import co.ke.emtechhouse.es.AppUser.AppUser;
@@ -72,6 +75,8 @@ public class MembersController {
     RoleRepository roleRepository;
  @Autowired
  GroupsRepo groupsRepo;
+ @Autowired
+ TokenRepo tokenRepo;
 
     @Autowired
     PasswordEncoder encoder;
@@ -146,6 +151,7 @@ public class MembersController {
         }
 
         Members members = new Members();
+        Token token = new Token();
         members.setUsername(signUpRequest.getPhoneNo());
         members.setEmail(signUpRequest.getEmail());
         members.setPostedTime(dtf.format(now));
@@ -162,6 +168,8 @@ public class MembersController {
         members.setGender(signUpRequest.getGender());
         members.setFamilyId(familyId);
         members.setOutStationId(signUpRequest.getOutStationId());
+        token.setDeviceToken(signUpRequest.getDeviceToken());
+        token.setMemberNumber(memberNumber);
         members.setMemberNumber(memberNumber);
         members.setDateOfBirth(signUpRequest.getDateOfBirth());
 
@@ -180,6 +188,7 @@ public class MembersController {
 
         // Save the member without adding groups to the GroupMember table yet
         Members savedMembers = membersRepository.save(members);
+        Token saveToken = tokenRepo.save(token);
 
         List<Long> groupsId = signUpRequest.getGroupsId();
         if (groupsId != null && !groupsId.isEmpty()) {

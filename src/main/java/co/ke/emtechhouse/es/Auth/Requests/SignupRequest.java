@@ -25,6 +25,7 @@ public class SignupRequest {
     @NotBlank
     private String nationalID;
     private Long appId;
+    private String deviceToken;
     @NotBlank
     private String idOwnership;
     @NotBlank
