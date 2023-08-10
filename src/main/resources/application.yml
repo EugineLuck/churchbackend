@@ -43,7 +43,7 @@ spring:
     logo: src/main/resources/logo.png
 
     fcm_api: https://fcm.googleapis.com/fcm/send
-    server_key: AAAAmKVL4-c:APA91bEqa4M3x2s7vISTKo9tGOTdvNuSWlofT3y-yZKUydYZ9EQj9Tb7Mw8kkhtlWRU6H80jqpmBjZyDV87Yg0iote0PmJSkd0DI2ae6u0Xom7Q1tinqWVasLkwy5PY8nL0cLk4B4rLk
+    server_key: AAAA0mjUIIw:APA91bG28SaYX6ibPaRDd55Du9PUUcecHM2dpPVkkzPMhNMWYgBRVHnPQmvOK2gwlAjVxErioZ15aJEG04fU97sdkWBuJ1Wsyzw0a9VcuWWmJ6UcP1JMo0KcdcQTMk3FeEZ4ggEj-lpI
 
 
   # EMAIL CONFIGURATIONS
