@@ -1,4 +1,5 @@
 package co.ke.emtechhouse.es.Auth.Members;
+import org.apache.commons.text.WordUtils;
 
 import co.ke.emtechhouse.es.AppUser.AppUser;
 import co.ke.emtechhouse.es.Auth.DTO.Mailparams;
@@ -124,7 +125,12 @@ public class MembersController {
 
         String familyNumber = generateFamily();
         String memberNumber = generateMemberNumber();
+        String firstName = signUpRequest.getFirstName();
+        String lastName = signUpRequest.getLastName();
 
+        // Capitalize the first letter of each word in the first name and last name
+        String capitalizedFirstName = WordUtils.capitalizeFully(signUpRequest.getFirstName());
+        String capitalizedLastName = WordUtils.capitalizeFully(signUpRequest.getLastName());
         // Save Family if familyId is not provided
         Long familyId = signUpRequest.getFamilyId();
         if (familyId == null) {
@@ -143,8 +149,8 @@ public class MembersController {
         members.setUsername(signUpRequest.getPhoneNo());
         members.setEmail(signUpRequest.getEmail());
         members.setPostedTime(dtf.format(now));
-        members.setFirstName(signUpRequest.getFirstName());
-        members.setLastName(signUpRequest.getLastName());
+        members.setFirstName(capitalizedFirstName);
+        members.setLastName(capitalizedLastName);
         members.setModeOfRegistration(signUpRequest.getModeOfRegistration());
         members.setPhoneNumber(signUpRequest.getPhoneNo());
         members.setEmail(signUpRequest.getEmail());

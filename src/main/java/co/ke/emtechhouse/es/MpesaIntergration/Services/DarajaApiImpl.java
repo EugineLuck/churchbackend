@@ -230,25 +230,7 @@ public class DarajaApiImpl implements DarajaApi {
             InternalStkPushStatusRequest chid = new InternalStkPushStatusRequest();
             chid.setCheckoutRequestID(v.getCheckoutRequestID());
             StkPushStatusResponse res = this.stkPushStatus(chid);
-            if (res.getResultCode() == "0") {
-
-                Transaction transaction = new Transaction();
-                transaction.setResultDesc(res.getResultDesc());
-                transaction.setStatus("Processing");
-                transaction.setResultCode(res.getResultCode());
-
-                transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
-                transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
-
-                transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
-                transaction.setGivingId(internalStkPushRequest.getGivingId());
-                transaction.setTransactionDate(new Date());
-                transactionRepo.save(transaction);
-
-                if (!transactionRepo.save(transaction).equals(null)) ;
-
-                return res;
-            } else {
+            if (res.getResultCode() == "1032") {
 
 
                 FailedTransactions failed = new FailedTransactions();
@@ -265,6 +247,24 @@ public class DarajaApiImpl implements DarajaApi {
                 failedRepo.save(failed);
 
                 if (!failedRepo.save(failed).equals(null)) ;
+                return res;
+            } else {
+
+                System.out.println(res.getResultCode());
+                Transaction transaction = new Transaction();
+                transaction.setResultDesc(res.getResultDesc());
+                transaction.setStatus("Processing");
+                transaction.setResultCode(res.getResultCode());
+
+                transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
+                transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+
+                transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                transaction.setGivingId(internalStkPushRequest.getGivingId());
+                transaction.setTransactionDate(new Date());
+                transactionRepo.save(transaction);
+
+                if (!transactionRepo.save(transaction).equals(null)) ;
 
                 return res;
             }
