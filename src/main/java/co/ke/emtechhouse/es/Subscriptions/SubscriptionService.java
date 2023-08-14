@@ -27,7 +27,8 @@ public class SubscriptionService {
         }
     }
 
-    public ApiResponse<?> getAll() {
+    public  ApiResponse<?> getAll() {
+
         try {
             ApiResponse response=new ApiResponse<>();
             List<Subscriptions> subs = subscriptionsRepo.findAll();
@@ -47,16 +48,6 @@ public class SubscriptionService {
 
     }
 
-    public Subscriptions findByMemberNumbers(String memberNumber) {
-        try {
-            Subscriptions savedSub = subscriptionsRepo.searchByMemberNumber(memberNumber);
-            return savedSub;
-        }catch (Exception e) {
-            log.info("Catched Error {} " + e);
-            return null;
-        }
-
-    }
 
 
 
@@ -69,11 +60,6 @@ public class SubscriptionService {
         }
 
     }
-
-
-
-
-
 
 
 

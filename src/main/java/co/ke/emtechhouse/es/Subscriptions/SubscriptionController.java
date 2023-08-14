@@ -2,6 +2,7 @@ package co.ke.emtechhouse.es.Subscriptions;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import co.ke.emtechhouse.es.Subscribers.Subscibers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ public class SubscriptionController {
         }
     }
 
+
     @GetMapping("/get/all")
     public ResponseEntity<?> getAllSubscriptions() {
         try{
@@ -49,12 +51,14 @@ public class SubscriptionController {
         }
     }
 
+
     @GetMapping("/get/by/{memberNumber}")
-    public ApiResponse  getByIdAd(@PathVariable String memberNumber) {
+
+    public ApiResponse getSubscriptionByMemberNumber(@PathVariable String memberNumber) {
         ApiResponse response = new ApiResponse<>();
-        Optional<Subscriptions> subs  = subscriptionsRepo.findBymemberNumber(memberNumber);
-        if (subs.isPresent()) {
-            Subscriptions subscription = subs.get();
+        Optional<Subscriptions> subscr = subscriptionsRepo.findBymemberNumber(memberNumber);
+        if (subscr.isPresent()) {
+            Subscriptions subscription = subscr.get();
             response.setMessage(HttpStatus.FOUND.getReasonPhrase());
             response.setStatusCode(HttpStatus.FOUND.value());
             response.setEntity(subscription);
@@ -65,6 +69,8 @@ public class SubscriptionController {
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
             return response;
         }
+
+
     }
 
 

@@ -14,9 +14,12 @@ import java.util.Optional;
 @Repository
 public interface SubscriptionsRepo extends JpaRepository<Subscriptions, Long> {
 
-    @Transactional
-    @Query(nativeQuery = true,value = "SELECT * FROM subscriptions WHERE member_number =:memberNumber")
-    Subscriptions searchByMemberNumber(@Param(value = "memberNumber") String memberNumber);
+//    @Transactional
+//    @Query(nativeQuery = true,value = "SELECT * FROM subscriptions WHERE member_number =:memberNumber")
+//    Subscriptions searchByMemberNumber(@Param(value = "memberNumber") String memberNumber);
+
+
+    Optional<Subscriptions> findBymemberNumber(String memberNumber);
 
     Optional<Subscriptions> findBymemberNumber(String memberNumber);
 
