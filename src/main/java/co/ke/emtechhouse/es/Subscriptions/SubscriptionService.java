@@ -27,10 +27,19 @@ public class SubscriptionService {
         }
     }
 
-    public List<Subscriptions> getAll() {
+    public ApiResponse<?> getAll() {
         try {
+            ApiResponse response=new ApiResponse<>();
             List<Subscriptions> subs = subscriptionsRepo.findAll();
-            return subs;
+            if (subs.size()>0) {
+                response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.FOUND.value());
+                response.setEntity(subs);
+            } else {
+                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+            return response;
         }catch (Exception e) {
             log.info("Catched Error {} " + e);
             return null;

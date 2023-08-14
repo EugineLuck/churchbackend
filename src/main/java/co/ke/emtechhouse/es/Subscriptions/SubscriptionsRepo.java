@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SubscriptionsRepo extends JpaRepository<Subscriptions, Long> {
@@ -16,5 +17,7 @@ public interface SubscriptionsRepo extends JpaRepository<Subscriptions, Long> {
     @Transactional
     @Query(nativeQuery = true,value = "SELECT * FROM subscriptions WHERE member_number =:memberNumber")
     Subscriptions searchByMemberNumber(@Param(value = "memberNumber") String memberNumber);
+
+    Optional<Subscriptions> findBymemberNumber(String memberNumber);
 
 }
