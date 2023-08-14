@@ -41,7 +41,7 @@ public class SubscriptionController {
 
 
     @GetMapping("/get/all")
-    public ResponseEntity<?> fetchAll() {
+    public ResponseEntity<?> getAllSubscriptions() {
         try{
             ApiResponse response = subscriptionService.getAll();
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -53,6 +53,7 @@ public class SubscriptionController {
 
 
     @GetMapping("/get/by/{memberNumber}")
+
     public ApiResponse getSubscriptionByMemberNumber(@PathVariable String memberNumber) {
         ApiResponse response = new ApiResponse<>();
         Optional<Subscriptions> subscr = subscriptionsRepo.findBymemberNumber(memberNumber);

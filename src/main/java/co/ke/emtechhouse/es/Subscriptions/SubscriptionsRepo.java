@@ -21,4 +21,6 @@ public interface SubscriptionsRepo extends JpaRepository<Subscriptions, Long> {
 
     Optional<Subscriptions> findBymemberNumber(String memberNumber);
 
+
+
 }
