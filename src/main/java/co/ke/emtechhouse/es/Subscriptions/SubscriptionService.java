@@ -28,6 +28,7 @@ public class SubscriptionService {
     }
 
     public  ApiResponse<?> getAll() {
+
         try {
             ApiResponse response=new ApiResponse<>();
             List<Subscriptions> subs = subscriptionsRepo.findAll();
