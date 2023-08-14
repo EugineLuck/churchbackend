@@ -42,6 +42,7 @@ spring:
     filePath: src/main/resources/templates
     logo: src/main/resources/logo.png
 
+  firebase:
     fcm_api: https://fcm.googleapis.com/fcm/send
     server_key: AAAA0mjUIIw:APA91bG28SaYX6ibPaRDd55Du9PUUcecHM2dpPVkkzPMhNMWYgBRVHnPQmvOK2gwlAjVxErioZ15aJEG04fU97sdkWBuJ1Wsyzw0a9VcuWWmJ6UcP1JMo0KcdcQTMk3FeEZ4ggEj-lpI
 
