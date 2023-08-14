@@ -50,9 +50,9 @@ public class NotificationService {
     GroupMemberRepo groupMemberRepo;
     @Autowired
     FamilyRepository familyRepository;
-    @Value("${firebase.fcm_api}")
+    @Value("${spring.firebase.fcm_api}")
     private String FCM_API;
-    @Value("${firebase.server_key}")
+    @Value("${spring.firebase.server_key}")
     private String SERVER_KEY;
 
 
@@ -100,16 +100,14 @@ public class NotificationService {
     public ApiResponse CreateServiceNotificationAll(Notification notification ) {
         try {
             ApiResponse apiResponse = new ApiResponse();
-            System.out.println("Checking here......");
             List<Members> members  = membersRepository.findAll();
             if(members.isEmpty()){
                 return null;
             }
-            for(Members member1 : members){
+            for(Members member1:  members){
                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
-                System.out.println("Checking here......" + member1.getMemberNumber());
                     if (tokenOptional.isPresent()) {
-
+                            Token token1 = tokenOptional.get();
                             Notification notification1 = new Notification();
                             notification1.setTitle(notification.getTitle());
                             notification1.setMessage(notification.getMessage());
@@ -119,11 +117,8 @@ public class NotificationService {
                             notification1.setNotificationCategory(NotificationCategory.SERVICE);
                             notification1.setNotificationType(notification.getNotificationType());
                             notification1.setNotificationFrequency(notification.getNotificationFrequency());
-                            String token = tokenOptional.get().getDeviceToken();
                             notification1.setNotificationStatus(notification.getNotificationStatus());
                             Notification savedNotification = notificationRepo.save(notification1);
-//                            sendPushNotification(savedNotification,tokenOptional.get().getDeviceToken());
-//                        System.out.println("Cheking token if its getting "+ );
                             saveTokensInNotification(savedNotification, tokenOptional.get());
                             apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
                             apiResponse.setStatusCode(HttpStatus.FOUND.value());
@@ -145,23 +140,12 @@ public class NotificationService {
     public ApiResponse CreateServiceNotification(Long groupId, Notification notification ) {
         try {
             ApiResponse apiResponse = new ApiResponse();
-//            Notification notification = request.getNotification();
-//            List<String> memberNumbers = request.getmemberNumbers();
-
-//            Find group by id
-//            List<GroupMember> groupMemberList = groupMemberRepo.getGroupMemberDetailsByGroupFk(groupId);
-            System.out.println("Checking here......");
             Optional<Groups> groups  = groupsRepo.findByDeletedFlagAndId('N', groupId);
             if(groups.isEmpty()){
                 return null;
             }
             List<GroupMember> groupMemberList = groupMemberRepo.getByGroup(groups.get());
             for(GroupMember groupMember : groupMemberList){
-
-//            Loop thro members
-//            find token for each member
-//            send notif for each member,
-
                 Optional<Members> foundMembers = membersRepository.findByMemberNumber(groupMember.getMember().getMemberNumber());
                 if (foundMembers.isPresent()) {
                     Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(foundMembers.get().getMemberNumber());
@@ -178,7 +162,9 @@ public class NotificationService {
                             notification1.setNotificationFrequency(notification.getNotificationFrequency());
                             notification1.setNotificationStatus(notification.getNotificationStatus());
                             Notification savedNotification = notificationRepo.save(notification1);
+
                             saveTokensInNotification(savedNotification, tokenOptional.get());
+
                             apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
                             apiResponse.setStatusCode(HttpStatus.FOUND.value());
                             apiResponse.setEntity(savedNotification);
@@ -309,7 +295,8 @@ public class NotificationService {
             Map<String, Object> notifications = new HashMap<>();
             notifications.put("title", notification.getTitle());
             notifications.put("body", notification.getMessage());
-            notifications.put("android_channel_id", "EMT CHURCH");                        System.out.println("Notification Sent: " + notification.getTitle());
+            notifications.put("android_channel_id", "EMT CHURCH");
+            System.out.println("Notification Sent: " + notification.getTitle());
 
 
         Map<String, Object> requestBody = new HashMap<>();
@@ -317,6 +304,8 @@ public class NotificationService {
             requestBody.put("data", data);
             requestBody.put("notification", notifications);
             requestBody.put("to", token.getDeviceToken());
+
+        System.out.println("Checking Device token "+ token.getDeviceToken());
 
             String jsonBody = new Gson().toJson(requestBody);
 
@@ -335,7 +324,7 @@ public class NotificationService {
                         notificationRepo.save(notification);
                     }
                 } else {
-                    log.info("An error occurred while trying to send a notification");
+                    log.info("An error occurred while trying to send a notification "+ response.body().string());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
