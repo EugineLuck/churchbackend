@@ -612,6 +612,27 @@ public class MembersController {
             return response;
         }
 
+
+    }
+
+    @GetMapping(path = "/memberdetails/findbyNumber/{number}")
+    public ApiResponse getMemberByNumber(@PathVariable String number) {
+        ApiResponse response = new ApiResponse<>();
+        Optional<MemberDetails> members1 = membersRepository.searchByNumber(number);
+        if (members1.isPresent()) {
+            MemberDetails members = members1.get();
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(members);
+            return response;
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.setMessage("MemberNumber not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+
     }   @GetMapping(path = "/find/by/appId/{appId}")
     public ApiResponse getMemberByAppUser(@PathVariable Long appId) {
         ApiResponse response = new ApiResponse<>();
