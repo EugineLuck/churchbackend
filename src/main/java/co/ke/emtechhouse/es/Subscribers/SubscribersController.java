@@ -2,6 +2,7 @@ package co.ke.emtechhouse.es.Subscribers;
 
 
 
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,14 @@ public class SubscribersController {
     private SubscribersService subscribersService;
     @PostMapping("/add")
     public ResponseEntity<Object> addSubscription(@RequestBody Subscibers subS) {
+        ApiResponse response = new ApiResponse();
+
         try {
             Subscibers save = subscribersService.saveSubscriber(subS);
-            return new ResponseEntity<>(save, HttpStatus.OK);
+            response.setMessage("Subscriber added Successful");
+            response.setStatusCode(HttpStatus.CREATED.value());
+            response.setEntity(save);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
