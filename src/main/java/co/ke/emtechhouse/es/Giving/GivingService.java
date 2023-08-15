@@ -2,6 +2,8 @@ package co.ke.emtechhouse.es.Giving;
 
 import co.ke.emtechhouse.es.Auth.utils.CONSTANTS;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ public class GivingService {
     @Autowired
     private GivingRepo givingRepo;
 
+    @Autowired
+    NotificationService notificationService;
+
     public ApiResponse<?> addGiving(Giving giving) {
         try {
             ApiResponse response= new ApiResponse<>();
@@ -24,6 +29,22 @@ public class GivingService {
             Giving savedGiving = givingRepo.save(giving);
             response.setMessage(HttpStatus.CREATED.getReasonPhrase());
             response.setMessage("GIVING " + giving.getGivingTitle() + " CREATED SUCCESSFULLY AT " + giving.getPostedTime());
+
+
+//            notificationService.CreateServiceNotificationAll();
+
+            NotificationDTO notificationDTO = new NotificationDTO();
+            notificationDTO.setMessage("We will have a Harambee Kesho.");
+            notificationDTO.setNotificationtype("All"); // Set the notification type here
+            notificationDTO.setTitle("Harambee"); // Set the notification title here
+            notificationDTO.setSubtitle("Mini Harambee"); // Set the notification subtitle here
+
+            // Call the CreateServiceNotificationAll() function with the populated NotificationDTO
+//            notificationService.CreateServiceNotificationAll(notificationDTO);
+
+
+
+
             response.setStatusCode(HttpStatus.CREATED.value());
             response.setEntity(savedGiving);
             return response;
@@ -79,7 +100,8 @@ public class GivingService {
             return null;
         }
 
-    } public ApiResponse<?> getUpcomingGiving() {
+    }
+    public ApiResponse<?> getUpcomingGiving() {
         try {
             ApiResponse response=new ApiResponse<>();
             List<Giving> givings= givingRepo.upcomingGiving();
