@@ -53,7 +53,6 @@ public class SubscriptionController {
 
 
     @GetMapping("/get/by/{memberNumber}")
-
     public ApiResponse getSubscriptionByMemberNumber(@PathVariable String memberNumber) {
         ApiResponse response = new ApiResponse<>();
         Optional<Subscriptions> subscr = subscriptionsRepo.findBymemberNumber(memberNumber);
@@ -63,14 +62,11 @@ public class SubscriptionController {
             response.setStatusCode(HttpStatus.FOUND.value());
             response.setEntity(subscription);
             return response;
-//            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             response.setMessage("Subscription with MemberNumber not found");
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
             return response;
         }
-
-
     }
 
 
@@ -79,7 +75,6 @@ public class SubscriptionController {
     public ResponseEntity<Object> delete(Long id) {
         try {
             subscriptionService.delete(id);
-
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

@@ -97,6 +97,8 @@ public class NotificationService {
         }
     }
 
+
+
     public ApiResponse CreateServiceNotificationAll(Notification notification ) {
         try {
             ApiResponse apiResponse = new ApiResponse();
@@ -107,7 +109,6 @@ public class NotificationService {
             for(Members member1:  members){
                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
                     if (tokenOptional.isPresent()) {
-                            Token token1 = tokenOptional.get();
                             Notification notification1 = new Notification();
                             notification1.setTitle(notification.getTitle());
                             notification1.setMessage(notification.getMessage());
@@ -119,7 +120,7 @@ public class NotificationService {
                             notification1.setNotificationFrequency(notification.getNotificationFrequency());
                             notification1.setNotificationStatus(notification.getNotificationStatus());
                             Notification savedNotification = notificationRepo.save(notification1);
-                            saveTokensInNotification(savedNotification, tokenOptional.get());
+                            saveTokensInNotification(notification, tokenOptional.get());
                             apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
                             apiResponse.setStatusCode(HttpStatus.FOUND.value());
                             apiResponse.setEntity(savedNotification);
@@ -135,6 +136,48 @@ public class NotificationService {
             return null;
         }
     }
+
+
+
+    public ApiResponse CreateServiceNotificationAllx(NotificationDTO notificationDTO ) {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            List<Members> members  = membersRepository.findAll();
+            if(members.isEmpty()){
+                return null;
+            }
+            for(Members member1:  members){
+                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
+                if (tokenOptional.isPresent()) {
+                    Notification notification1 = new Notification();
+                    notification1.setTitle(notificationDTO.getTitle());
+                    notification1.setMessage(notificationDTO.getMessage());
+                    notification1.setSubtitle(notificationDTO.getSubtitle());
+
+                    Notification savedNotification = notificationRepo.save(notification1);
+
+//                    saveTokensInNotification(savedNotification, tokenOptional.get());
+
+                    sendPushNotification(savedNotification, tokenOptional.get());
+
+                    apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                    apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                    apiResponse.setEntity(savedNotification);
+
+
+                } else {
+                    log.info("Member's token  does not exist");
+                }
+            }
+            return apiResponse;
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
+
+
+
 
 
     public ApiResponse CreateServiceNotification(Long groupId, Notification notification ) {

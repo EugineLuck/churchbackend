@@ -27,8 +27,7 @@ spring:
 
   datasource:
 
-#
-#
+
 #    url:  jdbc:mariadb://localhost/emt_church
 #    username: root
 #    password:
