@@ -17,7 +17,7 @@ public interface MemberDetails {
     Long getChurchId();
 
 
-    Date getPostedTime();
+    String getPostedTime();
     String getMor();
     String getLogged_in();
 

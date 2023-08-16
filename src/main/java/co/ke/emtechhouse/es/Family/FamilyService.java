@@ -1,5 +1,6 @@
 package co.ke.emtechhouse.es.Family;
 
+import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
 import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
@@ -86,6 +87,7 @@ public class FamilyService {
             return null;
         }
     }
+
     public ApiResponse<?> getAllFamily() {
         try {
             ApiResponse response=new ApiResponse<>();
@@ -107,18 +109,6 @@ public class FamilyService {
     }
 
 
-//    public List<Members> getAllMembersByFamilyId(Long familyId){
-//        try{
-//            Family family = familyRepository.findById(familyId)
-//                    .orElseThrow(() -> new RuntimeException("Family not found"));
-//
-//            return membersRepository.findByFamilyId(familyId);
-//
-//        }catch (Exception e){
-//            log.info("Catched Error {} " + e);
-//            return null;
-//        }
-//    }
 public ApiResponse<?> deleteById(Long id) {
     try {
         familyRepository.deleteById(id);
@@ -164,8 +154,7 @@ public ApiResponse<?> deleteById(Long id) {
             if (members.isPresent()) {
                 Members presentMembers= members.get();
                 System.out.println(members);
-//                    presentUser.setGroupMembers((List<GroupMember>) groupMemberService.getAllGroupMembers().getEntity());
-                List<Family> families = familyRepository.findByOutStationId(familyId);
+          List<Family> families = familyRepository.findByOutStationId(familyId);
                 if (families.size() > 0) {
                     response.setMessage(HttpStatus.FOUND.getReasonPhrase());
                     response.setStatusCode(HttpStatus.FOUND.value());
@@ -182,6 +171,28 @@ public ApiResponse<?> deleteById(Long id) {
             return response;
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+    public EntityResponse<MemberDetails> findMemberByFamilyId(Long familyId) {
+
+        try {
+            EntityResponse entityResponse = new EntityResponse<>();
+            Optional<MemberDetails> optionalFamily = familyRepository.searchById(familyId);
+            if(optionalFamily.isPresent()){
+                entityResponse.setMessage("Found");
+                entityResponse.setEntity(optionalFamily.get());
+                entityResponse.setStatusCode(HttpStatus.OK.value());
+            }else {
+                entityResponse.setMessage("Not found");
+                entityResponse.setEntity(null);
+                entityResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+            return entityResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            log.error("Error fetching family by nationalID: " + familyId, e);
             return null;
         }
     }

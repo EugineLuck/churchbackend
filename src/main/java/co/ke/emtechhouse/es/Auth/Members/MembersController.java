@@ -54,7 +54,7 @@ import java.util.*;
 
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+
 @RequestMapping("/api/v1/auth")
 @Slf4j
 public class MembersController {
@@ -633,7 +633,8 @@ public class MembersController {
         }
 
 
-    }   @GetMapping(path = "/find/by/appId/{appId}")
+    }
+    @GetMapping(path = "/find/by/appId/{appId}")
     public ApiResponse getMemberByAppUser(@PathVariable Long appId) {
         ApiResponse response = new ApiResponse<>();
         Optional<Members> members1 = membersRepository.findByAppId(appId);
@@ -646,6 +647,23 @@ public class MembersController {
 //            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             response.setMessage("AppUser not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+    }
+
+    @GetMapping(path = "memberDetails/find/by/groupsId/{groupsId}")
+    public ApiResponse getMemberByGroupsId(@PathVariable Long groupsId) {
+        ApiResponse response = new ApiResponse<>();
+        List<MemberDetails> members1 = membersRepository.searchByGroupsId(groupsId);
+        if (!members1.isEmpty()) {
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(members1);
+            return response;
+        } else {
+            response.setMessage("Member not found");
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
             return response;
         }

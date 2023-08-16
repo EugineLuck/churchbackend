@@ -18,7 +18,7 @@ public interface GroupsRepo extends JpaRepository<Groups,Long> {
     List<Groups> findByOutStationId(Long outStationId);
 //    List<Groups> findAll();
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT g.id as groupsId,g.group_name as groupName,s.id as stationId,s.out_station_name as station,COUNT(DISTINCT mg.member_id) AS members  from out_station s join groups g on g.out_station_id=s.id JOIN member_groups mg on mg.id = g.id group by g.id;")
+    @Query(nativeQuery = true,value = "SELECT g.id as groupsId,g.group_name as groupName,s.id as stationId,s.out_station_name as station,COUNT(mg.group_id) AS members  from out_station s join groups g on g.out_station_id=s.id JOIN member_groups mg on mg.group_id = g.id group by mg.group_id;")
     List<GroupDetails> getAllGroups();
     @Transactional
     @Query(nativeQuery = true,value = "SELECT g.id as groupsId,g.group_name as groupName,s.id as stationId,s.out_station_name as station  from out_station s join groups g on g.out_station_id=s.id group by g.id;")
