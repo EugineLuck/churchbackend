@@ -633,6 +633,7 @@ public class MembersController {
         }
 
 
+
     }
     @GetMapping(path = "/find/by/appId/{appId}")
     public ApiResponse getMemberByAppUser(@PathVariable Long appId) {
