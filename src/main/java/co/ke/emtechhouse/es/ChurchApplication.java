@@ -54,6 +54,7 @@ public class ChurchApplication {
 	@Value("${organisation.superUserLastName}")
 	private String superUserLastName;
 
+
 	@Value("${organisation.superUserUserName}")
 	private String superUserUserName;
 	@Value("${organisation.superUserPhone}")
@@ -123,6 +124,7 @@ public class ChurchApplication {
 				secretaryRole.setVerifiedFlag('Y');
 				secretaryRole.setVerifiedTime(new Date());
 				secretaryRole.setPostedTime(new Date());
+//                System.out.println("Checking");
 
 				Role appUserRole = new Role();
 				appUserRole.setName(ERole.ROLE_APP_USER.toString());

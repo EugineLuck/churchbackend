@@ -3,12 +3,18 @@ package co.ke.emtechhouse.es.Subscribers;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+
+import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -17,16 +23,38 @@ import java.util.List;
 public class SubscribersController {
     @Autowired
     private SubscribersService subscribersService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    String nowDate = now.format(formatter);
+
+
     @PostMapping("/add")
-    public ResponseEntity<Object> addSubscription(@RequestBody Subscibers subS) {
+
+    public ResponseEntity<Object> addSubscriber(@RequestBody Subscibers subS) {
         ApiResponse response = new ApiResponse();
 
         try {
+            subS.setDateSubscribed(nowDate);
             Subscibers save = subscribersService.saveSubscriber(subS);
-            response.setMessage("Subscriber added Successful");
-            response.setStatusCode(HttpStatus.CREATED.value());
+
+            response.setMessage("Subscriber Added");
             response.setEntity(save);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            response.setStatusCode(HttpStatus.CREATED.value());
+
+            NotificationsDTO notificationsDTO = new NotificationsDTO();
+            notificationsDTO.setTitle("New Subscriber");
+            notificationsDTO.setMessage("You have a new subscriber\n");
+            notificationsDTO.setSubtitle("Subscription Notice");
+
+            notificationService.CreateServiceNotificationforSupscription(notificationsDTO, subS.getSubscriptionItemId());
+
+
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

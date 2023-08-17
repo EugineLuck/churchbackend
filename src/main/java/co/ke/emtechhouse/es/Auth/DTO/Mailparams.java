@@ -13,4 +13,5 @@ public class Mailparams {
     private String email;
     private String subject;
     private String message;
+
 }

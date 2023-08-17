@@ -1,15 +1,12 @@
 package co.ke.emtechhouse.es.Subscriptions;
 
 
-import co.ke.emtechhouse.es.Advertisement.Advertisement;
-import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -18,11 +15,12 @@ public class SubscriptionService {
     private SubscriptionsRepo subscriptionsRepo;
 
     public Subscriptions saveSubscription(Subscriptions sub){
+
         try {
             Subscriptions saveSub = subscriptionsRepo.save(sub);
             return saveSub;
         }catch (Exception e) {
-            log.info("Catched Error {} " + e);
+            System.out.println("Catched Error {} " + e);
             return null;
         }
     }
@@ -42,12 +40,23 @@ public class SubscriptionService {
             }
             return response;
         }catch (Exception e) {
-            log.info("Catched Error {} " + e);
+            System.out.println("Catched Error {} " + e);
             return null;
         }
 
     }
 
+
+    public Subscriptions findByMemberNumbers(String memberNumber) {
+        try {
+            Subscriptions savedSub = subscriptionsRepo.searchByMemberNumber(memberNumber);
+            return savedSub;
+        }catch (Exception e) {
+            System.out.println("Catched Error {} " + e);
+            return null;
+        }
+
+    }
 
 
 

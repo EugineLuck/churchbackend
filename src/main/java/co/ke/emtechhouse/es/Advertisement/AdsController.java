@@ -27,10 +27,12 @@ public class AdsController {
         ApiResponse response = new ApiResponse();
         try {
             Advertisement savedAdvert = AdsService.saveAdvert(advert);
-            response.setMessage("Advertisement added Successful");
-            response.setStatusCode(HttpStatus.CREATED.value());
+
+            response.setMessage("Advertisement Added");
             response.setEntity(savedAdvert);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            response.setStatusCode(HttpStatus.CREATED.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

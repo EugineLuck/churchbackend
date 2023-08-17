@@ -1,4 +1,4 @@
-package co.ke.emtechhouse.es.Giving;
+package co.ke.emtechhouse.es.Auth.Requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -6,19 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Lob;
 import java.util.Date;
+import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Entity
-public class Giving {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Long id;
+@Data
+public class GivingRequest {
     private String givingLevel;
     private String startDate;
     private String endDate;
@@ -26,9 +23,11 @@ public class Giving {
 
     @Lob
     private String description;
-    private Long groupId;
+    private List<Long> familyId;
+    private List<Long> churchId;
+    private List<Long> communityId;
+    private List<Long> groupId;
     private Double targetAmount;
-    private Double amount;
     private String status;
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -36,13 +35,5 @@ public class Giving {
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date postedTime;
-
-    public void setSaved(Boolean aTrue) {
-
-    }
-
-//    Group,family,church,community
-
-
 
 }
