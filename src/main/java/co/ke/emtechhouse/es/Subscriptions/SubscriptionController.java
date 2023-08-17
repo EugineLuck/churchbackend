@@ -1,12 +1,15 @@
 package co.ke.emtechhouse.es.Subscriptions;
 
 
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -17,11 +20,21 @@ public class SubscriptionController {
 
     @Autowired
     private SubscriptionService subscriptionService;
+
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    String nowDate = now.format(formatter);
     @PostMapping("/add")
     public ResponseEntity<Object> addSubscription(@RequestBody Subscriptions subS) {
+        ApiResponse response = new ApiResponse();
         try {
+            subS.setDateCreated(nowDate);
             Subscriptions save = subscriptionService.saveSubscription(subS);
-            return new ResponseEntity<>(save, HttpStatus.OK);
+            response.setMessage("Subscription Added");
+            response.setEntity(save);
+            response.setStatusCode(HttpStatus.CREATED.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

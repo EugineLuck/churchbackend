@@ -50,7 +50,7 @@ public class NotificationController {
     }
 
     @PostMapping("/add/notification/all")
-    public ResponseEntity<?> createNotificationAll(@RequestBody Notification notification) {
+    public ResponseEntity<?> createNotificationAll(@RequestBody NotificationsDTO notification) {
         try {
             ApiResponse apiResponse = notificationService.CreateServiceNotificationAll(notification);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -61,9 +61,11 @@ public class NotificationController {
         }
     }
 
-    @GetMapping("/get/notification/by/memberNumber/{memberNumber}")    public ResponseEntity<?> getNotificationsByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
+    
 
 
+    @GetMapping("/get/notification/by/memberNumber/{memberNumber}")
+    public ResponseEntity<?> getNotificationsByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
         try {
             ApiResponse response = notificationService.getNotificationByMemberNumber(memberNumber);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -106,4 +108,8 @@ public class NotificationController {
 //            return null;
 //        }
 //    }
+
+
+
+
 }

@@ -15,6 +15,8 @@ import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 import co.ke.emtechhouse.es.NotificationComponent.TokenNotifications.TokenNotificationKey;
 import co.ke.emtechhouse.es.NotificationComponent.TokenNotifications.TokenNotifications;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
+import co.ke.emtechhouse.es.Subscriptions.Subscriptions;
+import co.ke.emtechhouse.es.Subscriptions.SubscriptionsRepo;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -43,6 +45,9 @@ public class NotificationService {
 
     @Autowired
     GroupsService groupsService;
+
+    @Autowired
+    SubscriptionsRepo subscriptionsRepo;
 
     @Autowired
     GroupsRepo groupsRepo;
@@ -97,49 +102,125 @@ public class NotificationService {
         }
     }
 
-    public ApiResponse CreateServiceNotificationAll(Notification notification ) {
+//    public ApiResponse CreateServiceNotificationAll(Notification notification ) {
+//        try {
+//            ApiResponse apiResponse = new ApiResponse();
+////            System.out.println("Checking here......");
+//            List<Members> members  = membersRepository.findAll();
+//            if(members.isEmpty()){
+//                return null;
+//            }
+//            for(Members member1 : members){
+//                String memberNumber = member1.getMemberNumber();
+//               Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
+//                System.out.println("Checking here......" + memberNumber);
+//                    if (tokenOptional.isPresent()) {
+//
+//                            Notification notification1 = new Notification();
+//                            notification1.setTitle(notification.getTitle());
+//                            notification1.setMessage(notification.getMessage());
+//                            notification1.setSubtitle(notification.getSubtitle());
+//                            notification1.setDateCreated(new Date());
+//                            notification1.setNextNotificationDate(new Date());
+//                            notification1.setNotificationCategory(NotificationCategory.SERVICE);
+//                            notification1.setNotificationType(notification.getNotificationType());
+//                            notification1.setNotificationFrequency(notification.getNotificationFrequency());
+////                            String token = tokenOptional.get().getDeviceToken();
+//                            notification1.setNotificationStatus(notification.getNotificationStatus());
+//                            Notification savedNotification = notificationRepo.save(notification1);
+//
+////                            sendPushNotification(savedNotification, tokenOptional.get());
+//                            System.out.println("Cheking token if its getting "+ tokenOptional.get());
+//
+//                            saveTokensInNotification(savedNotification, tokenOptional.get());
+//                            apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+//                            apiResponse.setStatusCode(HttpStatus.FOUND.value());
+//                            apiResponse.setEntity(savedNotification);
+//
+//
+//                    } else {
+//                        log.info("Member's token  does not exist");
+//                    }
+//                }
+//            return apiResponse;
+//        } catch (Exception e) {
+//            log.info("Error" + e);
+//            return null;
+//        }
+//    }
+
+
+    public ApiResponse CreateServiceNotificationAll(NotificationsDTO notificationsDTO ) {
         try {
             ApiResponse apiResponse = new ApiResponse();
-            System.out.println("Checking here......");
             List<Members> members  = membersRepository.findAll();
             if(members.isEmpty()){
                 return null;
             }
             for(Members member1 : members){
-               Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
-                System.out.println("Checking here......" + member1.getMemberNumber());
-                    if (tokenOptional.isPresent()) {
+                String memberNumber = member1.getMemberNumber();
+                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
+                System.out.println("Checking here......" + memberNumber);
+                if (tokenOptional.isPresent()) {
+                    Notification notification1 = new Notification();
+                    notification1.setTitle(notificationsDTO.getTitle());
+                    notification1.setMessage(notificationsDTO.getMessage());
+                    notification1.setSubtitle(notificationsDTO.getSubtitle());
 
-                            Notification notification1 = new Notification();
-                            notification1.setTitle(notification.getTitle());
-                            notification1.setMessage(notification.getMessage());
-                            notification1.setSubtitle(notification.getSubtitle());
-                            notification1.setDateCreated(new Date());
-                            notification1.setNextNotificationDate(new Date());
-                            notification1.setNotificationCategory(NotificationCategory.SERVICE);
-                            notification1.setNotificationType(notification.getNotificationType());
-                            notification1.setNotificationFrequency(notification.getNotificationFrequency());
-                            String token = tokenOptional.get().getDeviceToken();
-                            notification1.setNotificationStatus(notification.getNotificationStatus());
-                            Notification savedNotification = notificationRepo.save(notification1);
-//                            sendPushNotification(savedNotification,tokenOptional.get().getDeviceToken());
-//                        System.out.println("Cheking token if its getting "+ );
-                            saveTokensInNotification(savedNotification, tokenOptional.get());
-                            apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
-                            apiResponse.setStatusCode(HttpStatus.FOUND.value());
-                            apiResponse.setEntity(savedNotification);
+                    Notification savedNotification = notificationRepo.save(notification1);
+                    System.out.println("Cheking token if its getting "+ tokenOptional.get());
+
+                    saveTokensInNotification(savedNotification, tokenOptional.get());
+                    apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                    apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                    apiResponse.setEntity(savedNotification);
 
 
-                    } else {
-                        log.info("Member's token  does not exist");
-                    }
+                } else {
+                    log.info("Member's token  does not exist");
                 }
+            }
             return apiResponse;
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
         }
     }
+
+    public ApiResponse CreateServiceNotificationforSupscription(NotificationsDTO notificationsDTO, Long itemId ) {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            Optional<Subscriptions> subscriptionHolder  = subscriptionsRepo.findById(itemId);
+            if(subscriptionHolder.isPresent()){
+                String memberNumber = subscriptionHolder.get().getMemberNumber();
+                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(subscriptionHolder.get().getMemberNumber());
+                System.out.println("Checking here......" + memberNumber);
+//
+                if (tokenOptional.isPresent()) {
+
+                    Notification notification1 = new Notification();
+                    notification1.setTitle(notificationsDTO.getTitle());
+                    notification1.setMessage(notificationsDTO.getMessage());
+                    notification1.setSubtitle(notificationsDTO.getSubtitle());
+
+                    Notification savedNotification = notificationRepo.save(notification1);
+                    saveTokensInNotification(savedNotification, tokenOptional.get());
+                    apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                    apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                    apiResponse.setEntity(savedNotification);
+                } else {
+                    log.info("Member's token  does not exist");
+                }
+            }
+            return apiResponse;
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
+
+
+
 
 
     public ApiResponse CreateServiceNotification(Long groupId, Notification notification ) {
@@ -296,7 +377,7 @@ public class NotificationService {
             MediaType mediaType = MediaType.parse("application/json");
             Headers headers = new Headers.Builder()
                     .add("Content-Type", "application/json")
-                    .add("Authorization", "Bearer " + SERVER_KEY)
+                    .add("Authorization", "Bearer " + "AAAA0mjUIIw:APA91bG28SaYX6ibPaRDd55Du9PUUcecHM2dpPVkkzPMhNMWYgBRVHnPQmvOK2gwlAjVxErioZ15aJEG04fU97sdkWBuJ1Wsyzw0a9VcuWWmJ6UcP1JMo0KcdcQTMk3FeEZ4ggEj-lpI")
                     .build();
 
             Map<String, Object> data = new HashMap<>();
@@ -322,7 +403,7 @@ public class NotificationService {
 
             RequestBody body = RequestBody.create(mediaType, jsonBody);
             Request request = new Request.Builder()
-                    .url(FCM_API)
+                    .url("https://fcm.googleapis.com/fcm/send")
                     .headers(headers)
                     .post(body)
                     .build();
@@ -334,6 +415,7 @@ public class NotificationService {
                         notification.setFirebaseFLag('Y');
                         notificationRepo.save(notification);
                     }
+                    System.out.println("Notification was sent succesfully to .........................\n");
                 } else {
                     log.info("An error occurred while trying to send a notification");
                 }

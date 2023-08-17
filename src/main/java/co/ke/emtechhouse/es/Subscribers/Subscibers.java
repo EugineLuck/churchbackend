@@ -24,7 +24,7 @@ public class Subscibers {
     private Long id;
     private String phoneNumber;
     private String memberNumber;
-    private String subscriptionItemId;
+    private Long subscriptionItemId;
     private  String dateSubscribed;
     @Column(name = "isActive")
     private boolean isActive = true;

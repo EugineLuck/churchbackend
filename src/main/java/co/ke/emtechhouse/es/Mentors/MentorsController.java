@@ -39,9 +39,13 @@ public class MentorsController {
 
     @PostMapping("/add")
     public ResponseEntity<Object> addMentor(@RequestBody Mentors mentor) {
+        ApiResponse response = new ApiResponse();
         try {
             Mentors saveMentor = mentorsService.saveMentor(mentor);
-            return new ResponseEntity<>(saveMentor, HttpStatus.OK);
+            response.setMessage("Mentor Added");
+            response.setEntity(saveMentor);
+            response.setStatusCode(HttpStatus.CREATED.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

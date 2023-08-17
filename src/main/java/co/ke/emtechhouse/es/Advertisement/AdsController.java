@@ -26,9 +26,13 @@ public class AdsController {
 
     @PostMapping("/add")
     public ResponseEntity<Object> addAdvert(@RequestBody Advertisement advert) {
+        ApiResponse response = new ApiResponse();
         try {
             Advertisement savedAdvert = AdsService.saveAdvert(advert);
-            return new ResponseEntity<>(savedAdvert, HttpStatus.OK);
+            response.setMessage("Advertisement Added");
+            response.setEntity(savedAdvert);
+            response.setStatusCode(HttpStatus.CREATED.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

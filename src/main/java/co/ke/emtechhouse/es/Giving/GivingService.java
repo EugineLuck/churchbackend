@@ -2,6 +2,8 @@ package co.ke.emtechhouse.es.Giving;
 
 import co.ke.emtechhouse.es.Auth.utils.CONSTANTS;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ public class GivingService {
     @Autowired
     private GivingRepo givingRepo;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public ApiResponse<?> addGiving(Giving giving) {
         try {
             ApiResponse response= new ApiResponse<>();
@@ -26,6 +31,14 @@ public class GivingService {
             response.setMessage("GIVING " + giving.getGivingTitle() + " CREATED SUCCESSFULLY AT " + giving.getPostedTime());
             response.setStatusCode(HttpStatus.CREATED.value());
             response.setEntity(savedGiving);
+
+            NotificationsDTO notif = new NotificationsDTO();
+            notif.setMessage(giving.getDescription()+"\n This is scheduled to start from "+ giving.getStartDate()+" and end on "+ giving.getEndDate());
+            notif.setTitle(giving.getGivingTitle());
+            notif.setSubtitle("Notification");
+            notif.setNotificationType("All");
+            notificationService.CreateServiceNotificationAll(notif);
+
             return response;
         }catch (Exception e) {
             log.info("Catched Error {} " + e);
@@ -120,7 +133,6 @@ public class GivingService {
         ApiResponse response = new ApiResponse();
         try {
             givingRepo.deleteById(id);
-
             response.setMessage("Giving deleted successfully");
             response.setStatusCode(HttpStatus.OK.value());
             response.setEntity("");

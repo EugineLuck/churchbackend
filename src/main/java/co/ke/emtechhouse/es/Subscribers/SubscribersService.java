@@ -1,6 +1,7 @@
 package co.ke.emtechhouse.es.Subscribers;
 
 
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Subscriptions.Subscriptions;
 import co.ke.emtechhouse.es.Subscriptions.SubscriptionsRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -19,23 +20,9 @@ public class SubscribersService {
     private SubscriptionsRepo subscriptionsRepo;
 
 
-    //find the subscription by id
-    //get subscribers list
-    //add new subscriber
-//    public Subscibers addSubscriber(Long subscriptionId, Subscibers sub){
-//        try {
-//            Optional<Subscriptions> subscriptionsOptional = subscriptionsRepo.findById(subscriptionId);
-//            Subscriptions subscriptions = subscriptionsOptional.get();
-////            subscriptions.get
-////            Optional<Subscri>
-//            Subscibers saveSub = subscribersRepository.save(sub);
-//            return saveSub;
-//        }catch (Exception e) {
-//            log.info("Catched Error {} " + e);
-//            return null;
-//        }
-//    }
+
     public Subscibers saveSubscriber(Subscibers sub){
+        ApiResponse response = new ApiResponse();
         try {
             Subscibers saveSub = subscribersRepository.save(sub);
             return saveSub;
