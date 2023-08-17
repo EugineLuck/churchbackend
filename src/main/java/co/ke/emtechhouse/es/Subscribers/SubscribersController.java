@@ -3,8 +3,10 @@ package co.ke.emtechhouse.es.Subscribers;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,11 +33,14 @@ public class SubscribersController {
 
 
     @PostMapping("/add")
+
     public ResponseEntity<Object> addSubscriber(@RequestBody Subscibers subS) {
         ApiResponse response = new ApiResponse();
+
         try {
             subS.setDateSubscribed(nowDate);
             Subscibers save = subscribersService.saveSubscriber(subS);
+
             response.setMessage("Subscriber Added");
             response.setEntity(save);
             response.setStatusCode(HttpStatus.CREATED.value());

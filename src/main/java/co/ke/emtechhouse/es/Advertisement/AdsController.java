@@ -1,9 +1,7 @@
 package co.ke.emtechhouse.es.Advertisement;
 
 
-import co.ke.emtechhouse.es.Auth.Members.MemberUpdateDTO;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
-import co.ke.emtechhouse.es.Deanery.Deanery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,10 +27,12 @@ public class AdsController {
         ApiResponse response = new ApiResponse();
         try {
             Advertisement savedAdvert = AdsService.saveAdvert(advert);
+
             response.setMessage("Advertisement Added");
             response.setEntity(savedAdvert);
             response.setStatusCode(HttpStatus.CREATED.value());
             return new ResponseEntity<>(response, HttpStatus.OK);
+
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
@@ -83,7 +83,6 @@ public ResponseEntity<?> updateAdvert(@PathVariable Long Id,
     public ResponseEntity<Object> delete(Long id) {
         try {
             AdsService.delete(id);
-
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

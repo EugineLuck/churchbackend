@@ -42,10 +42,11 @@ public class MentorsController {
         ApiResponse response = new ApiResponse();
         try {
             Mentors saveMentor = mentorsService.saveMentor(mentor);
-            response.setMessage("Mentor Added");
-            response.setEntity(saveMentor);
+
+            response.setMessage("Mentor added Successful");
             response.setStatusCode(HttpStatus.CREATED.value());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response.setEntity(saveMentor);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

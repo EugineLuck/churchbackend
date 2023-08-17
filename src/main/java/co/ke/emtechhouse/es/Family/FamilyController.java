@@ -1,5 +1,6 @@
 package co.ke.emtechhouse.es.Family;
 
+import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
 import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Family.FamilyMember.FamilyMember;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600000)
 @RequestMapping("/api/v1/Family")
 public class FamilyController {
     @Autowired
@@ -40,6 +42,18 @@ public class FamilyController {
             return null;
         }
     }
+
+
+    @GetMapping("/get/memberBy/familyId/{familyId}")
+    public ResponseEntity<EntityResponse<MemberDetails>> fetchMemberByFamilyId(@PathVariable("familyId") Long familyId) {
+        try {
+            return ResponseEntity.ok(familyService.findMemberByFamilyId(familyId));
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Object> addFamily(@RequestBody Family family) {
         try {
