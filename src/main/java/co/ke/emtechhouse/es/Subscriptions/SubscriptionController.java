@@ -23,6 +23,10 @@ public class SubscriptionController {
 
     @Autowired
     private SubscriptionService subscriptionService;
+    @Autowired
+    private SubscriptionsRepo subscriptionsRepo;
+
+
 
 
     LocalDateTime now = LocalDateTime.now();

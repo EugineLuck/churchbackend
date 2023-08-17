@@ -3,6 +3,7 @@ package co.ke.emtechhouse.es.Giving;
 import co.ke.emtechhouse.es.Auth.utils.CONSTANTS;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
 
