@@ -85,7 +85,7 @@ public class GivingController {
 //        Check Groups
         List<Long> groupsId = givingRequest.getGroupId();
         if (groupsId != null && !groupsId.isEmpty()) {
-            List<GivingLevel> groupsIds = new ArrayList<>();
+            List<Groups> groupData = new ArrayList<>();
             for (Long groupId : groupsId) {
                 Groups group = groupsRepo.findById(groupId)
                         .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
@@ -94,7 +94,7 @@ public class GivingController {
                 glevel.setGroups(group);
                 glevel.setGiving(saveGiving);
                 glevel = givingLevelRepo.save(glevel);
-                groupsIds.add(glevel);
+                groupData.add(glevel.getGroups());
             }
 
 //            Send Notification
@@ -108,11 +108,12 @@ public class GivingController {
 
 //            Loop through the groups
 
-//            for(GivingLevel groups : groupsIds){
-//                System.out.println(groups);
-////                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groups.getGroups());
-//
-//            }
+            for (Groups groupDetails : groupData){
+                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groupDetails);
+            }
+
+
+
 
 
 

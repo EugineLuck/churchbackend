@@ -246,8 +246,7 @@ public class AppUserController {
                 AppUser user1 = user.get();
                 user1.setPassword(newPass);
                 appUserRepo.save(user1);
-                String message = "Dear " + user1.getUserName() + " your password has been updated successfully! These are your new Credentials. Username <b> " + user1.getUserName()
-                        + " </b> and password <b>" + forgotpassword.getNewPassword() + " </b> Login in.";
+                String message = "Dear " + user1.getUserName() + " your password has been updated successfully!";
                 response.setMessage(message);
                 response.setStatusCode(HttpStatus.OK.value());
                 response.setEntity("");
