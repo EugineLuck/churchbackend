@@ -108,11 +108,14 @@ public class GivingController {
 
 //            Loop through the groups
 
-//            for(GivingLevel groups : groupsIds){
-//                System.out.println(groups);
-////                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groups.getGroups());
+            for(GivingLevel groups : groupsIds){
+//                for(Groups g: groups.getGroups()){
 //
-//            }
+//                }
+                System.out.println(groups);
+//                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groups.getGroups());
+
+            }
 
 
 
