@@ -12,4 +12,5 @@ public interface SubscribersRepository extends JpaRepository<Subscibers, Long> {
     Subscibers searchByMemberNumber(@Param(value = "memberNumber") String memberNumber);
 
     Subscibers findBymemberNumber(String memberNumber);
+
 }

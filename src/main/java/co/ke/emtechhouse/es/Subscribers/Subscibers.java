@@ -36,4 +36,6 @@ public class Subscibers {
             inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id"))
     private List<Subscriptions> subscriptions;
 
+
+
 }

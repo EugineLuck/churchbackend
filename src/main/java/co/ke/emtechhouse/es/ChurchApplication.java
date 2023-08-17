@@ -76,6 +76,12 @@ public class ChurchApplication {
 	public OkHttpClient getOkHttpClient() {
 		return new OkHttpClient();
 	}
+
+	@Value("${spring.firebase.fcm_api}")
+	private String FCM_API;
+	@Value("${spring.firebase.server_key}")
+	private String SERVER_KEY;
+
 	@Bean
 	public AcknowledgeResponse getAcknowledgeResponse(){
 		AcknowledgeResponse acknowledgeResponse = new AcknowledgeResponse();
