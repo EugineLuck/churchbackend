@@ -17,6 +17,7 @@ import co.ke.emtechhouse.es.GivingLevels.GivingLevelRepo;
 import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
@@ -84,7 +85,7 @@ public class GivingController {
 //        Check Groups
         List<Long> groupsId = givingRequest.getGroupId();
         if (groupsId != null && !groupsId.isEmpty()) {
-            List<GivingLevel> groupMembers = new ArrayList<>();
+            List<GivingLevel> groupsIds = new ArrayList<>();
             for (Long groupId : groupsId) {
                 Groups group = groupsRepo.findById(groupId)
                         .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
@@ -93,16 +94,27 @@ public class GivingController {
                 glevel.setGroups(group);
                 glevel.setGiving(saveGiving);
                 glevel = givingLevelRepo.save(glevel);
-                groupMembers.add(glevel);
+                groupsIds.add(glevel);
             }
 
 //            Send Notification
-            NotificationsDTO notif = new NotificationsDTO();
+            NotificationDTO notif = new NotificationDTO();
             notif.setMessage(givingRequest.getDescription()+"\n This is scheduled to start from "+ givingRequest.getStartDate()+" and end on "+ givingRequest.getEndDate());
             notif.setTitle(givingRequest.getGivingTitle());
             notif.setSubtitle("Notification");
-            notif.setNotificationType("All");
-            notificationService.CreateServiceNotificationAll(notif);
+            notif.setNotificationtype("All");
+
+
+
+//            Loop through the groups
+
+//            for(GivingLevel groups : groupsIds){
+//                System.out.println(groups);
+////                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groups.getGroups());
+//
+//            }
+
+
 
 
 
