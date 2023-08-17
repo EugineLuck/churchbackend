@@ -2,8 +2,10 @@ package co.ke.emtechhouse.es.Subscriptions;
 
 
 
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class SubscriptionService {
         }
     }
 
-    public  ApiResponse<?> getAll() {
+    public ApiResponse<?> getAll() {
 
         try {
             ApiResponse response=new ApiResponse<>();
