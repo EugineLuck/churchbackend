@@ -49,7 +49,7 @@ public class ReportsController {
     @GetMapping("/members")
     public ResponseEntity<ByteArrayResource> membersReports() throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path+"/allMembers.jrxml"));
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream("files_path"+"/allMembers.jrxml"));
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("logo", logo);
         JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);

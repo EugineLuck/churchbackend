@@ -671,6 +671,40 @@ public class MembersController {
 
     }
 
+    @GetMapping(path = "memberDetails/find/by/communityId/{communityId}")
+    public ApiResponse getMemberByCommunityId(@PathVariable Long communityId) {
+        ApiResponse response = new ApiResponse<>();
+        List<MemberDetails> members1 = membersRepository.searchByCommunityId(communityId);
+        if (!members1.isEmpty()) {
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(members1);
+            return response;
+        } else {
+            response.setMessage("Member not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+    }
+
+    @GetMapping(path = "memberDetails/find/by/outstationId/{outstationId}")
+    public ApiResponse getMemberByOutstationId(@PathVariable Long outstationId) {
+        ApiResponse response = new ApiResponse<>();
+        List<MemberDetails> members1 = membersRepository.searchByOutstationId(outstationId);
+        if (!members1.isEmpty()) {
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(members1);
+            return response;
+        } else {
+            response.setMessage("Member not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+    }
+
     @GetMapping(path = "/members")
     public List<Members> allMembers() {
         return membersRepository.allRoleMember();
