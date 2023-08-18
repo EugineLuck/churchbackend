@@ -81,6 +81,14 @@ public class GivingController {
 
         Giving saveGiving = givingRepo.save(giv);
 
+        //Send Notification
+        NotificationDTO notif = new NotificationDTO();
+        notif.setMessage(givingRequest.getDescription()+"\n This is scheduled to start from "+ givingRequest.getStartDate()+" and end on "+ givingRequest.getEndDate());
+        notif.setTitle(givingRequest.getGivingTitle());
+        notif.setSubtitle("Notification");
+        notif.setNotificationtype("All");
+
+
 
 //        Check Groups
         List<Long> groupsId = givingRequest.getGroupId();
@@ -96,28 +104,10 @@ public class GivingController {
                 glevel = givingLevelRepo.save(glevel);
                 groupData.add(glevel.getGroups());
             }
-
-//            Send Notification
-            NotificationDTO notif = new NotificationDTO();
-            notif.setMessage(givingRequest.getDescription()+"\n This is scheduled to start from "+ givingRequest.getStartDate()+" and end on "+ givingRequest.getEndDate());
-            notif.setTitle(givingRequest.getGivingTitle());
-            notif.setSubtitle("Notification");
-            notif.setNotificationtype("All");
-
-
-
-//            Loop through the groups
-
+            //Loop through the groups
             for (Groups groupDetails : groupData){
                 notificationService.CreateServiceNotificationAllSelectedGroups(notif, groupDetails);
             }
-
-
-
-
-
-
-
 
         }
 
