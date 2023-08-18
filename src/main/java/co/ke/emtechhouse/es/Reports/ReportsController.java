@@ -173,6 +173,38 @@ public class ReportsController {
         return ResponseEntity.ok().headers(headers).body(byteArrayResource);
     }
 
+    @GetMapping("/churchfamily/{churchId}")
+    public ResponseEntity<ByteArrayResource> churchfamily(@PathVariable Long churchId) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outSationFamilies.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("churchId", churchId);
+        parameter.put("logo", logo);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=outstation_"+churchId+"_statement.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
+    @GetMapping("/communityfamily/{communityId}")
+    public ResponseEntity<ByteArrayResource> communityfamily(@PathVariable Long communityId) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/communityFamilies.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("churchId", communityId);
+        parameter.put("logo", logo);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=community_"+communityId+"_statement.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
 
 
 

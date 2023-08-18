@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3a081027-db98-4dbc-afe1-9c3521a70e2c">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="OnlineDB"/>
+    <parameter name="communityId" class="java.lang.Long"/>
+    <queryString language="SQL">
+        <![CDATA[SELECT
+    f.id AS familyId,
+    f.family_number AS familyNumber,
+    o.id AS churchId,
+    f.family_name AS family,
+    o.out_station_name AS church,
+    c.community_name AS community,
+    DATE_FORMAT(m.posted_time, '%Y-%m-%d') AS formattedPostedTime
+FROM
+    family f
+JOIN
+    members m ON f.id = m.family_id
+JOIN
+    out_station o ON o.id = m.out_station_id
+JOIN
+    members_roles mr ON mr.member_id = m.id
+JOIN
+    community c ON c.id = m.community_id
+WHERE
+    mr.role_id = 1
+    AND c.id = $P{communityId}
+GROUP BY
+    f.id]]>
+    </queryString>
+    <field name="familyId" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.name" value="id"/>
+        <property name="com.jaspersoft.studio.field.label" value="familyId"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="family"/>
+    </field>
+    <field name="familyNumber" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="family_number"/>
+        <property name="com.jaspersoft.studio.field.label" value="familyNumber"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="family"/>
+    </field>
+    <field name="churchId" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.name" value="id"/>
+        <property name="com.jaspersoft.studio.field.label" value="churchId"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="out_station"/>
+    </field>
+    <field name="family" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="family_name"/>
+        <property name="com.jaspersoft.studio.field.label" value="family"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="family"/>
+    </field>
+    <field name="church" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="out_station_name"/>
+        <property name="com.jaspersoft.studio.field.label" value="church"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="out_station"/>
+    </field>
+    <field name="community" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="community_name"/>
+        <property name="com.jaspersoft.studio.field.label" value="community"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="community"/>
+    </field>
+    <field name="formattedPostedTime" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="formattedPostedTime"/>
+        <property name="com.jaspersoft.studio.field.label" value="formattedPostedTime"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="178" splitType="Stretch">
+            <frame>
+                <reportElement x="252" y="2" width="48" height="43" uuid="23f5c092-4f47-467b-9b50-fc08437cd287"/>
+                <image>
+                    <reportElement x="0" y="0" width="48" height="43" uuid="c3feec1d-2146-4105-b3c6-a117221577f6"/>
+                    <imageExpression><![CDATA["logo.png"]]></imageExpression>
+                </image>
+            </frame>
+            <rectangle>
+                <reportElement x="330" y="21" width="230" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="1850a019-4eec-427c-9151-97c85a40f307"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="22" width="211" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="062f07e3-1201-4492-8842-b9103ef730b7"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="211" y="47" width="133" height="17" forecolor="#0066FF" backcolor="#75C6F8" uuid="054744c7-b903-4dab-aa73-95e2868c74b0"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[E&M Technology House]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="227" y="64" width="100" height="13" forecolor="#0066FF" backcolor="#75C6F8" uuid="55b39b7f-af62-42c2-8ab7-fea23cb2276d"/>
+                <textElement>
+                    <font isBold="false"/>
+                </textElement>
+                <text><![CDATA[Tel: 254711223344]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="227" y="78" width="100" height="13" forecolor="#0066FF" backcolor="#75C6F8" uuid="c94452e0-5b67-4db1-8416-38f2f61beac1"/>
+                <textElement>
+                    <font isBold="false"/>
+                </textElement>
+                <text><![CDATA[Email: info@emtech.co.ke]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="211" y="90" width="134" height="13" forecolor="#0066FF" backcolor="#75C6F8" uuid="8c391852-d74d-4ca8-b1e5-c23d970fc596"/>
+                <textElement>
+                    <font isBold="false"/>
+                </textElement>
+                <text><![CDATA[Website: www.emtech.co.ke]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="123" y="104" width="207" height="27" forecolor="#0066FF" backcolor="#75C6F8" uuid="f438a204-7764-41f4-a309-134604eb17dd"/>
+                <textElement>
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Outstation Families Report]]></text>
+            </staticText>
+            <rectangle>
+                <reportElement x="158" y="130" width="249" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="f2ec7270-335f-4ca2-bb14-5e57c30e8a55"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="157" y="162" width="249" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="9fea691e-b3ee-4804-b859-6f9a4b0c7e1c"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="160" y="141" width="73" height="20" forecolor="#0066FF" uuid="890100f7-8011-47dc-a614-77dd35549ee1"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date Created: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="330" y="140" width="40" height="20" forecolor="#0066FF" uuid="1135de1b-7b2d-4bb4-ac68-f0a4071629f0"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Time: ]]></text>
+            </staticText>
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement x="238" y="141" width="89" height="15" forecolor="#0066FF" uuid="70935bae-6981-4816-887e-99201c76d3ae"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <textField pattern="HH:mm">
+                <reportElement x="375" y="140" width="100" height="16" forecolor="#0066FF" uuid="5593bcb6-e94b-406a-8d0a-e9a3c268c568"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="335" y="102" width="155" height="29" forecolor="#030303" backcolor="#FFFFFF" uuid="07e1378f-df6f-4112-a6bd-2a59bbd9f2dc"/>
+                <textElement>
+                    <font size="16"/>
+                </textElement>
+                <textFieldExpression><![CDATA["("+$F{community}+")"]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <pageHeader>
+        <band splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="22" splitType="Stretch">
+            <property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+            <staticText>
+                <reportElement x="0" y="0" width="141" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="8bbf49e9-f8f9-4ba3-9590-eed0ce342cfd"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[#]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="141" y="0" width="138" height="22" forecolor="#0066FF" backcolor="#030303" uuid="9bd857c6-833f-4ace-a293-cec335e56cfe"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Family Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="279" y="0" width="138" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="2eb3ea70-346b-4149-93f7-65e8a765eb69"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Family Number]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="417" y="0" width="138" height="22" forecolor="#0066FF" backcolor="#0066FF" uuid="b780e4b4-70a0-4266-886d-806e6de18985"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="16" splitType="Stretch">
+            <property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+            <textField>
+                <reportElement x="0" y="0" width="141" height="16" backcolor="#5C96ED" uuid="2ac697d6-be0f-4224-bd97-2fdc9686553a">
+                    <property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+                    <property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+                </reportElement>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="141" y="0" width="138" height="16" backcolor="#5C96ED" uuid="880681f6-deea-48ca-8520-2bab56e21cc9"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{family}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="0" width="138" height="16" backcolor="#5C96ED" uuid="b2c20748-ca39-46d3-8c9e-93f02132b4dc"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{familyNumber}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="417" y="0" width="138" height="16" backcolor="#5C96ED" uuid="b115a3e1-60a3-463d-b1c0-d33adf19bd53"/>
+                <box>
+                    <pen lineColor="#5C96ED"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{formattedPostedTime}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <columnFooter>
+        <band splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="102" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="58" width="555" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="88b15b47-9dff-4652-a3d2-2b9dd527a968"/>
+            </rectangle>
+            <textField>
+                <reportElement x="430" y="64" width="125" height="20" uuid="295f749c-44e0-4620-8f5b-a8cb7ca10017"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}+" of  " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="6" y="69" width="100" height="15" uuid="13e1304d-259a-4bd1-8df1-e18f95565771"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Emtech Church]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="75" splitType="Stretch"/>
+    </summary>
+</jasperReport>
