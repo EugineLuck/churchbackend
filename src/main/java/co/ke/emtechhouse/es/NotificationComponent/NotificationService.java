@@ -3,6 +3,8 @@ package co.ke.emtechhouse.es.NotificationComponent;
 import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import co.ke.emtechhouse.es.Family.Family;
+import co.ke.emtechhouse.es.Family.FamilyMember.FamilyMember;
 import co.ke.emtechhouse.es.Family.FamilyRepository;
 import co.ke.emtechhouse.es.GoalComponent.GoalRepo;
 import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
@@ -179,7 +181,7 @@ public class NotificationService {
 
 
 
-
+//Groups
     public ApiResponse CreateServiceNotificationAllSelectedGroups(NotificationDTO notificationDTO, Groups group) {
         try {
             ApiResponse apiResponse = new ApiResponse();
@@ -201,47 +203,12 @@ public class NotificationService {
                             apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
                             apiResponse.setStatusCode(HttpStatus.FOUND.value());
                             apiResponse.setEntity(savedNotification);
-
-
                         } else {
                             log.info("Member's token  does not exist");
                         }
 
                 }
-//                apiResponse.setEntity(allMembers);
-
-
-
             }
-
-//            List<Members> members  = membersRepository.findAll();
-//            if(members.isEmpty()){
-//                return null;
-//            }
-//            for(Members member1:  members){
-//                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(member1.getMemberNumber());
-//                if (tokenOptional.isPresent()) {
-//                    Notification notification1 = new Notification();
-//                    notification1.setTitle(notificationDTO.getTitle());
-//                    notification1.setMessage(notificationDTO.getMessage());
-//                    notification1.setSubtitle(notificationDTO.getSubtitle());
-//
-//                    Notification savedNotification = notificationRepo.save(notification1);
-//
-////                    saveTokensInNotification(savedNotification, tokenOptional.get());
-//
-//                    sendPushNotification(savedNotification, tokenOptional.get());
-//
-//                    apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
-//                    apiResponse.setStatusCode(HttpStatus.FOUND.value());
-//                    apiResponse.setEntity(savedNotification);
-//
-//
-//                } else {
-//                    log.info("Member's token  does not exist");
-//                }
-//            }
-
             return apiResponse;
         } catch (Exception e) {
             log.info("Error" + e);
@@ -249,7 +216,38 @@ public class NotificationService {
         }
     }
 
+    //Families
+    public ApiResponse CreateServiceNotificationAllSelectedFamilies(NotificationDTO notificationDTO, Family family) {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            if(!(family == null)){
+                List<Members> familyMember = family.getMembers();
+                for (Members familyMemberDetails : familyMember) {
+                    System.out.println("Member Number......."+ familyMemberDetails.getMemberNumber());
+                    Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(familyMemberDetails.getMemberNumber());
+                    if (tokenOptional.isPresent()) {
+                        Notification notification1 = new Notification();
+                        notification1.setTitle(notificationDTO.getTitle());
+                        notification1.setMessage(notificationDTO.getMessage());
+                        notification1.setSubtitle(notificationDTO.getSubtitle());
+                        Notification savedNotification = notificationRepo.save(notification1);
+                        System.out.println("Checking token"+ tokenOptional.get().getDeviceToken());
+                        saveTokensInNotification(savedNotification, tokenOptional.get());
+                        apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                        apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                        apiResponse.setEntity(savedNotification);
+                    } else {
+                        log.info("Member's token  does not exist");
+                    }
 
+                }
+            }
+            return apiResponse;
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
 
 
 

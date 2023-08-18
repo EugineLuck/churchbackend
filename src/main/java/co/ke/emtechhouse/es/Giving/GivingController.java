@@ -91,30 +91,30 @@ public class GivingController {
 
 
 //        Check Groups
-        List<Long> groupsId = givingRequest.getGroupId();
-        if (groupsId != null && !groupsId.isEmpty()) {
-            List<Groups> groupData = new ArrayList<>();
-            for (Long groupId : groupsId) {
-                Groups group = groupsRepo.findById(groupId)
-                        .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
-
-                GivingLevel glevel = new GivingLevel();
-                glevel.setGroups(group);
-                glevel.setGiving(saveGiving);
-                glevel = givingLevelRepo.save(glevel);
-                groupData.add(glevel.getGroups());
-            }
-            //Loop through the groups
-            for (Groups groupDetails : groupData){
-                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groupDetails);
-            }
-
-        }
+//        List<Long> groupsId = givingRequest.getGroupId();
+//        if (groupsId != null && !groupsId.isEmpty()) {
+//            List<Groups> groupData = new ArrayList<>();
+//            for (Long groupId : groupsId) {
+//                Groups group = groupsRepo.findById(groupId)
+//                        .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
+//
+//                GivingLevel glevel = new GivingLevel();
+//                glevel.setGroups(group);
+//                glevel.setGiving(saveGiving);
+//                glevel = givingLevelRepo.save(glevel);
+//                groupData.add(glevel.getGroups());
+//            }
+//            //Loop through the groups
+//            for (Groups groupDetails : groupData){
+//                notificationService.CreateServiceNotificationAllSelectedGroups(notif, groupDetails);
+//            }
+//
+//        }
 
 //        Check Families
         List<Long> familyId = givingRequest.getFamilyId();
         if (familyId != null && !familyId.isEmpty()) {
-            List<GivingLevel> familyMembers = new ArrayList<>();
+            List<Family> familyMembers = new ArrayList<>();
             for (Long familyIdx : familyId) {
                 Family family = familyRepository.findById(familyIdx)
                         .orElseThrow(() -> new RuntimeException("Error"));
@@ -123,44 +123,49 @@ public class GivingController {
                 glevel.setFamily(family);
                 glevel.setGiving(saveGiving);
                 glevel = givingLevelRepo.save(glevel);
-                familyMembers.add(glevel);
+                familyMembers.add(glevel.getFamily());
             }
+            for (Family familyDetails : familyMembers){
+                notificationService.CreateServiceNotificationAllSelectedFamilies(notif, familyDetails);
+            }
+
+
 
         }
 
         //        Check Churches
-        List<Long> chucrhId = givingRequest.getChurchId();
-        if (familyId != null && !familyId.isEmpty()) {
-            List<GivingLevel> churchMembers = new ArrayList<>();
-            for (Long churchIdx : chucrhId) {
-                OutStation outStation = outStationRepository.findById(churchIdx)
-                        .orElseThrow(() -> new RuntimeException("Error"));
-
-                GivingLevel glevel = new GivingLevel();
-                glevel.setOutStation(outStation);
-                glevel.setGiving(saveGiving);
-                glevel = givingLevelRepo.save(glevel);
-                churchMembers.add(glevel);
-            }
-
-        }
+//        List<Long> chucrhId = givingRequest.getChurchId();
+//        if (familyId != null && !familyId.isEmpty()) {
+//            List<GivingLevel> churchMembers = new ArrayList<>();
+//            for (Long churchIdx : chucrhId) {
+//                OutStation outStation = outStationRepository.findById(churchIdx)
+//                        .orElseThrow(() -> new RuntimeException("Error"));
+//
+//                GivingLevel glevel = new GivingLevel();
+//                glevel.setOutStation(outStation);
+//                glevel.setGiving(saveGiving);
+//                glevel = givingLevelRepo.save(glevel);
+//                churchMembers.add(glevel);
+//            }
+//
+//        }
 
         //        Check Communities
-        List<Long> communityId = givingRequest.getCommunityId();
-        if (familyId != null && !familyId.isEmpty()) {
-            List<GivingLevel> communityIds = new ArrayList<>();
-            for (Long community : communityId) {
-                Community comm = communityRepository.findById(community)
-                        .orElseThrow(() -> new RuntimeException("Error"));
-
-                GivingLevel glevel = new GivingLevel();
-                glevel.setCommunity(comm);
-                glevel.setGiving(saveGiving);
-                glevel = givingLevelRepo.save(glevel);
-                communityIds.add(glevel);
-            }
-
-        }
+//        List<Long> communityId = givingRequest.getCommunityId();
+//        if (familyId != null && !familyId.isEmpty()) {
+//            List<GivingLevel> communityIds = new ArrayList<>();
+//            for (Long community : communityId) {
+//                Community comm = communityRepository.findById(community)
+//                        .orElseThrow(() -> new RuntimeException("Error"));
+//
+//                GivingLevel glevel = new GivingLevel();
+//                glevel.setCommunity(comm);
+//                glevel.setGiving(saveGiving);
+//                glevel = givingLevelRepo.save(glevel);
+//                communityIds.add(glevel);
+//            }
+//
+//        }
 
 
 
