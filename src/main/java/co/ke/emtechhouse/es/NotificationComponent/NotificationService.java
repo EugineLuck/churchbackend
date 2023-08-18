@@ -46,6 +46,7 @@ public class NotificationService {
     @Autowired
     GroupsService groupsService;
 
+
     @Autowired
     SubscriptionsRepo subscriptionsRepo;
 
@@ -179,13 +180,19 @@ public class NotificationService {
 
 
 
-    public ApiResponse CreateServiceNotificationAllSelectedGroups(NotificationDTO notificationDTO, Groups groups) {
+    public ApiResponse CreateServiceNotificationAllSelectedGroups(NotificationDTO notificationDTO, Groups group) {
         try {
             ApiResponse apiResponse = new ApiResponse();
 
-//            if(!(groups == null)){
-//                for(Long gId : groups)
-//            }
+            if(!(group == null)){
+//                Groups savedGroups= groupsRepo.findById(group.getId()).get();
+
+                System.out.println("Member all ........................ "+ group.getId());
+                System.out.println(groupsRepo.getGroupMembers(group.getId()));
+
+
+
+            }
 
 //            List<Members> members  = membersRepository.findAll();
 //            if(members.isEmpty()){

@@ -61,6 +61,20 @@ public class GroupsController {
             return null;
         }
     }
+
+    @GetMapping("/member/{groupId}")
+    public ApiResponse getMembers(@PathVariable Long groupId) {
+        ApiResponse response = new ApiResponse<>();
+        try{
+            List<Members> allMembers = repo.getGroupMembers(groupId);
+            response.setEntity(allMembers);
+            return response;
+        }catch (Exception e){
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
     @GetMapping("/get/by/outStationId/{outStationId}")
     public ResponseEntity<?> fetchGroupsByOutStationId(@PathVariable("outStationId") Long outStationId) {
         try {
@@ -81,6 +95,8 @@ public class GroupsController {
             return null;
         }
     }
+
+
 
 //    @GetMapping("/groups/{groupId}/members")
 //    public ResponseEntity<List<Members>> getAllMembersByGroup(@PathVariable Long groupId){
