@@ -185,10 +185,34 @@ public class NotificationService {
             ApiResponse apiResponse = new ApiResponse();
 
             if(!(group == null)){
-//                Groups savedGroups= groupsRepo.findById(group.getId()).get();
+                List<Object[]> membersData = groupsRepo.getGroupMembers(group.getId());
+                List<Members> allMembers = new ArrayList<>();
+                for (Object[] data : membersData) {
+                    System.out.println("Member Number......."+ (String) data[0]);
+                    Optional<Token> tokenOptional = tokenRepo.findByMemberNumber((String) data[0]);
+                        if (tokenOptional.isPresent()) {
+                            Notification notification1 = new Notification();
+                            notification1.setTitle(notificationDTO.getTitle());
+                            notification1.setMessage(notificationDTO.getMessage());
+                            notification1.setSubtitle(notificationDTO.getSubtitle());
 
-                System.out.println("Member all ........................ "+ group.getId());
-                System.out.println(groupsRepo.getGroupMembers(group.getId()));
+                            Notification savedNotification = notificationRepo.save(notification1);
+
+                            saveTokensInNotification(savedNotification, tokenOptional.get());
+
+//                            sendPushNotification(savedNotification, tokenOptional.get());
+
+                            apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                            apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                            apiResponse.setEntity(savedNotification);
+
+
+                        } else {
+                            log.info("Member's token  does not exist");
+                        }
+
+                }
+//                apiResponse.setEntity(allMembers);
 
 
 
@@ -400,8 +424,6 @@ public class NotificationService {
             requestBody.put("data", data);
             requestBody.put("notification", notifications);
             requestBody.put("to", token.getDeviceToken());
-
-        System.out.println("Checking Device token "+ token.getDeviceToken());
 
             String jsonBody = new Gson().toJson(requestBody);
 
