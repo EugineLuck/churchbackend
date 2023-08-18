@@ -83,7 +83,7 @@ public class GivingController {
 
 
 //        Check Groups
-        List<Long> groupsId = givingRequest.getGroupId();
+        List<Long> groupsId = givingRequest.getGroupsId();
         if (groupsId != null && !groupsId.isEmpty()) {
             List<Groups> groupData = new ArrayList<>();
             for (Long groupId : groupsId) {
