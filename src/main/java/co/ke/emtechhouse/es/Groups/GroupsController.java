@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -66,9 +67,18 @@ public class GroupsController {
     public ApiResponse getMembers(@PathVariable Long groupId) {
         ApiResponse response = new ApiResponse<>();
         try{
-            List<Members> allMembers = repo.getGroupMembers(groupId);
+            List<Object[]> membersData = repo.getGroupMembers(groupId);
+            List<Members> allMembers = new ArrayList<>();
+            for (Object[] data : membersData) {
+                Members member = new Members();
+                member.setMemberNumber((String) data[0]);
+                member.setLastName((String) data[1]);
+                member.setFirstName((String) data[2]);
+                allMembers.add(member);
+            }
+
             response.setEntity(allMembers);
-            return response;
+            return  response;
         }catch (Exception e){
             log.info("Catched Error {} " + e);
             return null;

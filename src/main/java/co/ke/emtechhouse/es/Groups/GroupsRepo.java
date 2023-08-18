@@ -33,7 +33,7 @@ public interface GroupsRepo extends JpaRepository<Groups,Long> {
 
     @Transactional
     @Query(nativeQuery = true, value = "SELECT m.member_number, m.last_name, m.first_name FROM members m JOIN member_groups mg ON m.id = mg.member_id JOIN groups g ON mg.group_id = g.id WHERE g.id = :groupId")
-    List<Members> getGroupMembers(Long groupId);
+    List<Object[]> getGroupMembers(Long groupId);
 
 
 
