@@ -141,5 +141,22 @@ public class FamilyController {
             e.printStackTrace();
             return null;
         }
+    }   @GetMapping("by/communityId")
+    public ResponseEntity<EntityResponse<Familydata>> getFamilyByCommunityId( Long communityId) {
+        try{
+            return ResponseEntity.ok(familyService.findByCommunityid(communityId));
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @GetMapping("by/churchId")
+    public ResponseEntity<EntityResponse<Familydata>> getFamilyByChurchIdId( Long churchId) {
+        try{
+            return ResponseEntity.ok(familyService.findByChurchId(churchId));
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

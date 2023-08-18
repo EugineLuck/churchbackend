@@ -7,5 +7,6 @@ public interface Familydata {
     String getChurch();
     String getRole();
     String getCommunities();
+    String getCommunityId();
     String getMembers();
 }

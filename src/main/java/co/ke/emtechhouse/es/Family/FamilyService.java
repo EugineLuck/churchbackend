@@ -88,6 +88,51 @@ public class FamilyService {
         }
     }
 
+    public EntityResponse<Familydata> findByCommunityid(Long communityId) {
+        try {
+            EntityResponse entityResponse = new EntityResponse<>();
+            List<Familydata> families = familyRepository.searchByCommunityId(communityId);
+            if (families.size()>0) {
+               entityResponse.setMessage("Found");
+               entityResponse.setEntity(families);
+
+               entityResponse.setStatusCode(HttpStatus.OK.value());
+            }else {
+                entityResponse.setMessage("Not found");
+                entityResponse.setEntity(null);
+                entityResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+            return entityResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Log the actual error message instead of the generic "Catched Error {}" message
+            log.error("Error fetching family by community: " + communityId, e);
+            return null;
+        }
+    }
+    public EntityResponse<Familydata> findByChurchId(Long churchId) {
+        try {
+            EntityResponse entityResponse = new EntityResponse<>();
+            List<Familydata> families = familyRepository.searchByChurchId(churchId);
+            if (families.size()>0) {
+               entityResponse.setMessage("Found");
+               entityResponse.setEntity(families);
+
+               entityResponse.setStatusCode(HttpStatus.OK.value());
+            }else {
+                entityResponse.setMessage("Not found");
+                entityResponse.setEntity(null);
+                entityResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+            return entityResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Log the actual error message instead of the generic "Catched Error {}" message
+            log.error("Error fetching family by churchId: " + churchId, e);
+            return null;
+        }
+    }
+
     public ApiResponse<?> getAllFamily() {
         try {
             ApiResponse response=new ApiResponse<>();
