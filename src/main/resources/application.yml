@@ -1,5 +1,5 @@
 server:
-  port: 8800
+  port: 8900
 
 spring:
   application:
@@ -28,12 +28,12 @@ spring:
   datasource:
 
 
-    url:  jdbc:mariadb://localhost/emt_church
-    username: root
-    password:
-#    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
-#    username: emtech
-#    password: emtech@2022
+#    url:  jdbc:mariadb://localhost/emt_church
+#    username: root
+#    password:
+    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
+    username: emtech
+    password: emtech@2022
 
     driverClassName: org.mariadb.jdbc.Driver
 
