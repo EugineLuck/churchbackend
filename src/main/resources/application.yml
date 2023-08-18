@@ -35,6 +35,7 @@ spring:
     username: emtech
     password: emtech@2022
 
+
     driverClassName: org.mariadb.jdbc.Driver
 
   others:
