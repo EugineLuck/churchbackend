@@ -195,13 +195,9 @@ public class NotificationService {
                             notification1.setTitle(notificationDTO.getTitle());
                             notification1.setMessage(notificationDTO.getMessage());
                             notification1.setSubtitle(notificationDTO.getSubtitle());
-
                             Notification savedNotification = notificationRepo.save(notification1);
-
+                            System.out.println("Checking token"+ tokenOptional.get().getDeviceToken());
                             saveTokensInNotification(savedNotification, tokenOptional.get());
-
-//                            sendPushNotification(savedNotification, tokenOptional.get());
-
                             apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
                             apiResponse.setStatusCode(HttpStatus.FOUND.value());
                             apiResponse.setEntity(savedNotification);
