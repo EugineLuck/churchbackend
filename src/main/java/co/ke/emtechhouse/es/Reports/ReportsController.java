@@ -43,7 +43,52 @@ public class ReportsController {
     private String password;
 
 
+    @GetMapping("/outstationmembers/{id}")
+    public ResponseEntity<ByteArrayResource> outstationMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationMembers.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("churchId", id);
+        parameter.put("logo", logo);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=outstation_members.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
 
+
+    @GetMapping("/outstationgroups/{id}")
+    public ResponseEntity<ByteArrayResource> outstationGroupsReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationGroups.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("id", id);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=outstation_group_"+id+".pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
+    @GetMapping("/outstationCommunities/{id}")
+    public ResponseEntity<ByteArrayResource> outstationCommunitiesReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
+        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
+        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationCommunities.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("id", id);
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=outstation_communities_"+id+".pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
 
 
     @GetMapping("/members")
@@ -61,21 +106,7 @@ public class ReportsController {
         return ResponseEntity.ok().headers(headers).body(byteArrayResource);
     }
 
-    @GetMapping("/outstationmembers/{id}")
-    public ResponseEntity<ByteArrayResource> outstationMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
-        Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationMembers.jrxml"));
-        Map<String, Object> parameter = new HashMap<>();
-        parameter.put("churchId", id);
-        parameter.put("logo", logo);
-        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
-        byte[] data = JasperExportManager.exportReportToPdf(report);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=outstation_members.pdf");
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
-        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
-    }
+
 
     @GetMapping("/communitymembers/{id}")
     public ResponseEntity<ByteArrayResource> communityMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
