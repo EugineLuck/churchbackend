@@ -7,8 +7,6 @@ spring:
     otpProd: false
     otpTestMail: elsiewambui16@gmail.com
     name: E&MTCHURCH_APP_SOLUTION
-  #    jasper_report_path: src/main/resources/reports
-  #    logo_path: src/main/resources/logo.png
 
   mvc:
     pathmatch:
@@ -28,12 +26,12 @@ spring:
   datasource:
 
 
-#    url:  jdbc:mariadb://localhost/emt_church
-#    username: root
-#    password:
-    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
-    username: emtech
-    password: emtech@2022
+    url:  jdbc:mariadb://localhost/emt_church
+    username: root
+    password:
+#    url:  jdbc:mariadb://52.15.152.26:3306/emt_church
+#    username: emtech
+#    password: emtech@2022
 
 
     driverClassName: org.mariadb.jdbc.Driver
