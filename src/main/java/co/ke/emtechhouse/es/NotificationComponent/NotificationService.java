@@ -375,7 +375,6 @@ public class NotificationService {
         if (notificationOptional.isPresent()) {
             Notification notification1 = notificationOptional.get();
             tokenNotifications.setNotification(notification1);
-
             Optional<Token> tokenOptional = tokenRepo.findById(token.getId());
             if (tokenOptional.isPresent()) {
                 Token token1 = tokenOptional.get();

@@ -17,6 +17,7 @@ import co.ke.emtechhouse.es.GivingLevels.GivingLevelRepo;
 import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
+import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
@@ -61,8 +62,26 @@ public class GivingController {
     @Autowired
     NotificationService notificationService;
 
+
     public GivingController() {
     }
+
+
+    @GetMapping("/transactions/group/{groupId}")
+    public ResponseEntity<?> getGroupTransactions(@PathVariable Long groupId) {
+        ApiResponse response = new ApiResponse<>();
+        try{
+            List<Object[]> transactions = givingRepo.transactionsPerGroup(groupId);
+            response.setEntity(transactions);
+            response.setStatusCode(200);
+            response.setMessage("Records Found");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<?> addGiving(@Valid @RequestBody GivingRequest  givingRequest) throws MessagingException {
