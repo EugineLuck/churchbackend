@@ -26,7 +26,7 @@ public class GivingRequest {
     private List<Long> familyId;
     private List<Long> churchId;
     private List<Long> communityId;
-    private List<Long> groupId;
+    private List<Long> groupsId;
     private Double targetAmount;
     private String status;
     @Column(nullable = false)
