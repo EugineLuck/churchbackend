@@ -1,11 +1,6 @@
 package co.ke.emtechhouse.es.Giving;
 
-import co.ke.emtechhouse.es.Advertisement.Advertisement;
-import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Requests.GivingRequest;
-import co.ke.emtechhouse.es.Auth.Requests.SignupRequest;
-import co.ke.emtechhouse.es.Auth.Roles.ERole;
-import co.ke.emtechhouse.es.Auth.Roles.Role;
 import co.ke.emtechhouse.es.Auth.utils.CONSTANTS;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Community.Community;
@@ -14,17 +9,12 @@ import co.ke.emtechhouse.es.Family.Family;
 import co.ke.emtechhouse.es.Family.FamilyRepository;
 import co.ke.emtechhouse.es.GivingLevels.GivingLevel;
 import co.ke.emtechhouse.es.GivingLevels.GivingLevelRepo;
-import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
-import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
-import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
-import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.OutStation.OutStation;
 import co.ke.emtechhouse.es.OutStation.OutStationRepository;
-import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,10 +97,12 @@ public class GivingController {
         notif.setSubtitle("Notification");
         notif.setNotificationtype("All");
 
+//Send notification for all Members
+        if(givingRequest.getGroupsId() == null && givingRequest.getFamilyId() == null && givingRequest.getChurchId() == null && givingRequest.getCommunityId() == null){
+            notificationService.CreateServiceNotificationAll(notif);
+        }
 
-
-
-//        Check Groups
+//        Send Groups
         List<Long> groupsId = givingRequest.getGroupsId();
         if (groupsId != null && !groupsId.isEmpty()) {
             List<Groups> groupData = new ArrayList<>();
@@ -131,7 +123,7 @@ public class GivingController {
 
         }
 
-//        Check Families
+//        Send Families
         List<Long> familyId = givingRequest.getFamilyId();
         if (familyId != null && !familyId.isEmpty()) {
             List<Family> familyMembers = new ArrayList<>();
@@ -151,7 +143,7 @@ public class GivingController {
         }
 
 
-//                Check Churches
+//                Send Churches
         List<Long> chucrhId = givingRequest.getChurchId();
         if (chucrhId != null && !chucrhId.isEmpty()) {
             List<OutStation> churchMembers = new ArrayList<>();
@@ -170,7 +162,7 @@ public class GivingController {
              }
         }
 
-        //        Check Communities
+        //        Send Communities
         List<Long> communityId = givingRequest.getCommunityId();
         if (communityId != null && !communityId.isEmpty()) {
             List<Community> communityDetails = new ArrayList<>();

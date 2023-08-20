@@ -50,7 +50,7 @@ public class NotificationController {
     }
 
     @PostMapping("/add/notification/all")
-    public ResponseEntity<?> createNotificationAll(@RequestBody NotificationsDTO notification) {
+    public ResponseEntity<?> createNotificationAll(@RequestBody NotificationDTO notification) {
         try {
             ApiResponse apiResponse = notificationService.CreateServiceNotificationAll(notification);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
