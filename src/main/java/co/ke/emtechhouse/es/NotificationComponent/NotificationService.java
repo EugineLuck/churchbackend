@@ -73,6 +73,9 @@ public class NotificationService {
             ApiResponse apiResponse = new ApiResponse();
             List<Notification> notificationList = notificationRepo.findAll();
             if (notificationList.size() > 0) {
+//                for(Notification notif: notificationList){
+////                    if(notif.get)
+//                }
                 apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
                 apiResponse.setStatusCode(HttpStatus.FOUND.value());
                 apiResponse.setEntity(notificationList);
@@ -384,6 +387,7 @@ public class NotificationService {
                 tokenNotifications.setTokenNotificationKey(new TokenNotificationKey());
                 tokenNotificationsList.add(tokenNotifications);
                 notification.setTokenNotifications(tokenNotificationsList);
+//                notification.setNotificationStatus();
                 Notification notification2 = notificationRepo.save(notification);
                 sendPushNotification(notification2, token1);
 //                if (notification.getNotificationCategory() == NotificationCategory.SERVICE){

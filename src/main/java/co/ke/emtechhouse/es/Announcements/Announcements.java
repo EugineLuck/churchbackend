@@ -20,4 +20,7 @@ public class Announcements {
     private String title;
     private String message;
     private String announcementDate;
+    private Long announcementCategory;
+    @Column(name = "isActive")
+    private boolean isActive = true;
 }

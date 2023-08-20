@@ -26,8 +26,12 @@ public class NotificationController {
 
     @GetMapping("/get/all")
     public ResponseEntity<?> getAllNotifications() {
+        ApiResponse response = new ApiResponse();
         try {
-            ApiResponse response = notificationService.getAllNotifications();
+            ApiResponse allNotifs = notificationService.getAllNotifications();
+            response.setEntity(allNotifs);
+            response.setMessage("Notifications All");
+            response.setStatusCode(HttpStatus.FOUND.value());
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
