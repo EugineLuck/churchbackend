@@ -159,7 +159,7 @@ WHERE
 				<reportElement x="252" y="2" width="48" height="43" uuid="23f5c092-4f47-467b-9b50-fc08437cd287"/>
 				<image>
 					<reportElement x="0" y="0" width="48" height="43" uuid="c3feec1d-2146-4105-b3c6-a117221577f6"/>
-					<imageExpression><![CDATA["E:/logo.png"]]></imageExpression>
+					<imageExpression><![CDATA["logo.png"]]></imageExpression>
 				</image>
 			</frame>
 			<rectangle>
