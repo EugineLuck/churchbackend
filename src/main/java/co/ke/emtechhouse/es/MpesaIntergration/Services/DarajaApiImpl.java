@@ -223,32 +223,14 @@ public class DarajaApiImpl implements DarajaApi {
             var v = objectMapper.readValue(response.body().string(), StkPushSyncResponse.class);
 
             try {
-                Thread.sleep(15000);
+                Thread.sleep(30000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             InternalStkPushStatusRequest chid = new InternalStkPushStatusRequest();
             chid.setCheckoutRequestID(v.getCheckoutRequestID());
             StkPushStatusResponse res = this.stkPushStatus(chid);
-            if (res.getResultCode() == "1032") {
-
-
-                FailedTransactions failed = new FailedTransactions();
-                failed.setResultDesc(res.getResultDesc());
-                failed.setStatus("Processing");
-                failed.setResultCode(res.getResultCode());
-
-                failed.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
-                failed.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
-
-                failed.setMemberNumber(internalStkPushRequest.getMemberNumber());
-                failed.setGivingId(internalStkPushRequest.getGivingId());
-                failed.setTransactionDate(new Date());
-                failedRepo.save(failed);
-
-                if (!failedRepo.save(failed).equals(null)) ;
-                return res;
-            } else {
+            if (res.getResultCode() == "0") {
 
                 System.out.println(res.getResultCode());
                 Transaction transaction = new Transaction();
@@ -265,6 +247,23 @@ public class DarajaApiImpl implements DarajaApi {
                 transactionRepo.save(transaction);
 
                 if (!transactionRepo.save(transaction).equals(null)) ;
+
+                return res;
+            } else {
+                FailedTransactions failed = new FailedTransactions();
+                failed.setResultDesc(res.getResultDesc());
+                failed.setStatus("Processing");
+                failed.setResultCode(res.getResultCode());
+
+                failed.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
+                failed.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+
+                failed.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                failed.setGivingId(internalStkPushRequest.getGivingId());
+                failed.setTransactionDate(new Date());
+                failedRepo.save(failed);
+
+                if (!failedRepo.save(failed).equals(null)) ;
 
                 return res;
             }

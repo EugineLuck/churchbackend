@@ -71,56 +71,19 @@ public class AppUserController {
             roles.add(userRole);
         }
         appUser.setRoles(roles);
-        appUser.setId(userReg.getId());
+
         appUser.setUserName(userReg.getUserName());
         appUser.setPassword(encoder.encode(userReg.getPassword()));
 
         appUserService.appUserRegistration(appUser);
-//        AppUser savedAppUsers = appUserRepo.save(appUser);
-        response.setMessage("You have successfully registered as an user to our church app");
+
+        response.setMessage("You have successfully registered as a System User Login to signUp for membership");
         response.setStatusCode(HttpStatus.CREATED.value());
         response.setEntity(appUser);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }
-//        response.setEntity(savedAppUsers);
 
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerAppUser(@Valid @RequestBody UserReg userReg) throws MessagingException {
-//        ApiResponse response = new ApiResponse();
-//
-//        if (appUserRepo.existsByUserName(userReg.getUserName())) {
-//            response.setMessage("Username is already taken!");
-//            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-//            response.setEntity("");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//
-//        AppUser appUser = new AppUser();
-//        Set<Role> roles = new HashSet<>();
-//        if (userReg.getRoleFk() == null) {
-//            Role appUserRole = roleRepository.findByName(ERole.ROLE_APP_USER.toString())
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(appUserRole);
-//        }
-//        else {
-//            Role userRole = roleRepository.findById(userReg.getRoleFk())
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(userRole);
-//        }
-//        appUser.setRoles(roles);
-//        appUser.setId(userReg.getId());
-//        appUser.setUserName(userReg.getUserName());
-//        appUser.setPassword(encoder.encode(userReg.getPassword()));
-//
-//        appUserService.appUserRegistration(appUser);
-//        AppUser savedAppUsers = appUserRepo.save(appUser);
-//        response.setMessage("You have successfully registered as an user to our church app");
-//        response.setStatusCode(HttpStatus.CREATED.value());
-//        response.setEntity(savedAppUsers);
-//        return new ResponseEntity<>(response, HttpStatus.CREATED);
-//
-//    }
 
     @PostMapping("/signin")
     public ApiResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws MessagingException {

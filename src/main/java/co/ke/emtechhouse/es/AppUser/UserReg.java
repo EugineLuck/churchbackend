@@ -18,11 +18,8 @@ import javax.validation.constraints.Size;
 @ToString
 @Data
 public class UserReg {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Long id;
-    @NotBlank
+
+
     @Size(min = 3, max = 20)
     private String userName;
     @Size(min = 6, max = 40)
