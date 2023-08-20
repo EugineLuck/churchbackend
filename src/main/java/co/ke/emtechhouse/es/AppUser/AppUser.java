@@ -30,9 +30,8 @@ public class AppUser {
     private String userName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private Long roleFk;
-//    @OneToOne(mappedBy = "appUser")
-//    private Members members;
+
+
     @Column(name = "active")
     private boolean isActive = true;
     @Column(name = "first_login", nullable = false, length = 1)
