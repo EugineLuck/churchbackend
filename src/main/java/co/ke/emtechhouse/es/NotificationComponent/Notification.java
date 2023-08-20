@@ -42,6 +42,9 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationCategory notificationCategory;
 
+    @Column(name = "isActive")
+    private boolean isActive = true;
+
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     @JsonIgnore
