@@ -44,6 +44,7 @@ public class GroupsController {
             return null;
         }
     }
+
     @GetMapping("/get/getAllGroups")
     public ResponseEntity<?> getAllGroups() {
         try{
@@ -52,16 +53,21 @@ public class GroupsController {
             log.info("Catched Error {} " + e);
             return null;
         }
+
     }
-    @GetMapping("/get/outstationPerGroup")
-    public ResponseEntity<?> getOutstation() {
+
+    @GetMapping("/get/getAllByOustationId/{id}")
+    public ResponseEntity<?> getAllByOustationId(@PathVariable Long id) {
         try{
-            return new ResponseEntity<>(repo.getOutStation(), HttpStatus.OK);
+            return new ResponseEntity<>(repo.getAllByOustationId(id), HttpStatus.OK);
         }catch (Exception e){
             log.info("Catched Error {} " + e);
             return null;
         }
     }
+
+
+
 
     @GetMapping("/member/{groupId}")
     public ApiResponse getMembers(@PathVariable Long groupId) {

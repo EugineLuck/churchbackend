@@ -5,7 +5,6 @@ import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
-import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +51,11 @@ public class GivingService {
             response.setStatusCode(HttpStatus.CREATED.value());
             response.setEntity(savedGiving);
 
-            NotificationsDTO notif = new NotificationsDTO();
+            NotificationDTO notif = new NotificationDTO();
             notif.setMessage(giving.getDescription()+"\n This is scheduled to start from "+ giving.getStartDate()+" and end on "+ giving.getEndDate());
             notif.setTitle(giving.getGivingTitle());
             notif.setSubtitle("Notification");
-            notif.setNotificationType("All");
+            notif.setNotificationtype("All");
             notificationService.CreateServiceNotificationAll(notif);
 
             return response;

@@ -109,7 +109,7 @@ public class NotificationService {
     }
 
 
-    public ApiResponse CreateServiceNotificationAll(NotificationsDTO notificationsDTO ) {
+    public ApiResponse CreateServiceNotificationAll(NotificationDTO notificationsDTO ) {
 
         try {
             ApiResponse apiResponse = new ApiResponse();
@@ -148,7 +148,7 @@ public class NotificationService {
         }
     }
 
-    public ApiResponse CreateServiceNotificationforSupscription(NotificationsDTO notificationsDTO, Long itemId ) {
+    public ApiResponse CreateServiceNotificationforSupscription(NotificationDTO notificationsDTO, Long itemId ) {
         try {
             ApiResponse apiResponse = new ApiResponse();
             Optional<Subscriptions> subscriptionHolder  = subscriptionsRepo.findById(itemId);
@@ -375,7 +375,6 @@ public class NotificationService {
         if (notificationOptional.isPresent()) {
             Notification notification1 = notificationOptional.get();
             tokenNotifications.setNotification(notification1);
-
             Optional<Token> tokenOptional = tokenRepo.findById(token.getId());
             if (tokenOptional.isPresent()) {
                 Token token1 = tokenOptional.get();

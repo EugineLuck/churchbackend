@@ -7,8 +7,6 @@ spring:
     otpProd: false
     otpTestMail: elsiewambui16@gmail.com
     name: E&MTCHURCH_APP_SOLUTION
-  #    jasper_report_path: src/main/resources/reports
-  #    logo_path: src/main/resources/logo.png
 
   mvc:
     pathmatch:

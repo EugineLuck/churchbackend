@@ -161,10 +161,10 @@ WHERE
                 </image>
             </frame>
             <rectangle>
-                <reportElement x="298" y="21" width="262" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="1850a019-4eec-427c-9151-97c85a40f307"/>
+                <reportElement x="330" y="21" width="224" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="1850a019-4eec-427c-9151-97c85a40f307"/>
             </rectangle>
             <rectangle>
-                <reportElement x="0" y="21" width="249" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="062f07e3-1201-4492-8842-b9103ef730b7"/>
+                <reportElement x="0" y="21" width="220" height="1" forecolor="#75C6F8" backcolor="#0066FF" uuid="062f07e3-1201-4492-8842-b9103ef730b7"/>
             </rectangle>
             <staticText>
                 <reportElement x="211" y="47" width="133" height="17" forecolor="#0066FF" backcolor="#75C6F8" uuid="054744c7-b903-4dab-aa73-95e2868c74b0"/>
@@ -344,10 +344,10 @@ WHERE
                 <reportElement x="0" y="0" width="81" height="16" backcolor="#5C96ED" uuid="2ac697d6-be0f-4224-bd97-2fdc9686553a"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
             </textField>
@@ -355,10 +355,10 @@ WHERE
                 <reportElement x="81" y="0" width="79" height="16" backcolor="#5C96ED" uuid="880681f6-deea-48ca-8520-2bab56e21cc9"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$F{firstname} +" "+ $F{lastname}]]></textFieldExpression>
             </textField>
@@ -366,10 +366,10 @@ WHERE
                 <reportElement x="160" y="0" width="79" height="16" backcolor="#5C96ED" uuid="71813230-d374-4d4d-b629-dd5c153f79e1"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
             </textField>
@@ -377,10 +377,10 @@ WHERE
                 <reportElement x="239" y="0" width="79" height="16" backcolor="#5C96ED" uuid="f3069f72-f40a-4902-a437-87bb580c2331"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
             </textField>
@@ -388,10 +388,10 @@ WHERE
                 <reportElement x="318" y="0" width="79" height="16" backcolor="#5C96ED" uuid="b2c20748-ca39-46d3-8c9e-93f02132b4dc"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$F{church}]]></textFieldExpression>
             </textField>
@@ -399,10 +399,10 @@ WHERE
                 <reportElement x="397" y="0" width="79" height="16" backcolor="#5C96ED" uuid="010eebb5-9f6b-48d9-85fa-283692d38fd8"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$F{family}]]></textFieldExpression>
             </textField>
@@ -410,10 +410,10 @@ WHERE
                 <reportElement x="476" y="0" width="79" height="16" backcolor="#5C96ED" uuid="b115a3e1-60a3-463d-b1c0-d33adf19bd53"/>
                 <box>
                     <pen lineColor="#5C96ED"/>
-                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#5C96ED"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
                 </box>
                 <textFieldExpression><![CDATA[$F{groups}]]></textFieldExpression>
             </textField>

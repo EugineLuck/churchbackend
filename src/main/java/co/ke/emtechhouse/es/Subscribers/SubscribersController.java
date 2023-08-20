@@ -4,8 +4,8 @@ package co.ke.emtechhouse.es.Subscribers;
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
-import co.ke.emtechhouse.es.NotificationComponent.NotificationsDTO;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class SubscribersController {
             response.setEntity(save);
             response.setStatusCode(HttpStatus.CREATED.value());
 
-            NotificationsDTO notificationsDTO = new NotificationsDTO();
+            NotificationDTO notificationsDTO = new NotificationDTO();
             notificationsDTO.setTitle("New Subscriber");
             notificationsDTO.setMessage("You have a new subscriber\n");
             notificationsDTO.setSubtitle("Subscription Notice");

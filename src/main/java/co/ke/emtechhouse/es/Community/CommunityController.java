@@ -95,12 +95,11 @@ public class CommunityController {
             return null;
         }
     }
-    @GetMapping("/get/by/outStationId/{outStationId}")
-    public ResponseEntity<?> fetchCommunityByOutStationId(@PathVariable("outStationId") Long outStationId) {
-        try {
-            ApiResponse response = communityService.getCommunityByOutStationId(outStationId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
+    @GetMapping("/get/getAllByOustationId/{id}")
+    public ResponseEntity<?> getAllByOustationId(@PathVariable Long id) {
+        try{
+            return new ResponseEntity<>(repo.getAllCommunitiesOutstation(id), HttpStatus.OK);
+        }catch (Exception e){
             log.info("Catched Error {} " + e);
             return null;
         }
