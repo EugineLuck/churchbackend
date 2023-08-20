@@ -102,7 +102,7 @@ public class GivingController {
             notificationService.CreateServiceNotificationAll(notif);
         }
 
-//        Send Groups
+
         List<Long> groupsId = givingRequest.getGroupsId();
         if (groupsId != null && !groupsId.isEmpty()) {
             List<Groups> groupData = new ArrayList<>();
