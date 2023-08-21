@@ -634,6 +634,25 @@ public class MembersController {
 
 
 
+    }   @GetMapping(path = "/systemUsersDetails")
+    public ApiResponse getSystemUsers() {
+        ApiResponse response = new ApiResponse<>();
+        List<MemberDetails> members1 = membersRepository.getAllUsers();
+        if (!members1.isEmpty()) {
+
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(members1);
+            return response;
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.setMessage("Members not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+
+
     }
     @GetMapping(path = "/find/by/appId/{appId}")
     public ApiResponse getMemberByAppUser(@PathVariable Long appId) {
