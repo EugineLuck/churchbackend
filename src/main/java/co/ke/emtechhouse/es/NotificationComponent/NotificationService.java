@@ -73,12 +73,15 @@ public class NotificationService {
             ApiResponse apiResponse = new ApiResponse();
             List<Notification> notificationList = notificationRepo.findAll();
             if (notificationList.size() > 0) {
-//                for(Notification notif: notificationList){
-////                    if(notif.get)
-//                }
-                apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
-                apiResponse.setStatusCode(HttpStatus.FOUND.value());
-                apiResponse.setEntity(notificationList);
+//                Check Active status of a notification
+                for(Notification notif: notificationList){
+                    if(notif.isActive()){
+                        apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                        apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                        apiResponse.setEntity(notificationList);
+                    }
+                }
+
             } else {
                 apiResponse.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
                 apiResponse.setStatusCode(HttpStatus.NOT_FOUND.value());

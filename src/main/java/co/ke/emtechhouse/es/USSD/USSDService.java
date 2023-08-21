@@ -84,8 +84,19 @@ public class USSDService {
         String response = "";
         USSD ussd = new USSD();
         Members members = new Members();
+        Optional<Members>  currentMemberx =  membersRepository.findByPhoneNumber(msisdn);
+//        List<Members> existingMember = new ArrayList<>();
+//
+//        if(currentMemberx.isPresent()) {
+//            Members mem = currentMemberx.get();
+//            existingMember.add(currentMemberx.get());
+//        }
         ussdString = ussdString.replace("*", "#");
         LinkedList<String> inputs = new LinkedList<>(Arrays.asList(ussdString.split("#")));
+
+
+
+
 
         //Initial Request
         if (inputs.size() == 1) {
@@ -100,13 +111,110 @@ public class USSDService {
         } else if (inputs.size() > 1) {
             if (inputs.get(1).equals("2") && inputs.size() == 2) {
 
-                response = "END session terminated ";
-            } else if (inputs.get(1).equals("1") && inputs.size() == 2) {
-                response = "CON 1. Enter First Name";
-            } else if (inputs.get(1).equals("1") && inputs.size() == 3) {
-                response = "CON 2. Enter Last Name";
-            } else if (inputs.get(1).equals("1") && inputs.size() == 4) {
-                response = "CON 3. Select OutStation";
+//                Giving Part
+
+                List<Giving> giving = givingRepo.findAll();
+                if (giving.size() > 0) {
+                    System.out.println(giving);
+                    int pageSize = 10; // Number of records per page
+                    int totalPages = (giving.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                    int currentPage = 1;
+                    if (inputs.size() > 4) {
+                        currentPage = Integer.parseInt(inputs.get(4));
+                    }
+
+                    int startIndex = (currentPage - 1) * pageSize;
+                    int endIndex = Math.min(startIndex + pageSize, giving.size());
+
+                    StringBuilder givingList = new StringBuilder();
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Giving giving1 = giving.get(i);
+                        givingList.append("\n").append(giving1.getId()).append(". ").append(giving1.getGivingTitle());
+                    }
+
+                    // Append options for navigating to the next page or saving data
+                    if (currentPage < totalPages) {
+                        givingList.append("\n98. Next Page");
+                    }
+
+                    response = "Select  Giving Type\n" + givingList;
+
+
+
+
+                }
+
+
+            } else if(inputs.get(1).equals("2") && inputs.size() == 3){
+                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                if(giving.isPresent()){
+                    Giving existingGiving = giving.get();
+                    response = response + "*Giving: " + existingGiving.getGivingTitle()+ "\n";
+                    response = response + "*Description: " + existingGiving.getDescription()+ "\n";
+                    response = response + "*Target Amount: " + existingGiving.getTargetAmount()+ "\n";
+                    response = response + "*Amount: " + existingGiving.getGivingTitle()+ "\n";
+                    response = response + "1. Give\n";
+
+
+                }
+
+            }else if(inputs.get(1).equals("2") && inputs.size() == 4) {
+
+                response = "Choose Option\n";
+
+                if(currentMemberx.isPresent()) {
+                    Members mem = currentMemberx.get();
+                    response = "Choose Option\n1. "+ mem.getPhoneNumber() +"\n";
+
+                }
+                response = response + "2. Enter New Phone Number\n";
+            }else if (inputs.get(1).equals("2") && inputs.size() == 5) {
+                if(inputs.get(4).equals("1")){
+                    if(currentMemberx.isPresent()) {
+                        Members mem = currentMemberx.get();
+                        response = "Use "+ mem.getPhoneNumber() +"\n";
+                    }
+                }else{
+                    response = response + "Enter Phone Number\n";
+                }
+
+            }else if (inputs.get(1).equals("2") && inputs.size() == 6) {
+                response = "Choose Option";
+                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                if(giving.isPresent()){
+                    Giving existingGiving = giving.get();
+                    response = response + "Choose Option\n1. Amount: "+existingGiving.getGivingTitle() +"\n";
+
+                }
+                response = response + "2. Enter Amount";
+
+            }else if (inputs.get(1).equals("2") && inputs.size() == 7) {
+                response = "Choose Option";
+                if(inputs.get(6).equals("1")){
+                    Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                    if(giving.isPresent()){
+                        Giving existingGiving = giving.get();
+                        response = response + "Give: " + existingGiving.getAmount()+ "\n";
+                    }
+                }else{
+                    response = response + "Enter Amount\n";
+                }
+
+
+
+            }else if (inputs.get(1).equals("1") && inputs.size() == 2) {
+                response = "CON 1. Enter National Id";
+            }else if (inputs.get(1).equals("1") && inputs.size() == 3) {
+                response = "CON 2. Select Id Ownership Type \n";
+                response = response + "1. Individual\n";
+                response = response + "2. Parent/Guardian\n";
+            }else if (inputs.get(1).equals("1") && inputs.size() == 4) {
+                response = "CON 3. Enter First Name";
+            } else if (inputs.get(1).equals("1") && inputs.size() == 5) {
+                response = "CON 4. Enter Last Name";
+            } else if (inputs.get(1).equals("1") && inputs.size() == 6) {
+                response = "CON 5. Select OutStation";
                 log.info("Updating details - display Out Station");
                 List<OutStation> outStations = this.outStationRepository.findAll();
                 if (outStations.size() > 0) {
@@ -114,8 +222,8 @@ public class USSDService {
                     int totalPages = (outStations.size() + pageSize - 1) / pageSize; // Calculate total pages
 
                     int currentPage = 1;
-                    if (inputs.size() > 4) {
-                        currentPage = Integer.parseInt(inputs.get(4));
+                    if (inputs.size() > 6) {
+                        currentPage = Integer.parseInt(inputs.get(6));
                     }
 
                     int startIndex = (currentPage - 1) * pageSize;
@@ -132,11 +240,11 @@ public class USSDService {
                         outStationList.append("\n98. Next Page");
                     }
 
-                    response = "CON  Select an OutStation\n" + outStationList;
+                    response = "CON 6.  Select an OutStation\n" + outStationList;
 
                 }
-            } else if (inputs.get(1).equals("1") && inputs.size() == 5) {
-                response = "CON 4. Select Community";
+            } else if (inputs.get(1).equals("1") && inputs.size() == 7) {
+                response = "CON 7. Select Community";
                 log.info("Updating details - display Community");
                 List<Community> communities = this.communityRepository.findAll();
                 if (communities.size() > 0) {
@@ -144,8 +252,8 @@ public class USSDService {
                     int totalPages = (communities.size() + pageSize - 1) / pageSize; // Calculate total pages
 
                     int currentPage = 1;
-                    if (inputs.size() > 4) {
-                        currentPage = Integer.parseInt(inputs.get(4));
+                    if (inputs.size() > 7) {
+                        currentPage = Integer.parseInt(inputs.get(7));
                     }
 
                     int startIndex = (currentPage - 1) * pageSize;
@@ -162,11 +270,11 @@ public class USSDService {
                         communityList.append("\n98. Next Page");
                     }
 
-                    response = "CON  Select an Community\n" + communityList;
+                    response = "CON 8.  Select an Community\n" + communityList;
 
                 }
-            } else if (inputs.get(1).equals("1") && inputs.size() == 6) {
-                response = "CON 5. Select Groups";
+            } else if (inputs.get(1).equals("1") && inputs.size() == 8) {
+                response = "CON 9. Select Groups";
                 log.info("Updating details - display Groups");
                 List<Groups> groups = groupsRepo.findAll();
                 if (groups.size() > 0) {
@@ -175,8 +283,8 @@ public class USSDService {
                     int totalPages = (groups.size() + pageSize - 1) / pageSize; // Calculate total pages
 
                     int currentPage = 1;
-                    if (inputs.size() > 4) {
-                        currentPage = Integer.parseInt(inputs.get(4));
+                    if (inputs.size() > 8) {
+                        currentPage = Integer.parseInt(inputs.get(8));
                     }
 
                     int startIndex = (currentPage - 1) * pageSize;
@@ -193,12 +301,12 @@ public class USSDService {
                         groupsList.append("\n98. Next Page");
                     }
 
-                    response = "CON  Select a Group\n" + groupsList;
+                    response = "CON 10.  Select a Group\n" + groupsList;
                     System.out.println("checkkkkkkkkkkkkkkkkk" + response);
                 }
             }
-            else if (inputs.get(1).equals("1") && inputs.size() == 7) {
-                response = "CON 6. Select Family";
+            else if (inputs.get(1).equals("1") && inputs.size() == 9) {
+                response = "CON 11. Select Family";
                 log.info("Updating details - display Family");
                 List<Family> families = this.familyRepository.findAll();
                 if (families.size() > 0) {
@@ -206,8 +314,8 @@ public class USSDService {
                     int totalPages = (families.size() + pageSize - 1) / pageSize; // Calculate total pages
 
                     int currentPage = 1;
-                    if (inputs.size() > 4) {
-                        currentPage = Integer.parseInt(inputs.get(4));
+                    if (inputs.size() > 9) {
+                        currentPage = Integer.parseInt(inputs.get(9));
                     }
 
                     int startIndex = (currentPage - 1) * pageSize;
@@ -224,16 +332,27 @@ public class USSDService {
                         familyList.append("\n98. Next Page");
                     }
 
-                    response = "CON  Select a Family\n" + familyList;
+                    response = "CON 12.  Select a Family\n" + familyList;
 
                 }
+            }else if (inputs.get(1).equals("1") && inputs.size() == 10) {
+//                int currentPage = 1;
+//                if (inputs.size() > 10) {
+//                    currentPage = Integer.parseInt(inputs.get(10));
+//                }
+                response = "CON 13. Select Family Role \n";
+                response = response + "1. Father\n";
+                response = response + "2. Mother\n";
+                response = response + "3. Son\n";
+                response = response + "4. Daughter\n";
+                response = response + "5. Relative\n";
             }
 
-            else if (inputs.size() == 8) {
+            else if (inputs.size() == 11) {
                 if (inputs.get(1).equalsIgnoreCase("1")) {
                     Optional <USSD> member = ussdRepo.findByPhoneNumber(msisdn);
                     if (member.isPresent()){
-                        response = "CON Enter your phoneNumber";
+                        response = "CON 14. Enter your phoneNumber";
                     }
                     else {
 
@@ -244,25 +363,33 @@ public class USSDService {
 //Send Message With Link to terms and Conditions
 
                         USSD user = new USSD();
-                        user.setFirstName(inputs.get(2));
-                        user.setLastName(inputs.get(3));
+                        user.setFirstName(inputs.get(4));
+                        user.setLastName(inputs.get(5));
                         user.setPhoneNumber(msisdn);
-                        user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(4))));
-                        user.setCommunityId(Long.valueOf(inputs.get(5)));
-                        user.setGroupsId(Long.valueOf(inputs.get(6)));
-                        user.setFamilyId(Long.valueOf(inputs.get(7)));
+                        user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(6))));
+                        user.setCommunityId(Long.valueOf(inputs.get(7)));
+                        user.setGroupsId(Long.valueOf(inputs.get(8)));
+                        user.setFamilyId(Long.valueOf(inputs.get(9)));
+                        user.setIdOwnership(inputs.get(3));
+                        user.setNationalID(inputs.get(2));
+                        user.setMemberRole(inputs.get(10));
                         user.setMemberNumber(memberNumber);
                         ussdRepo.save(user);
 
                         Members members1 = new Members();
                         members1.setModeOfRegistration("USSD");
-                        members1.setFirstName(inputs.get(2));
-                        members1.setLastName(inputs.get(3));
+                        members1.setFirstName(inputs.get(4));
+                        members1.setLastName(inputs.get(5));
+                        members1.setIdOwnership(inputs.get(3));
+                        members1.setNationalID(inputs.get(2));
+                        members1.setMemberRole(inputs.get(10));
+
                         members1.setPhoneNumber(msisdn);
                         members1.setMemberNumber(memberNumber);
-                        members1.setOutStationId(Long.valueOf(inputs.get(4)));
-                        members1.setCommunityId(Long.valueOf(inputs.get(5)));
-                        members1.setFamilyId(Long.valueOf(inputs.get(7)));
+                        members1.setOutStationId(Long.valueOf(inputs.get(6)));
+                        members1.setCommunityId(Long.valueOf(inputs.get(7)));
+                        members1.setFamilyId(Long.valueOf(inputs.get(9)));
+
 //                        members1.setPassword(encoder.encode("7777"));
 
                         Set<Groups> groups = new HashSet<>();
@@ -287,7 +414,7 @@ public class USSDService {
                         emtSmsService.sendSms(new SmsDto(msisdn, message));}
                 }
             }
-            else if (inputs.size() == 9) {
+            else if (inputs.size() == 13) {
                 if (inputs.get(1).equalsIgnoreCase("1")){
                     String memberNumber = generateMemberNumber();
                     log.info("{ " + msisdn + " }{ END Session }");
@@ -336,52 +463,41 @@ public class USSDService {
                     emtSmsService.sendSms(new SmsDto(msisdn, message));
                 }
             }
+
+
+
+
+
         }
 
 
 // GIVING
-        if (inputs.size() ==2 && (inputs.get(1).equals("2") && inputs.get(1).equalsIgnoreCase("2"))) {
+//        if (inputs.size() ==2 && (inputs.get(1).equals("2") && inputs.get(1).equalsIgnoreCase("2"))) {
+//
+//            response = " Select Giving Type";
+//            log.info("Church Giving  - display Giving");
 
-            response = " Select Church Giving";
-            log.info("Church Giving  - display Giving");
-            List<Giving> giving = givingRepo.findAll();
-            if (giving.size() > 0) {
-                System.out.println(giving);
-                int pageSize = 10; // Number of records per page
-                int totalPages = (giving.size() + pageSize - 1) / pageSize; // Calculate total pages
-
-                int currentPage = 1;
-                if (inputs.size() > 4) {
-                    currentPage = Integer.parseInt(inputs.get(4));
-                }
-
-                int startIndex = (currentPage - 1) * pageSize;
-                int endIndex = Math.min(startIndex + pageSize, giving.size());
-
-                StringBuilder givingList = new StringBuilder();
-                for (int i = startIndex; i < endIndex; i++) {
-                    Giving giving1 = giving.get(i);
-                    givingList.append("\n").append(giving1.getId()).append(". ").append(giving1.getGivingTitle());
-                }
-
-                // Append options for navigating to the next page or saving data
-                if (currentPage < totalPages) {
-                    givingList.append("\n98. Next Page");
-                }
-
-                response = "CON  Select a Church Giving\n" + givingList;
-                System.out.println("checkkkkkkkkkkkkkkkkk" + response);
-
-                if (inputs.size() == 3 ) {
-                    response = " Enter Your MemberNumber";
-                }
-                if (inputs.size() == 4 ) {
-                    response = " Enter Your Giving Amount";
-////        MPESA STK SHOULD POP UP
-                }
-            }
-
-        }
+//
+//
+//
+//                response = "CON  Select a Church Giving\n" + givingList;
+//                System.out.println("checkkkkkkkkkkkkkkkkk" + response);
+//
+//                if(inputs.size() ==3 && (inputs.get(1).equals("2"))){
+//                    String id = inputs.get(3);
+//
+//                    System.out.println(id);
+//
+//
+//
+//                }
+//
+//
+//
+//
+//
+//                }
+//            }
 
 
 
@@ -403,7 +519,7 @@ public class USSDService {
         if (memberNumber.isPresent()) {
             log.info("Increment  by 1");
             String memberNo = memberNumber.get().getMemberNumber();
-            String suffix = memberNo.substring(2, memberNo.length());
+            String suffix = memberNo.substring(2);
             int suffixNo = Integer.parseInt(suffix);
             String formattedCode = String.format("%05d", suffixNo + 1);
             newMemberNo = "EM" + formattedCode;

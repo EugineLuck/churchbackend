@@ -721,7 +721,7 @@ public class MembersController {
         if (memberNumber.isPresent()) {
             log.info("Increment  by 1");
             String memberNo = memberNumber.get().getMemberNumber();
-            String suffix = memberNo.substring(2, memberNo.length());
+            String suffix = memberNo.substring(2);
             int suffixNo = Integer.parseInt(suffix);
             String formattedCode = String.format("%05d", suffixNo + 1);
             newMemberNo = "EM" + formattedCode;
@@ -738,7 +738,7 @@ public class MembersController {
         if (familyNumber.isPresent()) {
             log.info("Increment  by 1");
             String familyNo = familyNumber.get().getFamilyNumber();
-            String suffix = familyNo.substring(2, familyNo.length());
+            String suffix = familyNo.substring(2);
             int suffixNo = Integer.parseInt(suffix);
             String formattedCode = String.format("%05d", suffixNo + 1);
             newFamilyNo = "FN" + formattedCode;
