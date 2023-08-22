@@ -20,6 +20,9 @@ import co.ke.emtechhouse.es.Groups.GroupsRepo;
 //import co.ke.emtechhouse.es.NotificationComponent.NotificationRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.InternalStkPushRequest;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
+import co.ke.emtechhouse.es.MpesaIntergration.SuccessfullyTransactions;
+import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
+import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
 import co.ke.emtechhouse.es.OutStation.OutStation;
 import co.ke.emtechhouse.es.OutStation.OutStationRepository;
 import co.ke.emtechhouse.es.Parish.ParishRepository;
@@ -77,6 +80,11 @@ public class USSDService {
     PasswordEncoder encoder;
     @Autowired
     GivingRepo givingRepo;
+
+    @Autowired
+    TransactionRepo transactionRepo;
+
+
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
@@ -573,13 +581,134 @@ public class USSDService {
 
 // INQUIRE OPTION
         if (inputs.size() == 2 && (inputs.get(1).equals("3") && inputs.get(1).equalsIgnoreCase("3"))) {
-            response = "END Your will receive your details on sms";
-            String message = "";
-            emtSmsService.sendSms(new SmsDto(msisdn, message));
+            response = "Choose Option\n";
+            response = response + "1. My Details\n";
+            response = response + "2. Givings\n";
+            response = response + "3. Announcements\n";
+        }else if(inputs.size() == 3 && inputs.get(1).equals("3")  && inputs.get(2).equals("1")){
+
+            response = "Enter Member Number";
+        }else if(inputs.size() == 4 && inputs.get(1).equals("3") && inputs.get(2).equals("1")){
+            Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
+            if(existingMember.isPresent()){
+                Members memDetails = (Members) existingMember.get();
+                response = "Dear " + memDetails.getFirstName() +", your request has been received. Wait for a message ";
+                String message = "Dear " + memDetails.getFirstName() + ",\n";
+                message = message + "Kindly this is your account infomation.\n";
+                message = message + "Name: "+ memDetails.getFirstName() +" "+ memDetails.getLastName() +"\n";
+                message = message + "Phone Number: "+ memDetails.getPhoneNumber() +"\n";
+                message = message + "Gender: "+ memDetails.getGender() +" \n";
+                message = message + "Outstation: "+ getOutstaionName(memDetails.getOutStationId()) +" \n";
+                message = message + "Comminity: "+ getCommunityName(memDetails.getCommunityId())+ " \n";
+                message = message + "Family: "+ getFamilyName(memDetails.getFamilyId()) +"\n";
+                message = message + "National Id: "+ memDetails.getNationalID() +"\n";
+                emtSmsService.sendSms(new SmsDto(msisdn, message));
+
+            }else{
+                response = "END Member Number not Found!";
+            }
+
+        }else if(inputs.size() == 3 && inputs.get(1).equals("3")  && inputs.get(2).equals("2")){
+
+            response = "Enter Member Number";
+
+
+        }else if(inputs.size() == 4 && inputs.get(1).equals("3") && inputs.get(2).equals("2")){
+            Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
+            if(existingMember.isPresent()){
+                Members memDetails = (Members) existingMember.get();
+                response = "CON Dear " + memDetails.getFirstName() +", your Givings.\n ";
+                List<SuccessfullyTransactions> allTransactions = transactionRepo.findByMemberNumber(memDetails.getMemberNumber());
+                if(allTransactions.size() > 0){
+                    int pageSize = 10; // Number of records per page
+                    int totalPages = (allTransactions.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                    int currentPage = 1;
+                    if (inputs.size() > 4) {
+                        currentPage = Integer.parseInt(inputs.get(4));
+                    }
+
+                    int startIndex = (currentPage - 1) * pageSize;
+                    int endIndex = Math.min(startIndex + pageSize, allTransactions.size());
+
+                    StringBuilder givingList = new StringBuilder();
+                    for (int i = startIndex; i < endIndex; i++) {
+                        SuccessfullyTransactions giving1 = allTransactions.get(i);
+                        givingList.append("\n").append(giving1.getGivingId()).append(". ").append(giving1.getTitle());
+                    }
+//                     Append options for navigating to the next page or saving data
+                    if (currentPage < totalPages) {
+                        givingList.append("\n98. Next Page");
+                    }
+                    response = response + givingList;
+
+                    emtSmsService.sendSms(new SmsDto(msisdn, response));
+
+
+                }else{
+                    response = "END No Givings found";
+                }
+
+
+            }else{
+                response = "END Member Number not Found!";
+            }
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
+
+
+
+
+public  String getOutstaionName(Long id){
+    Optional existingChurch = outStationRepository.findById(id);
+
+    if(existingChurch.isPresent()){
+        OutStation outStation = (OutStation) existingChurch.get();
+        return outStation.getOutStationName();
+
+    }
+    return  null;
+}
+
+    public  String getCommunityName(Long id){
+        Optional existingCommunity = communityRepository.findById(id);
+
+        if(existingCommunity.isPresent()){
+            Community comm = (Community) existingCommunity.get();
+            return comm.getCommunityName();
+
+        }
+        return  null;
+    }
+
+    public  String getFamilyName(Long id){
+        Optional existingFamily = familyRepository.findById(id);
+
+        if(existingFamily.isPresent()){
+            Family family = (Family) existingFamily.get();
+            return family.getFamilyName();
+
+        }
+        return  null;
+    }
+
+
 
     //    GENERATING MEMBERNUMBER
     public String generateMemberNumber() {
