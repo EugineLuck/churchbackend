@@ -29,6 +29,7 @@ public class Transaction {
     private Double transactionAmount;
     private String givingId;
     private String memberNumber;
+    private String transactionMode;
     private String resultCode;
     private String resultDesc;
     private String status;

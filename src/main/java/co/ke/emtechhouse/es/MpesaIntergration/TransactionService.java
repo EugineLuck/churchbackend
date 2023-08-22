@@ -255,7 +255,7 @@ public class TransactionService {
         ApiResponse response = new ApiResponse();
         try {
 
-                List<Transaction> transactions = transactionRepo.findAll();
+                List<SuccessfullyTransactions> transactions = transactionRepo.findAllTransations();
                 if (transactions.size() > 0) {
                     response.setMessage(HttpStatus.FOUND.getReasonPhrase());
                     response.setStatusCode(HttpStatus.FOUND.value());
