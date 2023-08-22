@@ -141,8 +141,6 @@ public class USSDService {
                     response = "Select  Giving Type\n" + givingList;
 
 
-
-
                 }
 
 
@@ -174,32 +172,59 @@ public class USSDService {
                     if(currentMemberx.isPresent()) {
                         Members mem = currentMemberx.get();
                         response = "Use "+ mem.getPhoneNumber() +"\n";
+                        response = "1. Yes\n";
                     }
                 }else{
                     response = response + "Enter Phone Number\n";
                 }
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 6) {
-                response = "Choose Option";
-                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
-                if(giving.isPresent()){
-                    Giving existingGiving = giving.get();
-                    response = response + "Choose Option\n1. Amount: "+existingGiving.getGivingTitle() +"\n";
-
+                if(inputs.get(5).equals("1")){
+                    if(currentMemberx.isPresent()) {
+                        Members mem = currentMemberx.get();
+                        response = "1. "+ mem.getMemberNumber() +"\n";
+                    }
+                }else{
+                    response = response + "2. Enter Member Number\n";
                 }
-                response = response + "2. Enter Amount";
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 7) {
                 response = "Choose Option";
                 if(inputs.get(6).equals("1")){
-                    Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
-                    if(giving.isPresent()){
-                        Giving existingGiving = giving.get();
-                        response = response + "Give: " + existingGiving.getAmount()+ "\n";
+                    if(currentMemberx.isPresent()) {
+                        Members mem = currentMemberx.get();
+                        response = "Use "+ mem.getMemberNumber() +"\n";
+                        response = "1. Yes\n";
                     }
+                }else{
+                    response = response + "Enter Member Number\n";
+                }
+
+
+
+            }else if (inputs.get(1).equals("2") && inputs.size() == 8) {
+                response = "Choose Option";
+                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                if(giving.isPresent()){
+                    Giving existingGiving = giving.get();
+                    response = response + "Choose Option\n1. Amount: "+existingGiving.getAmount() +"\n";
+
+                }
+                response = response + "2. Enter New Amount";
+
+            }else if (inputs.get(1).equals("2") && inputs.size() == 9) {
+                response = "Choose Option";
+                if(inputs.get(8).equals("1")){
+                        response = "1. Yes";
                 }else{
                     response = response + "Enter Amount\n";
                 }
+
+
+
+
+
+
 
 
 
