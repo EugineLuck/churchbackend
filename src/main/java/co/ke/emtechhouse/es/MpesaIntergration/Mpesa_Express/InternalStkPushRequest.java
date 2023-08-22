@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class InternalStkPushRequest {
     @JsonProperty("transactionAmount")
-    private String transactionAmount;
+    private Double transactionAmount;
     @JsonProperty("memberNumber")
     private String memberNumber;
     @JsonProperty("transactionNumber")
