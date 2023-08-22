@@ -91,7 +91,7 @@ public class MpesaController {
         log.info("Resonse");
         StkPushSyncResponse response = darajaApi.stkPushTransaction(internalStkPushRequest);
         System.out.println("Response" + response);
-        String pushedAmount = internalStkPushRequest.getTransactionAmount();
+        Double pushedAmount = internalStkPushRequest.getTransactionAmount();
         String transactionNumber = internalStkPushRequest.getTransactionNumber();
 
 

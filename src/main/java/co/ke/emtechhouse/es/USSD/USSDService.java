@@ -18,6 +18,8 @@ import co.ke.emtechhouse.es.Giving.GivingRepo;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
 //import co.ke.emtechhouse.es.NotificationComponent.NotificationRepo;
+import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.InternalStkPushRequest;
+import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
 import co.ke.emtechhouse.es.OutStation.OutStation;
 import co.ke.emtechhouse.es.OutStation.OutStationRepository;
 import co.ke.emtechhouse.es.Parish.ParishRepository;
@@ -66,6 +68,9 @@ public class USSDService {
     private FamilyRepository familyRepository;
     @Autowired
     private CommunityRepository communityRepository;
+
+    @Autowired
+    DarajaApiImpl darajaImplementation;
     @Autowired
     private GroupsRepo groupsRepo;
     @Autowired
@@ -85,6 +90,9 @@ public class USSDService {
         USSD ussd = new USSD();
         Members members = new Members();
         Optional<Members>  currentMemberx =  membersRepository.findByPhoneNumber(msisdn);
+        String phone = "";
+        Double amount = 0.0;
+        String memberNumberx = "";
 //        List<Members> existingMember = new ArrayList<>();
 //
 //        if(currentMemberx.isPresent()) {
@@ -169,21 +177,18 @@ public class USSDService {
                 response = response + "2. Enter New Phone Number\n";
             }else if (inputs.get(1).equals("2") && inputs.size() == 5) {
                 if(inputs.get(4).equals("1")){
-                    if(currentMemberx.isPresent()) {
-                        Members mem = currentMemberx.get();
-                        response = "Use "+ mem.getPhoneNumber() +"\n";
-                        response = "1. Yes\n";
-                    }
+                    Members mem = currentMemberx.get();
+                    response = "Use "+ mem.getPhoneNumber() +"\n";
+                    response = "1. Yes\n";
                 }else{
                     response = response + "Enter Phone Number\n";
                 }
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 6) {
-                if(inputs.get(5).equals("1")){
-                    if(currentMemberx.isPresent()) {
+                if(currentMemberx.isPresent()) {
                         Members mem = currentMemberx.get();
                         response = "1. "+ mem.getMemberNumber() +"\n";
-                    }
+                        response = response + "2. Enter Member Number\n";
                 }else{
                     response = response + "2. Enter Member Number\n";
                 }
@@ -195,9 +200,11 @@ public class USSDService {
                         Members mem = currentMemberx.get();
                         response = "Use "+ mem.getMemberNumber() +"\n";
                         response = "1. Yes\n";
+
                     }
                 }else{
                     response = response + "Enter Member Number\n";
+
                 }
 
 
@@ -208,22 +215,53 @@ public class USSDService {
                 if(giving.isPresent()){
                     Giving existingGiving = giving.get();
                     response = response + "Choose Option\n1. Amount: "+existingGiving.getAmount() +"\n";
-
+                    amount = existingGiving.getAmount();
                 }
                 response = response + "2. Enter New Amount";
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 9) {
                 response = "Choose Option";
                 if(inputs.get(8).equals("1")){
-                        response = "1. Yes";
+                    response = "1. Yes";
+
                 }else{
                     response = response + "Enter Amount\n";
                 }
 
 
+            }else if (inputs.get(1).equals("2") && inputs.size() == 10) {
 
+                InternalStkPushRequest data = new InternalStkPushRequest();
+                data.setTransactionAmount(Double.valueOf(amount));
 
+                if(inputs.get(6).equals("1")){
+                    Members mem = currentMemberx.get();
+                    data.setMemberNumber(mem.getMemberNumber());
+//                    System.out.println(mem.getMemberNumber());
+                }else{
+                    data.setMemberNumber(inputs.get(7));
 
+                }
+
+                if(inputs.get(4).equals("1")){
+                    Members mem = currentMemberx.get();
+                    data.setTransactionNumber("254" + mem.getPhoneNumber());
+                }else{
+                    data.setTransactionNumber("254" +inputs.get(5));
+                }
+
+                if(inputs.get(8).equals("1")){
+                    Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                    if(giving.isPresent()){
+                        Giving existingGiving = giving.get();
+                        data.setTransactionAmount(Double.valueOf(existingGiving.getAmount()));
+                    }
+                }else{
+                    data.setTransactionAmount(Double.valueOf(inputs.get(9)));
+                }
+
+                data.setGivingId(inputs.get(2));
+                darajaImplementation.stkPushTransaction(data);
 
 
 
