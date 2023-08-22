@@ -146,7 +146,7 @@ public class USSDService {
                         givingList.append("\n98. Next Page");
                     }
 
-                    response = "Select  Giving Type\n" + givingList;
+                    response = "CON Select  Giving Type\n" + givingList;
 
 
                 }
@@ -156,7 +156,7 @@ public class USSDService {
                 Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
                 if(giving.isPresent()){
                     Giving existingGiving = giving.get();
-                    response = response + "*Giving: " + existingGiving.getGivingTitle()+ "\n";
+                    response = response + "CON *Giving: " + existingGiving.getGivingTitle()+ "\n";
                     response = response + "*Description: " + existingGiving.getDescription()+ "\n";
                     response = response + "*Target Amount: " + existingGiving.getTargetAmount()+ "\n";
                     response = response + "*Amount: " + existingGiving.getGivingTitle()+ "\n";
@@ -167,18 +167,18 @@ public class USSDService {
 
             }else if(inputs.get(1).equals("2") && inputs.size() == 4) {
 
-                response = "Choose Option\n";
+                response = "CON Choose Option\n";
 
                 if(currentMemberx.isPresent()) {
                     Members mem = currentMemberx.get();
-                    response = "Choose Option\n1. "+ mem.getPhoneNumber() +"\n";
+                    response = "CON Choose Option\n1. "+ mem.getPhoneNumber() +"\n";
 
                 }
                 response = response + "2. Enter New Phone Number\n";
             }else if (inputs.get(1).equals("2") && inputs.size() == 5) {
                 if(inputs.get(4).equals("1")){
                     Members mem = currentMemberx.get();
-                    response = "Use "+ mem.getPhoneNumber() +"\n";
+                    response = "CON Use "+ mem.getPhoneNumber() +"\n";
                     response = "1. Yes\n";
                 }else{
                     response = response + "Enter Phone Number\n";
@@ -187,14 +187,14 @@ public class USSDService {
             }else if (inputs.get(1).equals("2") && inputs.size() == 6) {
                 if(currentMemberx.isPresent()) {
                         Members mem = currentMemberx.get();
-                        response = "1. "+ mem.getMemberNumber() +"\n";
+                        response = "CON 1. "+ mem.getMemberNumber() +"\n";
                         response = response + "2. Enter Member Number\n";
                 }else{
                     response = response + "2. Enter Member Number\n";
                 }
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 7) {
-                response = "Choose Option";
+                response = "CON Choose Option";
                 if(inputs.get(6).equals("1")){
                     if(currentMemberx.isPresent()) {
                         Members mem = currentMemberx.get();
@@ -210,17 +210,16 @@ public class USSDService {
 
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 8) {
-                response = "Choose Option";
+                response = "CON Choose Option";
                 Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
                 if(giving.isPresent()){
                     Giving existingGiving = giving.get();
                     response = response + "Choose Option\n1. Amount: "+existingGiving.getAmount() +"\n";
-                    amount = existingGiving.getAmount();
                 }
                 response = response + "2. Enter New Amount";
 
             }else if (inputs.get(1).equals("2") && inputs.size() == 9) {
-                response = "Choose Option";
+                response = "CON Choose Option";
                 if(inputs.get(8).equals("1")){
                     response = "1. Yes";
 
@@ -242,12 +241,17 @@ public class USSDService {
                     data.setMemberNumber(inputs.get(7));
 
                 }
+                if(inputs.get(5).length() != 10){
 
+                }
                 if(inputs.get(4).equals("1")){
                     Members mem = currentMemberx.get();
-                    data.setTransactionNumber("254" + mem.getPhoneNumber());
+                    data.setTransactionNumber(convertPhoneNumber(mem.getPhoneNumber()));
                 }else{
-                    data.setTransactionNumber("254" +inputs.get(5));
+                    if(inputs.get(5).length() < 10){
+                        response = "END Enter a 10 digit Number 07xxxxxxxx";
+                    }
+                    data.setTransactionNumber(convertPhoneNumber(inputs.get(5)));
                 }
 
                 if(inputs.get(8).equals("1")){
@@ -261,7 +265,10 @@ public class USSDService {
                 }
 
                 data.setGivingId(inputs.get(2));
+//                System.out.println("Checking---" + data);
                 darajaImplementation.stkPushTransaction(data);
+
+
 
 
 
@@ -428,7 +435,7 @@ public class USSDService {
                         USSD user = new USSD();
                         user.setFirstName(inputs.get(4));
                         user.setLastName(inputs.get(5));
-                        user.setPhoneNumber(msisdn);
+                        user.setPhoneNumber(convertPhoneNumber(msisdn));
                         user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(6))));
                         user.setCommunityId(Long.valueOf(inputs.get(7)));
                         user.setGroupsId(Long.valueOf(inputs.get(8)));
@@ -447,7 +454,7 @@ public class USSDService {
                         members1.setNationalID(inputs.get(2));
                         members1.setMemberRole(inputs.get(10));
 
-                        members1.setPhoneNumber(msisdn);
+                        members1.setPhoneNumber(convertPhoneNumber(msisdn));
                         members1.setMemberNumber(memberNumber);
                         members1.setOutStationId(Long.valueOf(inputs.get(6)));
                         members1.setCommunityId(Long.valueOf(inputs.get(7)));
@@ -485,7 +492,7 @@ public class USSDService {
                     USSD user = new USSD();
                     user.setFirstName(inputs.get(2));
                     user.setLastName(inputs.get(3));
-                    user.setPhoneNumber(inputs.get(8));
+                    user.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
                     user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(4))));
                     user.setCommunityId(Long.valueOf(inputs.get(5)));
                     user.setGroupsId(Long.valueOf(inputs.get(6)));
@@ -497,7 +504,7 @@ public class USSDService {
                     members1.setModeOfRegistration("USSD");
                     members1.setFirstName(inputs.get(2));
                     members1.setLastName(inputs.get(3));
-                    members1.setPhoneNumber(inputs.get(8));
+                    members1.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
                     members1.setMemberNumber(memberNumber);
                     members1.setOutStationId(Long.valueOf(inputs.get(4)));
                     members1.setCommunityId(Long.valueOf(inputs.get(5)));
@@ -592,6 +599,16 @@ public class USSDService {
         return newMemberNo;
 
     }
+    public String convertPhoneNumber(String phoneNumber) {
+        // Check if the number starts with '0' (indicating a Kenyan number).
+        if (phoneNumber != null && phoneNumber.length() == 10 && phoneNumber.startsWith("0")) {
+            // Remove the leading '0' and add the country code '254'.
+            return "254" + phoneNumber.substring(1);
+        }
+        // If the number is already in international format, return it as is.
+        return phoneNumber;
+    }
+
 
 
 }
