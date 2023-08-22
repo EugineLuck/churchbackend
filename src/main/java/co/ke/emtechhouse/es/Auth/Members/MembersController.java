@@ -158,7 +158,7 @@ public class MembersController {
         members.setFirstName(capitalizedFirstName);
         members.setLastName(capitalizedLastName);
         members.setModeOfRegistration(signUpRequest.getModeOfRegistration());
-        members.setPhoneNumber(signUpRequest.getPhoneNo());
+        members.setPhoneNumber(convertPhoneNumber(signUpRequest.getPhoneNo()));
         members.setEmail(signUpRequest.getEmail());
         members.setMemberRole(signUpRequest.getRole());
         members.setNationalID(signUpRequest.getNationalID());
@@ -185,6 +185,8 @@ public class MembersController {
             roles.add(memberRole);
         }
         members.setRoles(roles);
+
+
 
         // Save the member without adding groups to the GroupMember table yet
         Members savedMembers = membersRepository.save(members);
@@ -767,4 +769,18 @@ public class MembersController {
         return newFamilyNo;
 
     }
+
+
+    public  String convertPhoneNumber(String phoneNumber) {
+        // Check if the number starts with '0' (indicating a Kenyan number).
+        if (phoneNumber != null && phoneNumber.startsWith("0")) {
+            // Remove the leading '0' and add the country code '+254'.
+            return "+254" + phoneNumber.substring(1);
+        }
+        // If the number is already in international format, return it as is.
+        return phoneNumber;
+    }
+
+
+
 }
