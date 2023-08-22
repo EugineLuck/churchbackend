@@ -1,4 +1,5 @@
 package co.ke.emtechhouse.es.Auth.Members;
+import co.ke.emtechhouse.es.Auth.utils.DatesCalculator;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 import com.google.api.client.auth.oauth2.TokenRequest;
@@ -68,6 +69,8 @@ public class MembersController {
     FamilyRepository familyRepo;
     @Autowired
     private FamilyRepository frepo;
+    @Autowired
+    private DatesCalculator datesCalculator;
  @Autowired
     private GroupMemberRepo groupMemberRepo;
 
@@ -677,6 +680,21 @@ public class MembersController {
     public ApiResponse getMemberByGroupsId(@PathVariable Long groupsId) {
         ApiResponse response = new ApiResponse<>();
         List<MemberDetails> members1 = membersRepository.searchByGroupsId(groupsId);
+        if (!members1.isEmpty()) {
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(members1);
+            return response;
+        } else {
+            response.setMessage("Member not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+    }  @GetMapping(path = "memberDetails/find/by/postedTime")
+    public ApiResponse getMemberByDateRange(@RequestParam Date fromDate, @RequestParam Date toDate ) {
+        ApiResponse response = new ApiResponse<>();
+        List<MemberDetails> members1 = membersRepository.searchByDateRange(datesCalculator.dateFormat(fromDate), datesCalculator.dateFormat(toDate));
         if (!members1.isEmpty()) {
             response.setMessage(HttpStatus.FOUND.getReasonPhrase());
             response.setStatusCode(HttpStatus.FOUND.value());
