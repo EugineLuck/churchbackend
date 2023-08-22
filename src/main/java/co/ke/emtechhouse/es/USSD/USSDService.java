@@ -618,7 +618,7 @@ public class USSDService {
             if(existingMember.isPresent()){
                 Members memDetails = (Members) existingMember.get();
                 response = "CON Dear " + memDetails.getFirstName() +", your Givings.\n ";
-                List<SuccessfullyTransactions> allTransactions = transactionRepo.findByMemberNumber(memDetails.getMemberNumber());
+                List<SuccessfullyTransactions> allTransactions = transactionRepo.findByUssdMemberNumber(memDetails.getMemberNumber());
                 if(allTransactions.size() > 0){
                     int pageSize = 10; // Number of records per page
                     int totalPages = (allTransactions.size() + pageSize - 1) / pageSize; // Calculate total pages
