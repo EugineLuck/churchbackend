@@ -31,6 +31,11 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
   @Transactional
     @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title,t.phone_number as number,t.transaction_amount as amount,t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.member_number=:memberNumber")
     List<SuccessfullyTransactions>  findByMemberNumber(@Param(value = "memberNumber")String memberNumber);
+
+
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT * FROM `transaction` where member_number=:memberNumber")
+    List<SuccessfullyTransactions>  findByUssdMemberNumber(@Param(value = "memberNumber")String memberNumber);
   @Transactional
     @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title,t.phone_number as number,t.transaction_amount as amount,t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.giving_id=:givingId ")
     List<SuccessfullyTransactions> findByGivingId(@Param(value = "givingId")Long givingId);
