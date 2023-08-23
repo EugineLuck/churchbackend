@@ -41,7 +41,7 @@ public class DatesCalculator {
     }
 
     public String dateFormat(Date date) {
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy/MM/dd HH:mm:ss";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
     }
