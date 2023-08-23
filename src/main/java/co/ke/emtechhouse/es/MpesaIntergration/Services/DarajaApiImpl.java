@@ -230,6 +230,7 @@ public class DarajaApiImpl implements DarajaApi {
             InternalStkPushStatusRequest chid = new InternalStkPushStatusRequest();
             chid.setCheckoutRequestID(v.getCheckoutRequestID());
             StkPushStatusResponse res = this.stkPushStatus(chid);
+
                 System.out.println(res.getResultCode());
                 Transaction transaction = new Transaction();
                 transaction.setResultDesc(res.getResultDesc());
