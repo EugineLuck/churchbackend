@@ -231,7 +231,6 @@ public class DarajaApiImpl implements DarajaApi {
             chid.setCheckoutRequestID(v.getCheckoutRequestID());
             StkPushStatusResponse res = this.stkPushStatus(chid);
 
-
                 System.out.println(res.getResultCode());
                 Transaction transaction = new Transaction();
                 transaction.setResultDesc(res.getResultDesc());
@@ -249,24 +248,7 @@ public class DarajaApiImpl implements DarajaApi {
                 if (!transactionRepo.save(transaction).equals(null)) ;
 
                 return res;
-//             else {
-//                FailedTransactions failed = new FailedTransactions();
-//                failed.setResultDesc(res.getResultDesc());
-//                failed.setStatus("Processing");
-//                failed.setResultCode(res.getResultCode());
-//
-//                failed.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
-//                failed.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
-//
-//                failed.setMemberNumber(internalStkPushRequest.getMemberNumber());
-//                failed.setGivingId(internalStkPushRequest.getGivingId());
-//                failed.setTransactionDate(new Date());
-//                failedRepo.save(failed);
-//
-//                if (!failedRepo.save(failed).equals(null)) ;
-//
-//                return res;
-//            }
+
 
         } catch (IOException e) {
             log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));
