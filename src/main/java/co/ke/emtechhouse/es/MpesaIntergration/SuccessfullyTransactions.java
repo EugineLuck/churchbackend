@@ -10,7 +10,7 @@ public interface SuccessfullyTransactions {
     Long getTransId();
 
     String getFullName();
-
+    String getTransactionMode();
     String getTitle();
     String getLevel();
     String getAmount();
