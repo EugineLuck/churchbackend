@@ -1,6 +1,7 @@
 package co.ke.emtechhouse.es.USSD;
 
 
+import co.ke.emtechhouse.es.Announcements.Announcements;
 import co.ke.emtechhouse.es.Announcements.AnnouncementsRepo;
 import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
@@ -118,7 +119,7 @@ public class USSDService {
         if (inputs.size() == 1) {
             log.info("Direct to menu");
             {
-                response = "CON Welcome To EM -T CHURCH  " + " Sign In.\n";
+                response = "CON Welcome To EM -T CHURCH  \n";
                 response = response + "1. Register\n";
                 response = response + "2. Church Giving\n";
                 response = response + "3. Inquiry\n";
@@ -602,6 +603,7 @@ public class USSDService {
                 message = message + "Comminity: "+ getCommunityName(memDetails.getCommunityId())+ " \n";
                 message = message + "Family: "+ getFamilyName(memDetails.getFamilyId()) +"\n";
                 message = message + "National Id: "+ memDetails.getNationalID() +"\n";
+                System.out.println(message);
                 emtSmsService.sendSms(new SmsDto(msisdn, message));
 
             }else{
@@ -654,6 +656,34 @@ public class USSDService {
                 response = "END Member Number not Found!";
             }
 
+        }else if(inputs.size() == 3 && inputs.get(1).equals("3") && inputs.get(2).equals("3")) {
+            response = "CON Announcemnts";
+            List<Announcements> allAnnouncements = announcementsRepo.findAll();
+            if (allAnnouncements.size() > 0) {
+                int pageSize = 10; // Number of records per page
+                int totalPages = (allAnnouncements.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                int currentPage = 1;
+                if (inputs.size() > 4) {
+                    currentPage = Integer.parseInt(inputs.get(4));
+                }
+
+                int startIndex = (currentPage - 1) * pageSize;
+                int endIndex = Math.min(startIndex + pageSize, allAnnouncements.size());
+
+                StringBuilder announcements = new StringBuilder();
+                for (int i = startIndex; i < endIndex; i++) {
+                    Announcements announcement = allAnnouncements.get(i);
+                    announcements.append("\n").append(announcement.getId()).append(". ").append(announcement.getTitle());
+                }
+//                     Append options for navigating to the next page or saving data
+                if (currentPage < totalPages) {
+                    announcements.append("\n98. Next Page");
+                }
+                response = response + announcements;
+
+
+            }
         }
 
 
