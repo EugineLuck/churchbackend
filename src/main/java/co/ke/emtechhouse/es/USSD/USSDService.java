@@ -108,6 +108,7 @@ public class USSDService {
 //            Members mem = currentMemberx.get();
 //            existingMember.add(currentMemberx.get());
 //        }
+        Long churchCount = 0L;
         ussdString = ussdString.replace("*", "#");
         LinkedList<String> inputs = new LinkedList<>(Arrays.asList(ussdString.split("#")));
 
@@ -119,7 +120,7 @@ public class USSDService {
         if (inputs.size() == 1) {
             log.info("Direct to menu");
             {
-                response = "CON Welcome To EM -T CHURCH  \n";
+                response = "CON Welcome To EM -T CHURCH, Choose an option to continue!\n";
                 response = response + "1. Register\n";
                 response = response + "2. Church Giving\n";
                 response = response + "3. Inquiry\n";
@@ -285,146 +286,520 @@ public class USSDService {
             }else if (inputs.get(1).equals("1") && inputs.size() == 2) {
                 response = "CON 1. Enter National Id";
             }else if (inputs.get(1).equals("1") && inputs.size() == 3) {
-                response = "CON 2. Select Id Ownership Type \n";
-                response = response + "1. Individual\n";
-                response = response + "2. Parent/Guardian\n";
+
+                String nationalIdInput = inputs.get(2);
+
+                try {
+                    // Attempt to parse the input as a long
+                    long nationalId = Long.parseLong(nationalIdInput);
+
+                    // Check if it's a valid long
+                    if (nationalId >= 0) {
+                        response = "CON 2. Select Id Ownership Type \n";
+                        response = response + "1. Individual\n";
+                        response = response + "2. Parent/Guardian\n";
+                    } else {
+                        // Return to the previous step and ask for a valid National ID
+                        response = "CON 1. Enter National Id\n";
+                        response = response + "Invalid National ID. Please enter a valid National ID.";
+                    }
+                } catch (NumberFormatException e) {
+                    // Return to the previous step and ask for a valid National ID
+                    response = "CON 1. Enter National Id\n";
+                    response = response + "Invalid input. Please enter a valid National ID.";
+                }
+
             }else if (inputs.get(1).equals("1") && inputs.size() == 4) {
-                response = "CON 3. Enter First Name";
+                String value = inputs.get(3);
+
+                try {
+                    // Attempt to parse the input as a long
+                    long owner = Long.parseLong(value);
+
+                    // Check if it's a valid long
+                    if (owner >= 0 && owner <= 2) {
+                        response = "CON 3. Enter First Name";
+                    } else {
+                        // Return to the previous step and ask for a valid National ID
+
+                        response = "CON Invalid Option. Please enter a Try again.\n";
+                        response = response + "Choose Owner Type\n";
+                        response = response + "1. Individual\n";
+                        response = response + "2. Parent/Guardian\n";
+
+                    }
+                } catch (NumberFormatException e) {
+                    // Return to the previous step and ask for a valid National ID
+                    response = "CON Invalid Option. Please enter a Try again.\n";
+                    response = response + "Choose Owner Type\n";
+                    response = response + "1. Individual\n";
+                    response = response + "2. Parent/Guardian\n";
+                }
+
+
             } else if (inputs.get(1).equals("1") && inputs.size() == 5) {
-                response = "CON 4. Enter Last Name";
+
+                String value = inputs.get(4);
+
+                try {
+                    // Attempt to parse the input as a long
+                    long fname = Long.parseLong(value);
+
+                    // Check if it's a valid long (owner type)
+                    if (fname >= 0) {
+                        response = "CON Invalid Option. Try again.\n";
+                        response = response + " Enter First Name";
+                    } else {
+                        // Return to the previous step and ask for a valid owner type
+                        response =  "CON Enter Last Name";
+
+                    }
+                } catch (NumberFormatException e) {
+                        response =  "CON Enter Last Name";
+
+                }
+
+
+//                response = "CON 4. Enter Last Name";
             } else if (inputs.get(1).equals("1") && inputs.size() == 6) {
-                response = "CON 5. Select OutStation";
-                log.info("Updating details - display Out Station");
-                List<OutStation> outStations = this.outStationRepository.findAll();
-                if (outStations.size() > 0) {
-                    int pageSize = 10; // Number of records per page
-                    int totalPages = (outStations.size() + pageSize - 1) / pageSize; // Calculate total pages
+                String value = inputs.get(5);
 
-                    int currentPage = 1;
-                    if (inputs.size() > 6) {
-                        currentPage = Integer.parseInt(inputs.get(6));
+                try {
+                    // Attempt to parse the input as a long
+                    long fname = Long.parseLong(value);
+
+                    // Check if it's a valid long (owner type)
+                    if (fname >= 0) {
+                        response = "CON Invalid Option. Try again.\n";
+                        response = response + " Enter Last Name";
+                    } else {
+                        response = "CON Select OutStation\n";
+                        log.info("Updating details - display Out Station");
+                        List<OutStation> outStations = this.outStationRepository.findAll();
+                        if (outStations.size() > 0) {
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (outStations.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 6) {
+                                currentPage = Integer.parseInt(inputs.get(6));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, outStations.size());
+
+                            StringBuilder outStationList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                OutStation outStation = outStations.get(i);
+                                outStationList.append("\n").append(outStation.getId()).append(". ").append(outStation.getOutStationName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                outStationList.append("\n98. Next Page");
+                            }
+
+                            response = response + outStationList;
+
+                        }
+
                     }
+                } catch (NumberFormatException e) {
+                    response = "CON Select OutStation\n";
+                    log.info("Updating details - display Out Station");
+                    List<OutStation> outStations = this.outStationRepository.findAll();
+                    if (outStations.size() > 0) {
+                        int pageSize = 10; // Number of records per page
+                        int totalPages = (outStations.size() + pageSize - 1) / pageSize; // Calculate total pages
 
-                    int startIndex = (currentPage - 1) * pageSize;
-                    int endIndex = Math.min(startIndex + pageSize, outStations.size());
+                        int currentPage = 1;
+                        if (inputs.size() > 6) {
+                            currentPage = Integer.parseInt(inputs.get(6));
+                        }
 
-                    StringBuilder outStationList = new StringBuilder();
-                    for (int i = startIndex; i < endIndex; i++) {
-                        OutStation outStation = outStations.get(i);
-                        outStationList.append("\n").append(outStation.getId()).append(". ").append(outStation.getOutStationName());
+                        int startIndex = (currentPage - 1) * pageSize;
+                        int endIndex = Math.min(startIndex + pageSize, outStations.size());
+
+                        StringBuilder outStationList = new StringBuilder();
+                        for (int i = startIndex; i < endIndex; i++) {
+                            OutStation outStation = outStations.get(i);
+                            outStationList.append("\n").append(outStation.getId()).append(". ").append(outStation.getOutStationName());
+                            churchCount++;
+                        }
+
+                        // Append options for navigating to the next page or saving data
+                        if (currentPage < totalPages) {
+                            outStationList.append("\n98. Next Page");
+                        }
+
+
+                        response = response + outStationList;
+
                     }
-
-                    // Append options for navigating to the next page or saving data
-                    if (currentPage < totalPages) {
-                        outStationList.append("\n98. Next Page");
-                    }
-
-                    response = "CON 6.  Select an OutStation\n" + outStationList;
 
                 }
+
+
             } else if (inputs.get(1).equals("1") && inputs.size() == 7) {
-                response = "CON 7. Select Community";
-                log.info("Updating details - display Community");
-                List<Community> communities = this.communityRepository.findAll();
-                if (communities.size() > 0) {
-                    int pageSize = 10; // Number of records per page
-                    int totalPages = (communities.size() + pageSize - 1) / pageSize; // Calculate total pages
 
-                    int currentPage = 1;
-                    if (inputs.size() > 7) {
-                        currentPage = Integer.parseInt(inputs.get(7));
+                String value = inputs.get(6);
+                try {
+                    long owner = Long.parseLong(value);
+                    if (owner >= 0 ) {
+//                        Start of Community
+                        response = "CON 7. Select Community";
+                        List<Community> communities = this.communityRepository.findAll();
+                        if (communities.size() > 0) {
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (communities.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 7) {
+                                currentPage = Integer.parseInt(inputs.get(7));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, communities.size());
+
+                            StringBuilder communityList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                Community community = communities.get(i);
+                                communityList.append("\n").append(community.getId()).append(". ").append(community.getCommunityName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                communityList.append("\n98. Next Page");
+                            }
+
+                            response = "CON 8.  Select an Community\n" + communityList;
+
+                        }
+
+//                        End Of Community
+                    } else {
+                        // Return to the previous step and ask for a valid Oustation
+
+                        response = "CON Select OutStation\n";
+                        log.info("Updating details - display Out Station");
+                        List<OutStation> outStations = this.outStationRepository.findAll();
+                        if (outStations.size() > 0) {
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (outStations.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 6) {
+                                currentPage = Integer.parseInt(inputs.get(6));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, outStations.size());
+
+                            StringBuilder outStationList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                OutStation outStation = outStations.get(i);
+                                outStationList.append("\n").append(outStation.getId()).append(". ").append(outStation.getOutStationName());
+                                churchCount++;
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                outStationList.append("\n98. Next Page");
+                            }
+
+
+                            response = response + outStationList;
+
+                        }
+
+
                     }
+                } catch (NumberFormatException e) {
+                    // Return to the previous step and ask for a valid National ID
+                    response = "CON Select OutStation\n";
+                    log.info("Updating details - display Out Station");
+                    List<OutStation> outStations = this.outStationRepository.findAll();
+                    if (outStations.size() > 0) {
+                        StringBuilder outStationList = new StringBuilder();
+                        for (OutStation outStationx : outStations) {
+                            outStationList.append("\n").append(outStationx.getId()).append(". ").append(outStationx.getOutStationName());
+                            churchCount++;
+                        }
 
-                    int startIndex = (currentPage - 1) * pageSize;
-                    int endIndex = Math.min(startIndex + pageSize, communities.size());
 
-                    StringBuilder communityList = new StringBuilder();
-                    for (int i = startIndex; i < endIndex; i++) {
-                        Community community = communities.get(i);
-                        communityList.append("\n").append(community.getId()).append(". ").append(community.getCommunityName());
+                        response = response + outStationList;
+
                     }
-
-                    // Append options for navigating to the next page or saving data
-                    if (currentPage < totalPages) {
-                        communityList.append("\n98. Next Page");
-                    }
-
-                    response = "CON 8.  Select an Community\n" + communityList;
 
                 }
+
+
+
             } else if (inputs.get(1).equals("1") && inputs.size() == 8) {
-                response = "CON 9. Select Groups";
-                log.info("Updating details - display Groups");
-                List<Groups> groups = groupsRepo.findAll();
-                if (groups.size() > 0) {
-                    System.out.println(groups);
-                    int pageSize = 10; // Number of records per page
-                    int totalPages = (groups.size() + pageSize - 1) / pageSize; // Calculate total pages
 
-                    int currentPage = 1;
-                    if (inputs.size() > 8) {
-                        currentPage = Integer.parseInt(inputs.get(8));
+                String value = inputs.get(7);
+                try {
+                    long owner = Long.parseLong(value);
+                    if (owner >= 0 ) {
+//
+                        response = "CON 9. Select Groups";
+                        log.info("Updating details - display Groups");
+                        List<Groups> groups = groupsRepo.findAll();
+                        if (groups.size() > 0) {
+                            System.out.println(groups);
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (groups.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 8) {
+                                currentPage = Integer.parseInt(inputs.get(8));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, groups.size());
+
+                            StringBuilder groupsList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                Groups groups1 = groups.get(i);
+                                groupsList.append("\n").append(groups1.getId()).append(". ").append(groups1.getGroupName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                groupsList.append("\n98. Next Page");
+                            }
+
+                            response = "CON 10.  Select a Group\n" + groupsList;
+                            System.out.println("checkkkkkkkkkkkkkkkkk" + response);
+                        }
+//                        End Of Community
+                    } else {
+                        // Return to the previous step and ask for a valid Oustation
+
+//                        Start of Community
+                                response = "CON 7. Invalid Choice. Try again.\nSelect Community\n";
+                        List<Community> communities = this.communityRepository.findAll();
+                        if (communities.size() > 0) {
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (communities.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 7) {
+                                currentPage = Integer.parseInt(inputs.get(7));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, communities.size());
+
+                            StringBuilder communityList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                Community community = communities.get(i);
+                                communityList.append("\n").append(community.getId()).append(". ").append(community.getCommunityName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                communityList.append("\n98. Next Page");
+                            }
+
+                            response = "CON 8.  Select an Community\n" + communityList;
+
+                        }
+
+
+                    }
+                } catch (NumberFormatException e) {
+                    // Return to the previous step and ask for a valid National ID
+                    response = "CON 7. Invalid Choice. Try again.\nSelect Community\n";
+                    log.info("Updating details - display Out Station");
+                    List<Community> communities = this.communityRepository.findAll();
+                    if (communities.size() > 0) {
+                        StringBuilder communitiesList = new StringBuilder();
+                        for (Community outStationx : communities) {
+                            communitiesList.append("\n").append(outStationx.getId()).append(". ").append(outStationx.getCommunityName());
+                            churchCount++;
+                        }
+
+
+                        response = response + communitiesList;
+
                     }
 
-                    int startIndex = (currentPage - 1) * pageSize;
-                    int endIndex = Math.min(startIndex + pageSize, groups.size());
-
-                    StringBuilder groupsList = new StringBuilder();
-                    for (int i = startIndex; i < endIndex; i++) {
-                        Groups groups1 = groups.get(i);
-                        groupsList.append("\n").append(groups1.getId()).append(". ").append(groups1.getGroupName());
-                    }
-
-                    // Append options for navigating to the next page or saving data
-                    if (currentPage < totalPages) {
-                        groupsList.append("\n98. Next Page");
-                    }
-
-                    response = "CON 10.  Select a Group\n" + groupsList;
-                    System.out.println("checkkkkkkkkkkkkkkkkk" + response);
                 }
+
+
+
+
+
+
             }
             else if (inputs.get(1).equals("1") && inputs.size() == 9) {
-                response = "CON 11. Select Family";
-                log.info("Updating details - display Family");
-                List<Family> families = this.familyRepository.findAll();
-                if (families.size() > 0) {
-                    int pageSize = 10; // Number of records per page
-                    int totalPages = (families.size() + pageSize - 1) / pageSize; // Calculate total pages
 
-                    int currentPage = 1;
-                    if (inputs.size() > 9) {
-                        currentPage = Integer.parseInt(inputs.get(9));
+
+                String value = inputs.get(8);
+                try {
+                    long owner = Long.parseLong(value);
+                    if (owner >= 0 ) {
+//
+                        response = "CON 11. Select Family\n";
+                        log.info("Updating details - display Family");
+                        List<Family> families = this.familyRepository.findAll();
+                        if (families.size() > 0) {
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (families.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 9) {
+                                currentPage = Integer.parseInt(inputs.get(9));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, families.size());
+
+                            StringBuilder familyList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                Family family = families.get(i);
+                                familyList.append("\n").append(family.getId()).append(". ").append(family.getFamilyName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                familyList.append("\n98. Next Page");
+                            }
+
+                            response = response + familyList;
+
+                        }
+//                        End Of Community
+                    } else {
+                        // Return to the previous step and ask for a valid Oustation
+
+//                        Start of Community
+                        response = "CON 9. Select Groups\n";
+                        log.info("Updating details - display Groups");
+                        List<Groups> groups = groupsRepo.findAll();
+                        if (groups.size() > 0) {
+                            System.out.println(groups);
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (groups.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 8) {
+                                currentPage = Integer.parseInt(inputs.get(8));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, groups.size());
+
+                            StringBuilder groupsList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                Groups groups1 = groups.get(i);
+                                groupsList.append("\n").append(groups1.getId()).append(". ").append(groups1.getGroupName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                groupsList.append("\n98. Next Page");
+                            }
+
+                            response = response + groupsList;
+                        }
+
+
                     }
+                } catch (NumberFormatException e) {
+                    // Return to the previous step and ask for a valid National ID
+                    response = "CON 7. Invalid Choice. Try again.\nSelect Group\n";
+                    List<Groups> groups = this.groupsRepo.findAll();
+                    if (groups.size() > 0) {
+                        StringBuilder groupList = new StringBuilder();
+                        for (Groups groups1 : groups) {
+                            groupList.append("\n").append(groups1.getId()).append(". ").append(groups1.getGroupName());
+                            churchCount++;
+                        }
 
-                    int startIndex = (currentPage - 1) * pageSize;
-                    int endIndex = Math.min(startIndex + pageSize, families.size());
 
-                    StringBuilder familyList = new StringBuilder();
-                    for (int i = startIndex; i < endIndex; i++) {
-                        Family family = families.get(i);
-                        familyList.append("\n").append(family.getId()).append(". ").append(family.getFamilyName());
+                        response = response + groupList;
+
                     }
-
-                    // Append options for navigating to the next page or saving data
-                    if (currentPage < totalPages) {
-                        familyList.append("\n98. Next Page");
-                    }
-
-                    response = "CON 12.  Select a Family\n" + familyList;
 
                 }
+
+
+
+
+
             }else if (inputs.get(1).equals("1") && inputs.size() == 10) {
-//                int currentPage = 1;
-//                if (inputs.size() > 10) {
-//                    currentPage = Integer.parseInt(inputs.get(10));
-//                }
-                response = "CON 13. Select Family Role \n";
-                response = response + "1. Father\n";
-                response = response + "2. Mother\n";
-                response = response + "3. Son\n";
-                response = response + "4. Daughter\n";
-                response = response + "5. Relative\n";
+                String value = inputs.get(9);
+                try {
+                    long owner = Long.parseLong(value);
+                    if (owner >= 0 ) {
+//
+                        response = "CON 13. Select Family Role \n";
+                        response = response + "1. Father\n";
+                        response = response + "2. Mother\n";
+                        response = response + "3. Son\n";
+                        response = response + "4. Daughter\n";
+                        response = response + "5. Relative\n";
+
+//                        End Of Community
+                    } else {
+                        // Return to the previous step and ask for a valid Oustation
+
+                        response = "CON 7. Invalid Choice. Try again.\nSelect Group\n";
+                        log.info("Updating details - display Family");
+                        List<Family> families = this.familyRepository.findAll();
+                        if (families.size() > 0) {
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (families.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 9) {
+                                currentPage = Integer.parseInt(inputs.get(9));
+                            }
+
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, families.size());
+
+                            StringBuilder familyList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                Family family = families.get(i);
+                                familyList.append("\n").append(family.getId()).append(". ").append(family.getFamilyName());
+                            }
+
+                            // Append options for navigating to the next page or saving data
+                            if (currentPage < totalPages) {
+                                familyList.append("\n98. Next Page");
+                            }
+
+                            response = response + familyList;
+
+                        }
+
+
+                    }
+                } catch (NumberFormatException e) {
+                    // Return to the previous step and ask for a valid National ID
+                    response = "CON 7. Invalid Choice. Try again.\nSelect Group\n";
+                    List<Groups> groups = this.groupsRepo.findAll();
+                    if (groups.size() > 0) {
+                        StringBuilder groupList = new StringBuilder();
+                        for (Groups groups1 : groups) {
+                            groupList.append("\n").append(groups1.getId()).append(". ").append(groups1.getGroupName());
+                            churchCount++;
+                        }
+
+
+                        response = response + groupList;
+
+                    }
+
+                }
+
+
+
+
+
             }
 
             else if (inputs.size() == 11) {
