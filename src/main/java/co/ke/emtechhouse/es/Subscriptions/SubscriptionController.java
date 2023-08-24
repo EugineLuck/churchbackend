@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +54,7 @@ public class SubscriptionController {
             data.setTransactionType("subscription");
 
             StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
+            subS.setDateCreated(String.valueOf(new Date()));
 
             if(response1.getResultCode().equals("0")){
                 Subscriptions save = subscriptionService.saveSubscription(subS);

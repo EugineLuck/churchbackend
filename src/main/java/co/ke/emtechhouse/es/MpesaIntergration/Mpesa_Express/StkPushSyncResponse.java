@@ -17,4 +17,6 @@ public class StkPushSyncResponse {
     private String responseDescription;
     @JsonProperty("ResultCode")
     private String resultCode;
+    @JsonProperty("ResultsDesc")
+    private String resultDesc;
 }

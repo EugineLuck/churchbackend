@@ -26,6 +26,10 @@ public class Subscriptions {
     private String memberNumber;
     private String subscriptionType;
     private Double charges;
+    private String descriptionInfo;
+    private String banner;
+
+
     private  String dateCreated;
     @Column(name = "isActive")
     private boolean isActive = true;

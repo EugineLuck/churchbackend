@@ -271,9 +271,9 @@ public class DarajaApiImpl implements DarajaApi {
 //
 //                if (!transactionRepo.save(transaction).equals(null)) ;
 
-                    return res;
-                }
 
+                }
+            return res;
         } catch (IOException e) {
             log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));
             return null;
