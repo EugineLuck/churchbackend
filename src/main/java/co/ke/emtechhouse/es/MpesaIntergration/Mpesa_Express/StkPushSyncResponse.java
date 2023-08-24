@@ -15,4 +15,6 @@ public class StkPushSyncResponse {
     private String checkoutRequestID;
     @JsonProperty("ResponseDescription")
     private String responseDescription;
+    @JsonProperty("ResultCode")
+    private String resultCode;
 }
