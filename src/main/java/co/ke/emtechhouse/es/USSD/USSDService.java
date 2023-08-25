@@ -20,6 +20,7 @@ import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
 //import co.ke.emtechhouse.es.NotificationComponent.NotificationRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.InternalStkPushRequest;
+import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushSyncResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
 import co.ke.emtechhouse.es.MpesaIntergration.SuccessfullyTransactions;
 import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
@@ -275,13 +276,16 @@ public class USSDService {
                 }
 
                 data.setGivingId(inputs.get(2));
-//                System.out.println("Checking---" + data);
-                darajaImplementation.stkPushTransaction(data);
 
+                StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
+                 if(response1.getResultCode().equals("0")){
+                    response = "END Giving successfull";
+                 }else{
+                    response = "END Failed\n";
+                    response = response + response1.getResultDesc();
+                 }
 
-
-
-
+                System.out.println(response1);
 
             }else if (inputs.get(1).equals("1") && inputs.size() == 2) {
                 response = "CON 1. Enter National Id";

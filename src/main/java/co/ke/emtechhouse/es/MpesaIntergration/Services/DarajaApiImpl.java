@@ -15,6 +15,8 @@ import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.FailedRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.FailedTransactions;
 import co.ke.emtechhouse.es.MpesaIntergration.Utils.HelperUtility;
+import co.ke.emtechhouse.es.Subscriptions.SubsPaymentsRepository;
+import co.ke.emtechhouse.es.Subscriptions.SubscriptionPayments;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
@@ -45,6 +47,8 @@ public class DarajaApiImpl implements DarajaApi {
     private TransactionRepo transactionRepo;
     @Autowired
     private FailedRepo failedRepo;
+    @Autowired
+    SubsPaymentsRepository subsPaymentsRepository;
 
     @Autowired
     public DarajaApiImpl(MpesaConfiguration mpesaConfiguration, OkHttpClient okHttpClient, ObjectMapper objectMapper) {
@@ -232,24 +236,44 @@ public class DarajaApiImpl implements DarajaApi {
             StkPushStatusResponse res = this.stkPushStatus(chid);
 
                 System.out.println(res.getResultCode());
-                Transaction transaction = new Transaction();
-                transaction.setResultDesc(res.getResultDesc());
-                transaction.setStatus("Processing");
-                transaction.setResultCode(res.getResultCode());
 
-                transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
-                transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
-
-                transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
-                transaction.setGivingId(internalStkPushRequest.getGivingId());
-                transaction.setTransactionDate(new Date());
-                transactionRepo.save(transaction);
-
-                if (!transactionRepo.save(transaction).equals(null)) ;
-
-                return res;
+                if(res.getResultCode().equals("0")) {
 
 
+                    if (internalStkPushRequest.getTransactionType() == "subscription") {
+
+                        //                Subscriptions
+                        SubscriptionPayments subscriptionPayments = new SubscriptionPayments();
+                        subscriptionPayments.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                        subscriptionPayments.setAmountPaid(internalStkPushRequest.getTransactionAmount());
+                        subscriptionPayments.setDatePaid(String.valueOf(new Date()));
+                        subsPaymentsRepository.save(subscriptionPayments);
+
+                    } else {
+                        //Normal transactions
+                        Transaction transaction = new Transaction();
+                        transaction.setResultDesc(res.getResultDesc());
+                        transaction.setStatus("Processing");
+                        transaction.setResultCode(res.getResultCode());
+
+                        transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
+                        transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+
+                        transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
+                        transaction.setGivingId(internalStkPushRequest.getGivingId());
+                        transaction.setTransactionDate(new Date());
+                        transaction.setTransactionMode("M-pesa");
+                        transactionRepo.save(transaction);
+
+                    }
+//                Transactions
+
+//
+//                if (!transactionRepo.save(transaction).equals(null)) ;
+
+
+                }
+            return res;
         } catch (IOException e) {
             log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));
             return null;
