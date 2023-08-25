@@ -397,15 +397,20 @@ public class MembersController {
         }
 //        return userRepository.findByUsername(user).orElse(null);
     }
-//    @PutMapping(path = "/members/update/{memberNumber}")
-//    public ResponseEntity<?> updateMember(@Valid @RequestBody SignupRequest signUpRequest, @PathVariable String memberNumber) throws MessagingException {
-//        ApiResponse response = new ApiResponse();
-//        Optional<Members> membersOptional = membersRepository.findByMemberNumber(signUpRequest.getMemberNumber());
-//        if (membersOptional.isPresent()) {
-//            log.info("User exist...");
-//            Members existingMember = membersOptional.get();
-//
-//
+
+
+
+
+
+    @PutMapping(path = "/members/update/{memberNumber}")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody MemberUpdateDTO signUpRequest, @PathVariable String memberNumber) throws MessagingException {
+        ApiResponse response = new ApiResponse();
+        Optional<Members> membersOptional = membersRepository.findByMemberNumber(signUpRequest.getMemberNumber());
+        if (membersOptional.isPresent()) {
+            log.info("User exist...");
+            Members existingMember = membersOptional.get();
+
+
 //            existingMember.setEmail(signUpRequest.getEmail());
 //            existingMember.setPostedTime(dtf.format(now));
 //            existingMember.setUsername(signUpRequest.getEmail());
@@ -415,25 +420,47 @@ public class MembersController {
 //            existingMember.setCommunityId(signUpRequest.getCommunityId());
 //            existingMember.setOutStationId(signUpRequest.getOutStationId());
 //            existingMember.setDateOfBirth(signUpRequest.getDateOfBirth());
-//
+
+
+
 //            List<Long> groupsId = signUpRequest.getGroupsId();
+
+//            List  groupMemberGroups = Collections.singletonList(groupMemberRepo.findByMemberId(existingMember.getId()));
+
+//            Update Groups
+//            List<GroupMember> groupMemberGroups = groupMemberRepo.findByMemberId(existingMember.getId());
 //
+//            if(!groupMemberGroups.isEmpty()){
+//
+//                for(GroupMember gmember : groupMemberGroups){
+//                    gmember.setStatus("Inactive");
+//                    groupMemberRepo.save(gmember);
+//
+//                }
+//            }
+
+
+
+
+
+
+
 //            membersRepository.save(existingMember);
-//
+
 //            String mailMessage = "Dear " + signUpRequest.getFirstName() + ", your account details have been updated by " + UserRequestContext.getCurrentUser() + " on " + new Date() + ". Your Credentials are <b>" + existingMember.getUsername() + "</b> Password <b>" + ".</b>";
-//
-//
-//            response.setMessage("Member " + signUpRequest.getMemberNumber() + " has been updated successfully!");
-//            response.setStatusCode(HttpStatus.OK.value());
-//            response.setEntity("");
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } else {
-//            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-//            response.setStatusCode(HttpStatus.NOT_FOUND.value());
-//            response.setEntity("");
-//            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-//        }
-//    }
+
+
+            response.setMessage("Member " + signUpRequest.getMemberNumber() + " has been updated successfully!");
+            response.setStatusCode(HttpStatus.OK.value());
+            response.setEntity("");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            response.setEntity("");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     @PatchMapping("/{id}")
