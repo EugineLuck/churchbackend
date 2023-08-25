@@ -60,11 +60,14 @@ public class SubscriptionController {
                 Subscriptions save = subscriptionService.saveSubscription(subS);
                 response.setMessage("Subscription Added");
                 response.setEntity(save);
+//                response.setStatusCode(HttpStatus.FOUND.value());
                 response.setStatusCode(HttpStatus.CREATED.value());
+            }else{
+                response.setMessage("Mpesa transaction not successfull");
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+
             }
 
-            response.setMessage("Mpesa transaction not successfull");
-            response.setStatusCode(HttpStatus.NOT_FOUND.value());
             return new ResponseEntity<>(response, HttpStatus.OK);
 
 
