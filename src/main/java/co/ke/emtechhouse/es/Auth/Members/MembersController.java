@@ -427,15 +427,17 @@ public class MembersController {
 
 //            List  groupMemberGroups = Collections.singletonList(groupMemberRepo.findByMemberId(existingMember.getId()));
 
-            List<GroupMember> groupMemberGroups = groupMemberRepo.findByMemberId(existingMember.getId());
-
-            if(!groupMemberGroups.isEmpty()){
-
-                for(GroupMember gmember : groupMemberGroups){
-
-
-                }
-            }
+//            Update Groups
+//            List<GroupMember> groupMemberGroups = groupMemberRepo.findByMemberId(existingMember.getId());
+//
+//            if(!groupMemberGroups.isEmpty()){
+//
+//                for(GroupMember gmember : groupMemberGroups){
+//                    gmember.setStatus("Inactive");
+//                    groupMemberRepo.save(gmember);
+//
+//                }
+//            }
 
 
 
