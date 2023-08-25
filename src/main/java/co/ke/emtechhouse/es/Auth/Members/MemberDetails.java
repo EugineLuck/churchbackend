@@ -15,6 +15,7 @@ public interface MemberDetails {
     Long getCommunityId();
     Long getGroupsId();
     Long getChurchId();
+    Long getMid();
 
 
     String getPostedTime();

@@ -46,7 +46,8 @@ public class ReportsController {
     @GetMapping("/outstationmembers/{id}")
     public ResponseEntity<ByteArrayResource> outstationMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationMembers.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/outstationMembers.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("churchId", id);
         parameter.put("logo", logo);
@@ -63,7 +64,8 @@ public class ReportsController {
     @GetMapping("/outstationgroups/{id}")
     public ResponseEntity<ByteArrayResource> outstationGroupsReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationGroups.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/outstationGroups.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("id", id);
         JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
@@ -78,7 +80,8 @@ public class ReportsController {
     @GetMapping("/outstationCommunities/{id}")
     public ResponseEntity<ByteArrayResource> outstationCommunitiesReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outstationCommunities.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/outstationCommunities.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("id", id);
         JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
@@ -95,7 +98,12 @@ public class ReportsController {
     public ResponseEntity<ByteArrayResource> membersReports() throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
 
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/allMembers.jrxml"));
+
+
         JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path+"/allMembers.jrxml"));
+
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("logo", logo);
         JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
@@ -112,7 +120,8 @@ public class ReportsController {
     @GetMapping("/communitymembers/{id}")
     public ResponseEntity<ByteArrayResource> communityMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/communityMembers.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/communityMembers.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("communityId", id);
         parameter.put("logo", logo);
@@ -128,7 +137,8 @@ public class ReportsController {
     @GetMapping("/familymembers/{id}")
     public ResponseEntity<ByteArrayResource> familyMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/familyMembers.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/familyMembers.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("familyId", id);
         parameter.put("logo", logo);
@@ -144,7 +154,8 @@ public class ReportsController {
     @GetMapping("/groupmembers/{id}")
     public ResponseEntity<ByteArrayResource> groupMembersReports(@PathVariable Long id) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/groupMembers.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/groupMembers.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("groupId", id);
         parameter.put("logo", logo);
@@ -160,7 +171,8 @@ public class ReportsController {
     @GetMapping("/transactions")
     public ResponseEntity<ByteArrayResource> transactionsReports() throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path+"/transactionsAll.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/transactionsAll.jrxml"));
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("logo", logo);
         JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);
@@ -176,7 +188,8 @@ public class ReportsController {
     @GetMapping("/statement/{memberNumber}")
     public ResponseEntity<ByteArrayResource> memberStatementReports(@PathVariable String memberNumber) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/membersStatement.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/membersStatement.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("memberNumber", memberNumber);
         parameter.put("logo", logo);
@@ -192,7 +205,8 @@ public class ReportsController {
     @GetMapping("/transactions/{givingId}")
     public ResponseEntity<ByteArrayResource> categoryReports(@PathVariable Long givingId) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/transactionsType.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/transactionsType.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("givingId", givingId);
         parameter.put("logo", logo);
@@ -208,7 +222,8 @@ public class ReportsController {
     @GetMapping("/churchfamily/{churchId}")
     public ResponseEntity<ByteArrayResource> churchfamily(@PathVariable Long churchId) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/outSationFamilies.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/outSationFamilies.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("churchId", churchId);
         parameter.put("logo", logo);
@@ -224,7 +239,8 @@ public class ReportsController {
     @GetMapping("/communityfamily/{communityId}")
     public ResponseEntity<ByteArrayResource> communityfamily(@PathVariable Long communityId) throws FileNotFoundException, JRException, SQLException {
         Connection connection = DriverManager.getConnection(this.db, this.username, this.password);
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path + "/communityFamilies.jrxml"));
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/communityFamilies.jrxml"));
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("churchId", communityId);
         parameter.put("logo", logo);

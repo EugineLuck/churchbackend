@@ -2,22 +2,17 @@ package co.ke.emtechhouse.es.Auth.Members;
 import co.ke.emtechhouse.es.Auth.utils.DatesCalculator;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
-import com.google.api.client.auth.oauth2.TokenRequest;
 import org.apache.commons.text.WordUtils;
 
-import co.ke.emtechhouse.es.AppUser.AppUser;
-import co.ke.emtechhouse.es.Auth.DTO.Mailparams;
 import co.ke.emtechhouse.es.Auth.MailService.MailService;
 
 import co.ke.emtechhouse.es.Auth.Requests.*;
-import co.ke.emtechhouse.es.Auth.Responses.JwtResponse;
 import co.ke.emtechhouse.es.Auth.Responses.MessageResponse;
 import co.ke.emtechhouse.es.Auth.Roles.ERole;
 import co.ke.emtechhouse.es.Auth.Roles.Role;
 import co.ke.emtechhouse.es.Auth.Roles.RoleRepository;
 import co.ke.emtechhouse.es.Auth.Security.jwt.JwtUtils;
 import co.ke.emtechhouse.es.Auth.utils.HttpInterceptor.UserRequestContext;
-import co.ke.emtechhouse.es.Auth.utils.PasswordGeneratorUtil;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Auth.utils.Session.Activesession;
 import co.ke.emtechhouse.es.Community.CommunityService;
@@ -27,7 +22,6 @@ import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
 import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMemberRepo;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
-import co.ke.emtechhouse.es.OutStation.OutStation;
 import co.ke.emtechhouse.es.OutStation.OutStationRepository;
 import co.ke.emtechhouse.es.OutStation.OutStationService;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
@@ -39,16 +33,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -517,7 +508,13 @@ public class MembersController {
             return response;
         }
     }
+    @PutMapping("/updaterole")
+    public ResponseEntity<?> updateMemberRole(@Valid @RequestBody UpdateMemberRole update) {
 
+        membersRepository.updateMemberRole(update.getRoleid(), update.getMemberId());
+
+        return ResponseEntity.ok(new MessageResponse("Member Role Updated successfully!"));
+    }
 
     @PutMapping(path = "/unlock/{id}")
     public ApiResponse unlock(@PathVariable Long id) {
