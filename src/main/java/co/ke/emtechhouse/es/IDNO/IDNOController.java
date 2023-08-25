@@ -23,7 +23,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/verify")
+@RequestMapping("/api/v1/idno")
 public class IDNOController {
     public  IDNOController(){
 
@@ -46,22 +46,16 @@ public class IDNOController {
     private RestTemplate restTemplate;
 
 
-        @GetMapping("/access")
-    public ResponseEntity<Object> verifyNow() {
+        @PostMapping("/verify")
+    public ResponseEntity<Object> verifyNow(@RequestBody IDNOdto details) {
         ApiResponse responsex = new ApiResponse();
         try {
             String accessToken = getAccessToken(apiKey,merchantCode,customerSecret);
             JSONObject json = new JSONObject(accessToken);
             String accessTokenx = json.getString("accessToken");
-            responsex.setEntity(accessTokenx);
-            System.out.println(accessTokenx);
-
-
-
             OkHttpClient client = new OkHttpClient();
-
-            // Define your JSON request body
-            String requestBody = String.format("{\"identity\":{\"documentType\":\"%s\",\"documentNumber\":\"%s\",\"countryCode\":\"%s\"}}", "1234567", "36830481", "KE");
+            String requestBody = String.format("{\"identity\":{\"documentType\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\",\"dateOfBirth\":\"%s\",\"documentNumber\":\"%s\",\"countryCode\":\"%s\"}}",
+                    "NATIONALID", details.getFirstName(), details.getLastName(), details.getDateOfBirth(), details.getDocumentNumber(), "KE");
 
             // Define the media type for JSON
             MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
@@ -76,17 +70,6 @@ public class IDNOController {
 
             // Execute the request
             Response response = client.newCall(request).execute();
-
-            System.out.println("Cheking...... " + response);
-
-
-
-
-
-
-
-
-
             responsex.setMessage("OKay");
             responsex.setEntity(response);
             return new ResponseEntity<>(responsex, HttpStatus.OK);
