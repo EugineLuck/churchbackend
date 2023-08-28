@@ -236,10 +236,6 @@ public class DarajaApiImpl implements DarajaApi {
             StkPushStatusResponse res = this.stkPushStatus(chid);
 
                 System.out.println(res.getResultCode());
-
-                if(res.getResultCode().equals("0")) {
-
-
                     if (internalStkPushRequest.getTransactionType() == "subscription") {
 
                         //                Subscriptions
@@ -272,7 +268,6 @@ public class DarajaApiImpl implements DarajaApi {
 //                if (!transactionRepo.save(transaction).equals(null)) ;
 
 
-                }
             return res;
         } catch (IOException e) {
             log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));

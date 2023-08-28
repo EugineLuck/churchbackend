@@ -114,6 +114,7 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
 
     List<Members> findByCommunityId(Long community);
 
+    boolean findByNationalID(String nationalID);
 }
 //SELECT m. first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.id WHERE mr.role_id = 1")
 //    List<MemberDetails> getAllMembers();
