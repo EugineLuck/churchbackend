@@ -827,6 +827,25 @@ public class MembersController {
         return newMemberNo;
 
     }
+    @GetMapping(path = "/all/members/active")
+    public List<MemberDetails> getAllActiveMembers() {
+        return membersRepository.getAllActiveMembers();
+    }
+    @GetMapping(path = "/all/members/deleted")
+    public List<MemberDetails> getAllDeletedMembers() {
+        return membersRepository.getAllDeletedMembers();
+    }
+
+    @GetMapping(path = "/all/members/locked")
+    public List<MemberDetails> getAllLockedMembers() {
+        return membersRepository.getAllLockedMembers();
+    }
+
+
+
+
+
+
     public String generateFamily() {
         String newFamilyNo = "";
         Optional<Family> familyNumber = frepo.getFamilyNumber();
