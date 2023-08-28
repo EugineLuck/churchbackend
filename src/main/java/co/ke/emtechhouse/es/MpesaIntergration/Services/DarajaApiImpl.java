@@ -45,6 +45,8 @@ public class DarajaApiImpl implements DarajaApi {
     LocalDateTime now = LocalDateTime.now();
     @Autowired
     private TransactionRepo transactionRepo;
+
+
     @Autowired
     private FailedRepo failedRepo;
     @Autowired
@@ -203,12 +205,12 @@ public class DarajaApiImpl implements DarajaApi {
         externalStkPushRequest.setTimestamp(transactionTimestamp);
         externalStkPushRequest.setTransactionType(CUSTOMER_PAYBILL_ONLINE);
         externalStkPushRequest.setAmount(internalStkPushRequest.getTransactionAmount());
-        externalStkPushRequest.setPartyA(internalStkPushRequest.getTransactionNumber());
+        externalStkPushRequest.setPartyA(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber()));
         externalStkPushRequest.setPartyB(mpesaConfiguration.getStkPushShortCode());
-        externalStkPushRequest.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+        externalStkPushRequest.setPhoneNumber(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber()));
         externalStkPushRequest.setCallBackURL(mpesaConfiguration.getStkPushRequestCallbackUrl());
         externalStkPushRequest.setAccountReference(HelperUtility.getTransactionUniqueNumber());
-        externalStkPushRequest.setTransactionDesc(String.format("%s Transaction", internalStkPushRequest.getTransactionNumber()));
+        externalStkPushRequest.setTransactionDesc(String.format("%s Transaction", getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber())));
 
         AccessTokenResponse accessTokenResponse = getAccessToken();
 
@@ -252,8 +254,8 @@ public class DarajaApiImpl implements DarajaApi {
                         transaction.setStatus("Processing");
                         transaction.setResultCode(res.getResultCode());
 
-                        transaction.setTransactionAmount(Double.valueOf(internalStkPushRequest.getTransactionAmount()));
-                        transaction.setPhoneNumber(internalStkPushRequest.getTransactionNumber());
+                        transaction.setTransactionAmount(Double.valueOf(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber())));
+                        transaction.setPhoneNumber(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber()));
 
                         transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
                         transaction.setGivingId(internalStkPushRequest.getGivingId());
@@ -310,6 +312,18 @@ public class DarajaApiImpl implements DarajaApi {
         } catch (IOException e) {
             log.error(String.format("Could not confirm transaction status->%s", e.getLocalizedMessage()));
             return null;
+        }
+    }
+
+
+    public  String getfomatedPhoneNumber(String input) {
+        // Ensure the input string is not null and has at least 9 characters
+        if (input != null && input.length() >= 9) {
+            // Use substring to get the last 9 characters
+            return "254"+input.substring(input.length() - 9);
+        } else {
+            // Handle invalid input gracefully
+            return "Invalid input";
         }
     }
 }
