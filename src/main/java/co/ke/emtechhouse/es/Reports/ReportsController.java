@@ -102,8 +102,6 @@ public class ReportsController {
         JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/allMembers.jrxml"));
 
 
-        JasperReport compileReport = JasperCompileManager.compileReport(new FileInputStream(files_path+"/allMembers.jrxml"));
-
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("logo", logo);
         JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, connection);

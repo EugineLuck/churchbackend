@@ -1,5 +1,7 @@
 package co.ke.emtechhouse.es.Auth.Members;
 
+import co.ke.emtechhouse.es.AppUser.AppUser;
+import co.ke.emtechhouse.es.AppUser.User;
 import co.ke.emtechhouse.es.Community.Community;
 import co.ke.emtechhouse.es.Family.Familydata;
 import co.ke.emtechhouse.es.Groups.Groups;
@@ -20,28 +22,31 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
     Optional<Members> findByPhoneNumber(String phoneNumber);
     Optional<Members>findByAppId(Long appId);
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id = 1 group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id = 1 group by m.id")
     List<MemberDetails> getAllMembers();
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id NOT IN (1, 5) group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id NOT IN (1, 5) group by m.id")
     List<MemberDetails> getAllUsers();
     @Transactional
 
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE m.member_number =:number group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE m.member_number =:number group by m.id")
     Optional<MemberDetails> searchByNumber(@Param(value = "number") String number);
+
+    @Query(nativeQuery = true,value = "SELECT a.user_name as username FROM members m join app_user a ON m.app_id = a.id WHERE m.member_number =:memberId")
+    Optional<User> findByNumber(@Param(value = "memberId") String memberId);
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE g.id =:groupsId group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE g.id =:groupsId group by m.id")
     List<MemberDetails> searchByGroupsId(@Param(value = "groupsId") Long groupsId);
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE m.posted_time between :fromDate and  :toDate  group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE m.posted_time between :fromDate and  :toDate  group by m.id")
     List<MemberDetails> searchByDateRange(@Param(value = "fromDate") String fromDate, @Param(value = "toDate") String toDate);
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE c.id =:communityId group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE c.id =:communityId group by m.id")
     List<MemberDetails> searchByCommunityId(@Param(value = "communityId") Long communityId);
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE o.id =:outstationId group by m.id")
+    @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE o.id =:outstationId group by m.id")
     List<MemberDetails> searchByOutstationId(@Param(value = "outstationId") Long outstationId);
 
     Boolean existsByUsername(String username);
@@ -113,7 +118,7 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
     @Query(nativeQuery = true,value = "update members_roles set role_id = :role_id where member_id = :memberId")
     void updateMemberRole(
             @Param(value = "role_id") long role_id,
-            @Param(value = "memberId") Long memberId
+            @Param(value = "memberId") String memberId
     );
 
 //    List<Members> findByGroups(Groups group);
@@ -122,5 +127,34 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
 
     List<Members> findByCommunityId(Long community);
 
+
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "UPDATE members SET nationalid = :nationalID, id_ownership = :idOwnership, email = :email, phone_number = :phoneNo, community_id = :communityId, family_id = :familyId, member_role = :memberRole WHERE member_number = :memberNumber")
+    void updateMemberDetails(
+            @Param("nationalID") String nationalID,
+            @Param("idOwnership") String idOwnership,
+            @Param("email") String email,
+            @Param("phoneNo") String phoneNo,
+            @Param("communityId") Long communityId,
+            @Param("familyId") Long familyId,
+            @Param("memberRole") String memberRole,
+            @Param("memberNumber") String memberNumber
+    );
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "UPDATE members SET active = :active, delete_flag = :delete_flag, modified_on = :modified_on, modified_by = :modified_by WHERE member_number = :memberNumber")
+    void deleteUserAccount(
+            @Param(value = "active") boolean active,
+            @Param(value = "delete_flag") String deleteFlag,
+            @Param(value = "modified_on") String modifiedOn,
+            @Param(value = "modified_by") String modifiedBy,
+            @Param(value = "memberNumber") String memberNumber
+    );
+
+
+
     boolean findByNationalID(String nationalID);
+
 }

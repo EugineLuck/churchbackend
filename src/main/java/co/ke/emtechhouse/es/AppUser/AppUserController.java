@@ -3,9 +3,9 @@ package co.ke.emtechhouse.es.AppUser;
 
 import co.ke.emtechhouse.es.Advertisement.Advertisement;
 import co.ke.emtechhouse.es.Auth.DTO.Mailparams;
-import co.ke.emtechhouse.es.Auth.Requests.ChangePassword;
-import co.ke.emtechhouse.es.Auth.Requests.Forgotpassword;
-import co.ke.emtechhouse.es.Auth.Requests.LoginRequest;
+import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
+import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
+import co.ke.emtechhouse.es.Auth.Requests.*;
 import co.ke.emtechhouse.es.Auth.Responses.JwtResponse;
 import co.ke.emtechhouse.es.Auth.Roles.ERole;
 import co.ke.emtechhouse.es.Auth.Roles.Role;
@@ -14,6 +14,7 @@ import co.ke.emtechhouse.es.Auth.Security.jwt.JwtUtils;
 import co.ke.emtechhouse.es.Auth.utils.PasswordGeneratorUtil;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Auth.utils.Session.Activesession;
+import co.ke.emtechhouse.es.utils.Responses.MessageResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -36,18 +40,25 @@ import java.util.*;
 public class AppUserController {
     @Autowired
     AppUserRepo appUserRepo;
+  @Autowired
+  MembersRepository membersRepository;
 
     @Autowired
     RoleRepository roleRepository;
     @Autowired
     AuthenticationManager authenticationManager;
+
+
     @Autowired
     PasswordEncoder encoder;
     @Autowired
     AppUserService appUserService;
     @Autowired
     JwtUtils jwtUtils;
-
+    String modified_by = "";
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    String modified_on = dtf.format(now);
     @PostMapping("/register")
     public ResponseEntity<?> registerAppUser(@Valid @RequestBody UserReg userReg) throws MessagingException {
         ApiResponse response = new ApiResponse();
@@ -263,6 +274,50 @@ public class AppUserController {
             }
         }
     }
+    @PutMapping("/updatepassword")
+    public ResponseEntity<?> updateMemberPassword(@Valid @RequestBody UpdatePassword update) {
+        Optional<User> appUsers = membersRepository.findByNumber(update.getMemberId());
+
+        if (appUsers.isPresent()) {
+            User user = appUsers.get();
+String username = user.getUsername();
+            String modified_by = "Admin";
 
 
+            appUserRepo.updateUserPassword(encoder.encode(update.getPassword()),modified_by,modified_on,username);
+
+            return ResponseEntity.ok(new MessageResponse("Member " + username + " Password Updated successfully! to  "  + update.getPassword()+""));
+
+        } else {
+           return ResponseEntity.badRequest().body(new MessageResponse("Member not found"));
+      }
+    }
+
+    @PutMapping("/lockaccount")
+    public ResponseEntity<?> activateAccount(@Valid @RequestBody LockAccount update) {
+        Optional<User> appUsers = membersRepository.findByNumber(update.getMemberNumber());
+
+        if (appUsers.isPresent()) {
+            User user = appUsers.get();
+        modified_by = "Admin";
+            boolean isAcctLocked = true;
+        appUserRepo.lockUserAccount(isAcctLocked, modified_on, modified_by, user.getUsername());
+        }
+        return ResponseEntity.ok(new MessageResponse("User Account Status Altered successfully!"));
+    }
+    @PutMapping("/activateaccount")
+    public ResponseEntity<?> lockAccount(@Valid @RequestBody ActivateAccount update) {
+        Optional<User> appUsers = membersRepository.findByNumber(update.getMemberNumber());
+
+        if (appUsers.isPresent()) {
+            User user = appUsers.get();
+        modified_by ="Admin";
+            boolean isActive = true;
+        appUserRepo.activateUserAccount(isActive, modified_on, modified_by, user.getUsername());
+        }
+
+        return ResponseEntity.ok(new MessageResponse("User Account Status Altered successfully!"));
+    }
 }
+
+
