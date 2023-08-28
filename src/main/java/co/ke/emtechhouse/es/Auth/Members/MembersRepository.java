@@ -128,6 +128,7 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
     List<Members> findByCommunityId(Long community);
 
 
+
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE members SET nationalid = :nationalID, id_ownership = :idOwnership, email = :email, phone_number = :phoneNo, community_id = :communityId, family_id = :familyId, member_role = :memberRole WHERE member_number = :memberNumber")
@@ -152,5 +153,8 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
             @Param(value = "memberNumber") String memberNumber
     );
 
+
+
+    boolean findByNationalID(String nationalID);
 
 }

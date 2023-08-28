@@ -13,10 +13,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 public class MemberUpdateDTO {
-//    private String email;
-//    private String phoneNumber;
+    private String email;
+    private String phoneNumber;
     private String  memberNumber;
-//    private Set<Groups> groups = new HashSet<>();
-//    private Long communityId;
-//    private Long outStationId;
+    private List<Long> groupsId;
+    public List<Long> getGroupsId() {
+        return groupsId;
+    }
+
+    private Long communityId;
+    private Long outStationId;
 }
