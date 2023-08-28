@@ -99,16 +99,12 @@ public class USSDService {
         String response = "";
         USSD ussd = new USSD();
         Members members = new Members();
-        Optional<Members>  currentMemberx =  membersRepository.findByPhoneNumber(msisdn);
+
+        Optional<Members>  currentMemberx =  membersRepository.findByPhoneNumber(getfomatedPhoneNumber(msisdn));
+//        System.out.println("Checking number......" + getfomatedPhoneNumber(msisdn));
         String phone = "";
         Double amount = 0.0;
         String memberNumberx = "";
-//        List<Members> existingMember = new ArrayList<>();
-//
-//        if(currentMemberx.isPresent()) {
-//            Members mem = currentMemberx.get();
-//            existingMember.add(currentMemberx.get());
-//        }
         Long churchCount = 0L;
         ussdString = ussdString.replace("*", "#");
         LinkedList<String> inputs = new LinkedList<>(Arrays.asList(ussdString.split("#")));
@@ -972,9 +968,8 @@ public class USSDService {
             Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
             if(existingMember.isPresent()){
                 Members memDetails = (Members) existingMember.get();
-                response = "Dear " + memDetails.getFirstName() +", your request has been received. Wait for a message ";
-                String message = "Dear " + memDetails.getFirstName() + ",\n";
-                message = message + "Kindly this is your account infomation.\n";
+                response = "Dear " + memDetails.getFirstName() +", your request has been received. \n";
+                String message = "Kindly this is your account infomation.\n";
                 message = message + "Name: "+ memDetails.getFirstName() +" "+ memDetails.getLastName() +"\n";
                 message = message + "Phone Number: "+ memDetails.getPhoneNumber() +"\n";
                 message = message + "Gender: "+ memDetails.getGender() +" \n";
@@ -982,7 +977,7 @@ public class USSDService {
                 message = message + "Comminity: "+ getCommunityName(memDetails.getCommunityId())+ " \n";
                 message = message + "Family: "+ getFamilyName(memDetails.getFamilyId()) +"\n";
                 message = message + "National Id: "+ memDetails.getNationalID() +"\n";
-                System.out.println(message);
+                response = response + message;
                 emtSmsService.sendSms(new SmsDto(msisdn, message));
 
             }else{
@@ -1022,6 +1017,8 @@ public class USSDService {
                         givingList.append("\n98. Next Page");
                     }
                     response = response + givingList;
+
+
 
                     emtSmsService.sendSms(new SmsDto(msisdn, response));
 
@@ -1147,9 +1144,22 @@ public  String getOutstaionName(Long id){
         return phoneNumber;
     }
 
-
+    public  String getfomatedPhoneNumber(String input) {
+        // Ensure the input string is not null and has at least 9 characters
+        if (input != null && input.length() >= 9) {
+            // Use substring to get the last 9 characters
+            return "254"+input.substring(input.length() - 9);
+        } else {
+            // Handle invalid input gracefully
+            return "Invalid input";
+        }
+    }
 
 }
+
+
+
+
 
 
 

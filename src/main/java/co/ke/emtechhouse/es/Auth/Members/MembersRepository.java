@@ -122,4 +122,5 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
 
     List<Members> findByCommunityId(Long community);
 
+    boolean findByNationalID(String nationalID);
 }

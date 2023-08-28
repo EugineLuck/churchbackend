@@ -72,6 +72,7 @@ public class IDNOController {
             Response response = client.newCall(request).execute();
             responsex.setMessage("OKay");
             responsex.setEntity(response);
+            System.out.println("Checking........."+response.body());
             return new ResponseEntity<>(responsex, HttpStatus.OK);
 
         } catch (Exception e) {

@@ -121,6 +121,12 @@ public class MembersController {
             response.setEntity("");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+        if (membersRepository.findByNationalID(signUpRequest.getNationalID())) {
+            response.setMessage("The IDNO is already registered to another account!");
+            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            response.setEntity("");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
 
         String familyNumber = generateFamily();
         String memberNumber = generateMemberNumber();
@@ -402,6 +408,8 @@ public class MembersController {
             Members existingMember = membersOptional.get();
 
 
+
+
 //            existingMember.setEmail(signUpRequest.getEmail());
 //            existingMember.setPostedTime(dtf.format(now));
 //            existingMember.setUsername(signUpRequest.getEmail());
@@ -422,13 +430,35 @@ public class MembersController {
 //            List<GroupMember> groupMemberGroups = groupMemberRepo.findByMemberId(existingMember.getId());
 //
 //            if(!groupMemberGroups.isEmpty()){
-//
 //                for(GroupMember gmember : groupMemberGroups){
 //                    gmember.setStatus("Inactive");
 //                    groupMemberRepo.save(gmember);
 //
 //                }
 //            }
+
+//            Check if it Updation
+
+//            List<Long> groupsId = signUpRequest.getGroupsId();
+//            if (groupsId != null && !groupsId.isEmpty()) {
+//                List<GroupMember> groupMembers = new ArrayList<>();
+//                for (Long groupId : groupsId) {
+//                    Groups group = groupsRepo.findById(groupId)
+//                            .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
+//
+//                    GroupMember groupMember = new GroupMember();
+//                    groupMember.setGroup(group);
+//                    groupMember.setMember(existingMember);
+//                    groupMember.setUpdationTime(new Date());
+//                    groupMember.setModifiedTime(new Date());
+//                    groupMember.setStatus("Active");
+//                    groupMember = groupMemberRepo.save(groupMember);
+//                    groupMembers.add(groupMember);
+//                }
+//
+//            }
+
+
 
 
 
