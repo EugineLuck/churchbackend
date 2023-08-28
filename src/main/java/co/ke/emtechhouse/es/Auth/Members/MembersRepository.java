@@ -24,6 +24,29 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
     @Transactional
     @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id = 1 group by m.id")
     List<MemberDetails> getAllMembers();
+
+
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.active as status,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id = 1 AND m.active = 1 group by m.id")
+    List<MemberDetails> getAllActiveMembers();
+
+
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.deleted_flag as status, m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id = 1 AND m.deleted_flag = 'Y' group by m.id")
+    List<MemberDetails> getAllDeletedMembers();
+
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT m.posted_time as postedTime,m.logged_in,m.id as id,m.locked as status, m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id = 1 AND m.locked = 1 group by m.id")
+    List<MemberDetails> getAllLockedMembers();
+
+
+
+
+
+
+
+
+
     @Transactional
     @Query(nativeQuery = true,value = "SELECT m.member_role as memberRole,m.id_ownership as ownership,m.posted_time as postedTime,m.id as mid,m.logged_in,m.id as id,m.mode_of_registration as mor, mr.role_id as roleId,m.date_of_birth as dob,mg.id as groupsId,c.id as communityId,f.id as familyId,o.id as churchId,  m.first_name AS firstname,m.app_id AS appId, m.last_name AS lastname, m.member_number AS number, m.phone_number AS phone, m.nationalid AS nation, m.email AS email, f.family_name AS family, c.community_name AS community, o.out_station_name AS church, g.group_name AS groups FROM members m JOIN family f on f.id = m.family_id JOIN community c on c.id= m.community_id JOIN out_station o on o.id = m.out_station_id JOIN members_roles mr on mr.member_id = m.id JOIN member_groups mg on mg.member_id = m.id JOIN groups g ON g.id = mg.group_id WHERE mr.role_id NOT IN (1, 5) group by m.id")
     List<MemberDetails> getAllUsers();
