@@ -85,6 +85,14 @@ public class Members {
     @JsonIgnore
     private Date deletedTime;
 
+    @Column(name = "modifiedBy", nullable = true, length=256)
+    private String modifiedBy;
+
+    @Column(name = "modifiedOn", nullable = true)
+    private String modifiedOn;
+
+    @Column(name = "deleteFlag", nullable = false, length = 100)
+    private String deleteFlag;
 
 
 

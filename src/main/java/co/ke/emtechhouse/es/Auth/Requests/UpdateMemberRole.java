@@ -2,9 +2,9 @@ package co.ke.emtechhouse.es.Auth.Requests;
 
 public class UpdateMemberRole {
     private Long roleid;
-    private Long memberId;
+    private String memberId;
 
-    public UpdateMemberRole(Long roleid, Long memberId) {
+    public UpdateMemberRole(Long roleid, String memberId) {
         this.roleid = roleid;
         this.memberId = memberId;
     }
@@ -20,11 +20,11 @@ public class UpdateMemberRole {
         this.roleid = roleid;
     }
 
-    public Long getMemberId() {
+    public String getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(Long memberId) {
+    public void setMemberId(String memberId) {
         this.memberId = memberId;
     }
 }

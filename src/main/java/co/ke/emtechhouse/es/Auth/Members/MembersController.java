@@ -101,6 +101,7 @@ public class MembersController {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
     String isloggedin = "N";
+    String status = "Inactive";
 
 
 
@@ -323,20 +324,66 @@ public class MembersController {
 
 
 
-//    @PutMapping("/update/{memberNumber}")
-//    public ResponseEntity<?> updateMember(@PathVariable String memberNumber,
-//
-//                                         @RequestBody MemberDetails memberUpdateDTO) {
-//        try {
-//            ApiResponse response = membersService.updateMember(memberNumber, memberUpdateDTO);
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.info("Catched Error {} " + e);
-//            return null;
-//        }
-//
-//
-//    }
+    @PutMapping("/updateMember")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody UpdateMember updateMember) {
+        ApiResponse response = new ApiResponse();
+
+        membersRepository.updateMemberDetails(
+                updateMember.getNationalID(),
+                updateMember.getIdOwnership(),
+                updateMember.getEmail(),
+                updateMember.getPhoneNo(),
+                updateMember.getCommunityId(),
+                updateMember.getFamilyId(),
+                updateMember.getMemberRole(),
+                updateMember.getMemberNumber()
+        );
+
+        Optional<Members> existingMember = membersRepository.findByMemberNumber(updateMember.getMemberNumber());
+
+        if (existingMember.isPresent()) {
+            Members member = existingMember.get();
+            List<Long> groupsId = updateMember.getGroupsId();
+
+            if (groupsId != null && !groupsId.isEmpty()) {
+                // Find existing group memberships of the member
+                List<GroupMember> existingGroupMemberships = groupMemberRepo.findByMember(member);
+
+                // Add new group memberships and update existing ones
+                for (Long groupId : groupsId) {
+                    Groups group = groupsRepo.findById(groupId)
+                            .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
+
+                    // Check if the member has an existing membership for this group
+                    Optional<GroupMember> existingMembership = existingGroupMemberships.stream()
+                            .filter(groupMember -> groupMember.getGroup().getId().equals(groupId))
+                            .findFirst();
+
+                    if (existingMembership.isPresent()) {
+                        GroupMember groupMember = existingMembership.get();
+                        groupMember.setStatus("Active");
+                        groupMemberRepo.save(groupMember);
+                    } else {
+                        GroupMember newGroupMember = new GroupMember();
+                        newGroupMember.setGroup(group);
+                        newGroupMember.setMember(member);
+                        newGroupMember.setStatus("Active");
+                        groupMemberRepo.save(newGroupMember);
+                    }
+                }
+
+                // Update the status of existing group memberships that are not in groupsId
+                existingGroupMemberships.stream()
+                        .filter(groupMember -> !groupsId.contains(groupMember.getGroup().getId()))
+                        .forEach(groupMember -> {
+                            groupMember.setStatus("Inactive");
+                            groupMemberRepo.save(groupMember);
+                        });
+            }
+        }
+
+        return ResponseEntity.ok(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
+    }
 
 
 
@@ -510,10 +557,14 @@ public class MembersController {
     }
     @PutMapping("/updaterole")
     public ResponseEntity<?> updateMemberRole(@Valid @RequestBody UpdateMemberRole update) {
+        ApiResponse response = new ApiResponse();
+        Optional<Members> members = membersRepository.findByMemberNumber(update.getMemberId());
+        Optional<Role> roles = roleRepository.findById(update.getRoleid());
 
         membersRepository.updateMemberRole(update.getRoleid(), update.getMemberId());
 
-        return ResponseEntity.ok(new MessageResponse("Member Role Updated successfully!"));
+
+        return ResponseEntity.ok(new MessageResponse("Member  "  +  update.getMemberId()  + " With Role  " +  roles.get().getName()  + "  Updated successfully!"));
     }
 
     @PutMapping(path = "/unlock/{id}")
@@ -623,7 +674,25 @@ public class MembersController {
             return response;
         }
     }
+    String modified_by ="";
 
+    String modified_on = dtf.format(now);
+
+    @PutMapping("/deleteaccount")
+    public ResponseEntity<?> deleteAccount(@Valid @RequestBody DeleteAccount update) {
+        modified_by ="Admin";
+
+        //Delete Flag
+        String delete_flag = "Y";
+        boolean isActive = false;
+
+
+        membersRepository.deleteUserAccount(isActive, delete_flag, modified_on, modified_by, update.getMemberNumber());
+
+        //Add Audit
+
+        return ResponseEntity.ok(new MessageResponse("Member Account Deleted successfully!"));
+    }
     @GetMapping(path = "/find/by/memberNumber/{member}")
     public ApiResponse getMemberByMemberNumber(@PathVariable String member) {
         ApiResponse response = new ApiResponse<>();
