@@ -202,6 +202,27 @@ public class AppUserController {
         }
     }
 
+@PutMapping("update/image")
+public ResponseEntity<?> updateMemberImage(@RequestBody UpdateImageDTO updateImageDTO) throws MessagingException {
+    ApiResponse response = new ApiResponse();
+
+    Optional<Object> existingUser = appUserRepo.findByUserName(updateImageDTO.getUserName());
+    if(existingUser.isPresent()){
+
+        AppUser user = (AppUser) existingUser.get();
+        user.setImageBanner(updateImageDTO.getImageBanner());
+        appUserRepo.save(user);
+
+        response.setMessage("Image Updated Successfully");
+        response.setStatusCode(HttpStatus.CREATED.value());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }else{
+        response.setMessage("User not found");
+        response.setStatusCode(HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+}
 
     @PostMapping("/password/reset")
     public ResponseEntity<?> forgotPassword(@RequestBody Forgotpassword forgotpassword) throws MessagingException {
