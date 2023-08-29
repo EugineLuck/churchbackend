@@ -122,12 +122,12 @@ public class MembersController {
             response.setEntity("");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        if (membersRepository.findByNationalID(signUpRequest.getNationalID())) {
-            response.setMessage("The IDNO is already registered to another account!");
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setEntity("");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+//        if (membersRepository.findByNationalID(signUpRequest.getNationalID())) {
+//            response.setMessage("The IDNO is already registered to another account!");
+//            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+//            response.setEntity("");
+//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//        }
 
         String familyNumber = generateFamily();
         String memberNumber = generateMemberNumber();
@@ -388,8 +388,11 @@ public class MembersController {
                         });
             }
         }
+        response.setStatusCode(HttpStatus.CREATED.value());
+        response.setMessage("Member Updated successfully");
+        response.setEntity(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
 
-        return ResponseEntity.ok(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
+        return ResponseEntity.ok(response);
     }
 
 
