@@ -122,12 +122,12 @@ public class MembersController {
             response.setEntity("");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        if (membersRepository.findByNationalID(signUpRequest.getNationalID())) {
-            response.setMessage("The IDNO is already registered to another account!");
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setEntity("");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+//        if (membersRepository.findByNationalID(signUpRequest.getNationalID())) {
+//            response.setMessage("The IDNO is already registered to another account!");
+//            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+//            response.setEntity("");
+//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//        }
 
         String familyNumber = generateFamily();
         String memberNumber = generateMemberNumber();
@@ -330,6 +330,7 @@ public class MembersController {
 
 
 
+
     @PutMapping("/updateMember")
     public ResponseEntity<?> updateMember(@Valid @RequestBody UpdateMember updateMember) {
         ApiResponse response = new ApiResponse();
@@ -387,10 +388,12 @@ public class MembersController {
                         });
             }
         }
+        response.setStatusCode(HttpStatus.CREATED.value());
+        response.setMessage("Member Updated successfully");
+        response.setEntity(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
 
-        return ResponseEntity.ok(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
+        return ResponseEntity.ok(response);
     }
-
 
 
 
@@ -893,6 +896,25 @@ public class MembersController {
         return newMemberNo;
 
     }
+    @GetMapping(path = "/all/members/active")
+    public List<MemberDetails> getAllActiveMembers() {
+        return membersRepository.getAllActiveMembers();
+    }
+    @GetMapping(path = "/all/members/deleted")
+    public List<MemberDetails> getAllDeletedMembers() {
+        return membersRepository.getAllDeletedMembers();
+    }
+
+    @GetMapping(path = "/all/members/locked")
+    public List<MemberDetails> getAllLockedMembers() {
+        return membersRepository.getAllLockedMembers();
+    }
+
+
+
+
+
+
     public String generateFamily() {
         String newFamilyNo = "";
         Optional<Family> familyNumber = frepo.getFamilyNumber();

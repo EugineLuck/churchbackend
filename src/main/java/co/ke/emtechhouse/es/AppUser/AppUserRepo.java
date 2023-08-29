@@ -1,6 +1,7 @@
 package co.ke.emtechhouse.es.AppUser;
 
 
+import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
 import co.ke.emtechhouse.es.Auth.Members.Members;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,7 +21,7 @@ public interface AppUserRepo extends JpaRepository<AppUser,Long> {
     Optional<Object> findByUserName(String userName);
     Optional<AppUser> getByuserName(String userName);
 
-
+//
     Collection<Object> searchByUserName(String userName);
 
 //    String getDeleteFlag(String userName);
@@ -78,6 +79,7 @@ public interface AppUserRepo extends JpaRepository<AppUser,Long> {
             @Param(value = "modified_by") String modifiedby,
             @Param(value = "username") String username
     );
+
     @Transactional
     @Modifying
     @Query(nativeQuery = true,value = "update app_user set password = :password,modified_on= :modified_on,modified_by = :modified_by where user_name = :userName")
@@ -87,4 +89,5 @@ public interface AppUserRepo extends JpaRepository<AppUser,Long> {
             @Param(value = "modified_by") String modified_by,
             @Param(value = "userName") String userName
     );
+
 }
