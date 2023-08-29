@@ -4,6 +4,7 @@ package co.ke.emtechhouse.es.AppUser;
 import co.ke.emtechhouse.es.Advertisement.Advertisement;
 import co.ke.emtechhouse.es.Auth.DTO.Mailparams;
 import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
+import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
 import co.ke.emtechhouse.es.Auth.Requests.*;
 import co.ke.emtechhouse.es.Auth.Responses.JwtResponse;
@@ -17,6 +18,7 @@ import co.ke.emtechhouse.es.Auth.utils.Session.Activesession;
 import co.ke.emtechhouse.es.utils.Responses.MessageResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,8 @@ public class AppUserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-
+    @Autowired
+    AuditingRepository auditingRepository;
     @Autowired
     PasswordEncoder encoder;
     @Autowired
@@ -59,6 +62,15 @@ public class AppUserController {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
     String modified_on = dtf.format(now);
+    public void addAudit(Authentication authentication, String action) {
+        Auditing auditing = new Auditing();
+        auditing.setActivity(action);
+        auditing.setStarttime(dtf.format(now));
+        auditing.setUsername(authentication.getName());
+//        auditing.setRequestip(request.getRemoteAddr());
+        auditingRepository.save(auditing);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerAppUser(@Valid @RequestBody UserReg userReg) throws MessagingException {
         ApiResponse response = new ApiResponse();
@@ -242,7 +254,7 @@ public class AppUserController {
         if (!appUserRepo.existsByUserName(changepassword.getUserName())) {
             response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
-            response.setEntity("");
+            response.setEntity("Try Again after some time");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             PasswordGeneratorUtil passwordGeneratorUtil = new PasswordGeneratorUtil();
@@ -260,8 +272,9 @@ public class AppUserController {
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 }
                 user1.setPassword(newPass);
-                appUserRepo.save(user1);
-                String message = "Dear " + user1.getUserName() + " your password has been Changed successfully!";
+                String modified_by = "Admin";
+                appUserRepo.changePassword(encoder.encode(changepassword.getNewPassword()),modified_on,modified_by,changepassword.getUserName());
+                String message = "Dear " + changepassword.getUserName() + " your password has been Changed successfully!";
                 response.setMessage(message);
                 response.setStatusCode(HttpStatus.OK.value());
                 response.setEntity("");
@@ -318,6 +331,35 @@ String username = user.getUsername();
 
         return ResponseEntity.ok(new MessageResponse("User Account Status Altered successfully!"));
     }
+    @GetMapping(path = "/find/by/id/{id}")
+    public ApiResponse getUserById(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse<>();
+        Optional<AppUser> users = appUserRepo.findById(id);
+        if (users.isPresent()) {
+            AppUser user = users.get();
+            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            response.setStatusCode(HttpStatus.FOUND.value());
+            response.setEntity(user);
+            return response;
+
+        } else {
+            response.setMessage("User not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+
+    }
+//    @PutMapping("/changepassword")
+//    public ResponseEntity<?> updateYourPassword(@Valid @RequestBody UpdatePassword update) {
+//
+//        modified_by = "Admin";
+//        appUserRepo.updateUserPassword(encoder.encode(update.getPassword()), modified_on, modified_by, update.ge());
+//
+//
+//
+//        return ResponseEntity.ok(new MessageResponse("Password Updated successfully!"));
+//    }
 }
 
 
