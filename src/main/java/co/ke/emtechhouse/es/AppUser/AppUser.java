@@ -47,4 +47,10 @@ public class AppUser {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "modifiedBy", nullable = true, length=256)
+    private String modifiedBy;
+
+    @Column(name = "modifiedOn", nullable = true)
+    private String modifiedOn;
+
 }

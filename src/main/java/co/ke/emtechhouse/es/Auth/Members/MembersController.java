@@ -2,22 +2,17 @@ package co.ke.emtechhouse.es.Auth.Members;
 import co.ke.emtechhouse.es.Auth.utils.DatesCalculator;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
-import com.google.api.client.auth.oauth2.TokenRequest;
 import org.apache.commons.text.WordUtils;
 
-import co.ke.emtechhouse.es.AppUser.AppUser;
-import co.ke.emtechhouse.es.Auth.DTO.Mailparams;
 import co.ke.emtechhouse.es.Auth.MailService.MailService;
 
 import co.ke.emtechhouse.es.Auth.Requests.*;
-import co.ke.emtechhouse.es.Auth.Responses.JwtResponse;
 import co.ke.emtechhouse.es.Auth.Responses.MessageResponse;
 import co.ke.emtechhouse.es.Auth.Roles.ERole;
 import co.ke.emtechhouse.es.Auth.Roles.Role;
 import co.ke.emtechhouse.es.Auth.Roles.RoleRepository;
 import co.ke.emtechhouse.es.Auth.Security.jwt.JwtUtils;
 import co.ke.emtechhouse.es.Auth.utils.HttpInterceptor.UserRequestContext;
-import co.ke.emtechhouse.es.Auth.utils.PasswordGeneratorUtil;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Auth.utils.Session.Activesession;
 import co.ke.emtechhouse.es.Community.CommunityService;
@@ -27,7 +22,6 @@ import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
 import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMemberRepo;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
-import co.ke.emtechhouse.es.OutStation.OutStation;
 import co.ke.emtechhouse.es.OutStation.OutStationRepository;
 import co.ke.emtechhouse.es.OutStation.OutStationService;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
@@ -39,16 +33,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -110,6 +101,7 @@ public class MembersController {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
     String isloggedin = "N";
+    String status = "Inactive";
 
 
 
@@ -339,6 +331,66 @@ public class MembersController {
 
 
 
+    @PutMapping("/updateMember")
+    public ResponseEntity<?> updateMember(@Valid @RequestBody UpdateMember updateMember) {
+        ApiResponse response = new ApiResponse();
+
+        membersRepository.updateMemberDetails(
+                updateMember.getNationalID(),
+                updateMember.getIdOwnership(),
+                updateMember.getEmail(),
+                updateMember.getPhoneNo(),
+                updateMember.getCommunityId(),
+                updateMember.getFamilyId(),
+                updateMember.getMemberRole(),
+                updateMember.getMemberNumber()
+        );
+
+        Optional<Members> existingMember = membersRepository.findByMemberNumber(updateMember.getMemberNumber());
+
+        if (existingMember.isPresent()) {
+            Members member = existingMember.get();
+            List<Long> groupsId = updateMember.getGroupsId();
+
+            if (groupsId != null && !groupsId.isEmpty()) {
+                // Find existing group memberships of the member
+                List<GroupMember> existingGroupMemberships = groupMemberRepo.findByMember(member);
+
+                // Add new group memberships and update existing ones
+                for (Long groupId : groupsId) {
+                    Groups group = groupsRepo.findById(groupId)
+                            .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
+
+                    // Check if the member has an existing membership for this group
+                    Optional<GroupMember> existingMembership = existingGroupMemberships.stream()
+                            .filter(groupMember -> groupMember.getGroup().getId().equals(groupId))
+                            .findFirst();
+
+                    if (existingMembership.isPresent()) {
+                        GroupMember groupMember = existingMembership.get();
+                        groupMember.setStatus("Active");
+                        groupMemberRepo.save(groupMember);
+                    } else {
+                        GroupMember newGroupMember = new GroupMember();
+                        newGroupMember.setGroup(group);
+                        newGroupMember.setMember(member);
+                        newGroupMember.setStatus("Active");
+                        groupMemberRepo.save(newGroupMember);
+                    }
+                }
+
+                // Update the status of existing group memberships that are not in groupsId
+                existingGroupMemberships.stream()
+                        .filter(groupMember -> !groupsId.contains(groupMember.getGroup().getId()))
+                        .forEach(groupMember -> {
+                            groupMember.setStatus("Inactive");
+                            groupMemberRepo.save(groupMember);
+                        });
+            }
+        }
+
+        return ResponseEntity.ok(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
+    }
 
 
 
@@ -533,7 +585,17 @@ public class MembersController {
             return response;
         }
     }
+    @PutMapping("/updaterole")
+    public ResponseEntity<?> updateMemberRole(@Valid @RequestBody UpdateMemberRole update) {
+        ApiResponse response = new ApiResponse();
+        Optional<Members> members = membersRepository.findByMemberNumber(update.getMemberId());
+        Optional<Role> roles = roleRepository.findById(update.getRoleid());
 
+        membersRepository.updateMemberRole(update.getRoleid(), update.getMemberId());
+
+
+        return ResponseEntity.ok(new MessageResponse("Member  "  +  update.getMemberId()  + " With Role  " +  roles.get().getName()  + "  Updated successfully!"));
+    }
 
     @PutMapping(path = "/unlock/{id}")
     public ApiResponse unlock(@PathVariable Long id) {
@@ -642,7 +704,25 @@ public class MembersController {
             return response;
         }
     }
+    String modified_by ="";
 
+    String modified_on = dtf.format(now);
+
+    @PutMapping("/deleteaccount")
+    public ResponseEntity<?> deleteAccount(@Valid @RequestBody DeleteAccount update) {
+        modified_by ="Admin";
+
+        //Delete Flag
+        String delete_flag = "Y";
+        boolean isActive = false;
+
+
+        membersRepository.deleteUserAccount(isActive, delete_flag, modified_on, modified_by, update.getMemberNumber());
+
+        //Add Audit
+
+        return ResponseEntity.ok(new MessageResponse("Member Account Deleted successfully!"));
+    }
     @GetMapping(path = "/find/by/memberNumber/{member}")
     public ApiResponse getMemberByMemberNumber(@PathVariable String member) {
         ApiResponse response = new ApiResponse<>();
