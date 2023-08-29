@@ -12,5 +12,5 @@ import lombok.ToString;
 public class ChangePassword {
     private String userName;
     private String newPassword;
-//    private String confirmPassword;
+
 }
