@@ -330,6 +330,7 @@ public class MembersController {
 
 
 
+
     @PutMapping("/updateMember")
     public ResponseEntity<?> updateMember(@Valid @RequestBody UpdateMember updateMember) {
         ApiResponse response = new ApiResponse();
@@ -390,7 +391,6 @@ public class MembersController {
 
         return ResponseEntity.ok(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
     }
-
 
 
 
