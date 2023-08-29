@@ -338,20 +338,6 @@ public class MembersController {
 
 
 
-//    @PutMapping("/update/{memberNumber}")
-//    public ResponseEntity<?> updateMember(@PathVariable String memberNumber,
-//
-//                                         @RequestBody MemberDetails memberUpdateDTO) {
-//        try {
-//            ApiResponse response = membersService.updateMember(memberNumber, memberUpdateDTO);
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.info("Catched Error {} " + e);
-//            return null;
-//        }
-//
-//
-//    }
 
 
 

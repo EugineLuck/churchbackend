@@ -6,6 +6,8 @@ import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.InternalStkPushRequest;
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushSyncResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.Subscribers.Subscibers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class SubscriptionController {
     private SubscriptionsRepo subscriptionsRepo;
     @Autowired
     DarajaApiImpl darajaImplementation;
+
+    @Autowired
+    NotificationService notificationService;
 
 
 
@@ -60,13 +65,27 @@ public class SubscriptionController {
                 Subscriptions save = subscriptionService.saveSubscription(subS);
                 response.setMessage("Subscription Added");
                 response.setEntity(save);
-//                response.setStatusCode(HttpStatus.FOUND.value());
                 response.setStatusCode(HttpStatus.CREATED.value());
+
+                NotificationDTO notificationsDTO = new NotificationDTO();
+                notificationsDTO.setTitle("New Post");
+                notificationsDTO.setMessage("A church member has joined our Ads/Mentor Program. Visit career page to explore.\n");
+                notificationsDTO.setSubtitle("Subscription Notice");
+                notificationService.CreateServiceNotificationAll(notificationsDTO);
+
             }else{
-                response.setMessage("Mpesa transaction not successfull");
+                response.setMessage(response1.getResultDesc());
                 response.setStatusCode(HttpStatus.NOT_FOUND.value());
 
+                NotificationDTO notificationsDTO = new NotificationDTO();
+                notificationsDTO.setTitle("New Post");
+                notificationsDTO.setMessage("A church member has joined our Ads/Mentor Program. Visit career page to explore.\n");
+                notificationsDTO.setSubtitle("Subscription Notice");
+                notificationService.CreateServiceNotificationAll(notificationsDTO);
+
             }
+
+
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
