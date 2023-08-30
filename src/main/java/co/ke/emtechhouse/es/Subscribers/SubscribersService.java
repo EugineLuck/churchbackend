@@ -36,6 +36,7 @@ public class SubscribersService {
     public List<Subscibers> getAll() {
         try {
             List<Subscibers> subs = subscribersRepository.findAll();
+            subs.add(subscribersRepository.findAllSubscribersWithSubscriptions());
             return subs;
         }catch (Exception e) {
             log.info("Catched Error {} " + e);
