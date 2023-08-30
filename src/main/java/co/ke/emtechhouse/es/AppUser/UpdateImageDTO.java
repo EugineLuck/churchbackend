@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.Lob;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -12,6 +14,7 @@ import lombok.ToString;
 public class UpdateImageDTO {
 
     private String userName;
+    @Lob
     private String imageBanner;
 
 }
