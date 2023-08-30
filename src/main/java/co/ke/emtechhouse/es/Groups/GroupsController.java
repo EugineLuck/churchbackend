@@ -55,6 +55,16 @@ public class GroupsController {
         }
 
     }
+    @GetMapping("/get/getGroups")
+    public ResponseEntity<?> getGroups() {
+        try{
+            return new ResponseEntity<>(repo.getAllGroup(), HttpStatus.OK);
+        }catch (Exception e){
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+
+    }
 
     @GetMapping("/get/getAllByOustationId/{id}")
     public ResponseEntity<?> getAllByOustationId(@PathVariable Long id) {
