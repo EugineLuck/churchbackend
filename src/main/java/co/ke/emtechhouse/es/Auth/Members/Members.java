@@ -81,7 +81,7 @@ public class Members {
     @JsonIgnore
     private String deletedBy;
     @JsonIgnore
-    private Character deletedFlag = 'N';
+    private String deletedFlag;
     @JsonIgnore
     private Date deletedTime;
 
@@ -91,8 +91,8 @@ public class Members {
     @Column(name = "modifiedOn", nullable = true)
     private String modifiedOn;
 
-    @Column(name = "deleteFlag", nullable = false, length = 100)
-    private String deleteFlag;
+//    @Column(name = "deleteFlag", nullable = false, length = 100)
+//    private String deleteFlag;
 
 
 

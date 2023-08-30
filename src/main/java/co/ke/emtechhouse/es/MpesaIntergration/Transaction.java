@@ -33,6 +33,7 @@ public class Transaction {
     private String resultCode;
     private String resultDesc;
     private String status;
+
 }
 
 
