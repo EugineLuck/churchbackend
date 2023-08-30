@@ -44,7 +44,7 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class USSDService {
+public class USSDChecker {
     @Autowired
     private USSDRepo ussdRepo;
     @Autowired
@@ -111,10 +111,8 @@ public class USSDService {
 
 
 
+        if(inputs.size() == 1){
 
-
-        //Initial Request
-        if (inputs.size() == 1) {
             log.info("Direct to menu");
             {
                 response = "CON Welcome To EM -T CHURCH, Choose an option to continue!\n";
@@ -123,279 +121,14 @@ public class USSDService {
                 response = response + "3. Inquiry\n";
                 response = response + "4. Update Details\n";
             }
-        } else if (inputs.size() > 1) {
-            if(inputs.get(1).equals("3") && inputs.size() == 2 & inputs.get(2).equals("1")){
-//                Enquiry
 
+        }else{
 
-                response = "Choose Option\n";
-                response = response + "1. My Details\n";
-                response = response + "2. Givings\n";
-                response = response + "3. Announcements\n";
-            }else if(inputs.get(1).equals("3") && inputs.size() == 3){
 
-                response = "Enter Member Number";
-            }else if(inputs.get(1).equals("3") && inputs.size() == 4){
-                Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
-                if(existingMember.isPresent()){
-                    Members memDetails = (Members) existingMember.get();
-                    response = "Dear " + memDetails.getFirstName() +", your request has been received. \n";
-                    String message = "Kindly this is your account infomation.\n";
-                    message = message + "Name: "+ memDetails.getFirstName() +" "+ memDetails.getLastName() +"\n";
-                    message = message + "Phone Number: "+ memDetails.getPhoneNumber() +"\n";
-                    message = message + "Gender: "+ memDetails.getGender() +" \n";
-                    message = message + "Outstation: "+ getOutstaionName(memDetails.getOutStationId()) +" \n";
-                    message = message + "Comminity: "+ getCommunityName(memDetails.getCommunityId())+ " \n";
-                    message = message + "Family: "+ getFamilyName(memDetails.getFamilyId()) +"\n";
-                    message = message + "National Id: "+ memDetails.getNationalID() +"\n";
-                    response = response + message;
-                    emtSmsService.sendSms(new SmsDto(msisdn, message));
+//            Handle Registration
+            if(inputs.get(1).equals("1") && inputs.size() == 2) {
 
-                }else{
-                    response = "END Member Number not Found!";
-                }
-
-            }else if(inputs.size() == 3 && inputs.get(1).equals("3")  && inputs.get(2).equals("2")){
-
-                response = "Enter Member Number";
-
-
-            }else if(inputs.get(1).equals("3") && inputs.size() == 2 & inputs.get(2).equals("2")){
-                Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
-                if(existingMember.isPresent()){
-                    Members memDetails = (Members) existingMember.get();
-                    response = "CON Dear " + memDetails.getFirstName() +", your Givings.\n ";
-                    List<SuccessfullyTransactions> allTransactions = transactionRepo.findByUssdMemberNumber(memDetails.getMemberNumber());
-                    if(allTransactions.size() > 0){
-                        int pageSize = 10; // Number of records per page
-                        int totalPages = (allTransactions.size() + pageSize - 1) / pageSize; // Calculate total pages
-
-                        int currentPage = 1;
-                        if (inputs.size() > 4) {
-                            currentPage = Integer.parseInt(inputs.get(4));
-                        }
-
-                        int startIndex = (currentPage - 1) * pageSize;
-                        int endIndex = Math.min(startIndex + pageSize, allTransactions.size());
-
-                        StringBuilder givingList = new StringBuilder();
-                        for (int i = startIndex; i < endIndex; i++) {
-                            SuccessfullyTransactions giving1 = allTransactions.get(i);
-                            givingList.append("\n").append(giving1.getGivingId()).append(". ").append(giving1.getTitle());
-                        }
-//                     Append options for navigating to the next page or saving data
-                        if (currentPage < totalPages) {
-                            givingList.append("\n98. Next Page");
-                        }
-                        response = response + givingList;
-
-
-
-                        emtSmsService.sendSms(new SmsDto(msisdn, response));
-
-
-                    }else{
-                        response = "END No Givings found";
-                    }
-
-
-                }else{
-                    response = "END Member Number not Found!";
-                }
-
-            }else if(inputs.size() == 3 && inputs.get(1).equals("3") && inputs.get(2).equals("3")) {
-                response = "CON Announcemnts";
-                List<Announcements> allAnnouncements = announcementsRepo.findAll();
-                if (allAnnouncements.size() > 0) {
-                    int pageSize = 10; // Number of records per page
-                    int totalPages = (allAnnouncements.size() + pageSize - 1) / pageSize; // Calculate total pages
-
-                    int currentPage = 1;
-                    if (inputs.size() > 4) {
-                        currentPage = Integer.parseInt(inputs.get(4));
-                    }
-
-                    int startIndex = (currentPage - 1) * pageSize;
-                    int endIndex = Math.min(startIndex + pageSize, allAnnouncements.size());
-
-                    StringBuilder announcements = new StringBuilder();
-                    for (int i = startIndex; i < endIndex; i++) {
-                        Announcements announcement = allAnnouncements.get(i);
-                        announcements.append("\n").append(announcement.getId()).append(". ").append(announcement.getTitle());
-                    }
-//                     Append options for navigating to the next page or saving data
-                    if (currentPage < totalPages) {
-                        announcements.append("\n98. Next Page");
-                    }
-                    response = response + announcements;
-
-
-                }
-
-
-
-            }else
-            if (inputs.get(1).equals("2") && inputs.size() == 2) {
-
-//                Giving Part
-
-                List<Giving> giving = givingRepo.findAll();
-                if (giving.size() > 0) {
-                    System.out.println(giving);
-                    int pageSize = 10; // Number of records per page
-                    int totalPages = (giving.size() + pageSize - 1) / pageSize; // Calculate total pages
-
-                    int currentPage = 1;
-                    if (inputs.size() > 4) {
-                        currentPage = Integer.parseInt(inputs.get(4));
-                    }
-
-                    int startIndex = (currentPage - 1) * pageSize;
-                    int endIndex = Math.min(startIndex + pageSize, giving.size());
-
-                    StringBuilder givingList = new StringBuilder();
-                    for (int i = startIndex; i < endIndex; i++) {
-                        Giving giving1 = giving.get(i);
-                        givingList.append("\n").append(giving1.getId()).append(". ").append(giving1.getGivingTitle());
-                    }
-
-                    // Append options for navigating to the next page or saving data
-                    if (currentPage < totalPages) {
-                        givingList.append("\n98. Next Page");
-                    }
-
-                    response = "CON Select  Giving Type\n" + givingList;
-
-
-                }
-
-
-            } else if(inputs.get(1).equals("2") && inputs.size() == 3){
-                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
-                if(giving.isPresent()){
-                    Giving existingGiving = giving.get();
-                    response = response + "CON *Giving: " + existingGiving.getGivingTitle()+ "\n";
-                    response = response + "*Description: " + existingGiving.getDescription()+ "\n";
-                    response = response + "*Target Amount: " + existingGiving.getTargetAmount()+ "\n";
-                    response = response + "*Amount: " + existingGiving.getGivingTitle()+ "\n";
-                    response = response + "1. Give\n";
-
-
-                }
-
-            }else if(inputs.get(1).equals("2") && inputs.size() == 4) {
-
-                response = "CON Choose Option\n";
-
-                if(currentMemberx.isPresent()) {
-                    Members mem = currentMemberx.get();
-                    response = "CON Choose Option\n1. "+ mem.getPhoneNumber() +"\n";
-
-                }
-                response = response + "2. Enter New Phone Number\n";
-            }else if (inputs.get(1).equals("2") && inputs.size() == 5) {
-                if(inputs.get(4).equals("1")){
-                    Members mem = currentMemberx.get();
-                    response = "CON Use "+ mem.getPhoneNumber() +"\n";
-                    response = "1. Yes\n";
-                }else{
-                    response = response + "Enter Phone Number\n";
-                }
-
-            }else if (inputs.get(1).equals("2") && inputs.size() == 6) {
-                if(currentMemberx.isPresent()) {
-                        Members mem = currentMemberx.get();
-                        response = "CON 1. "+ mem.getMemberNumber() +"\n";
-                        response = response + "2. Enter Member Number\n";
-                }else{
-                    response = response + "2. Enter Member Number\n";
-                }
-
-            }else if (inputs.get(1).equals("2") && inputs.size() == 7) {
-                response = "CON Choose Option";
-                if(inputs.get(6).equals("1")){
-                    if(currentMemberx.isPresent()) {
-                        Members mem = currentMemberx.get();
-                        response = "Use "+ mem.getMemberNumber() +"\n";
-                        response = "1. Yes\n";
-
-                    }
-                }else{
-                    response = response + "Enter Member Number\n";
-
-                }
-
-
-
-            }else if (inputs.get(1).equals("2") && inputs.size() == 8) {
-                response = "CON Choose Option";
-                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
-                if(giving.isPresent()){
-                    Giving existingGiving = giving.get();
-                    response = response + "Choose Option\n1. Amount: "+existingGiving.getAmount() +"\n";
-                }
-                response = response + "2. Enter New Amount";
-
-            }else if (inputs.get(1).equals("2") && inputs.size() == 9) {
-                response = "CON Choose Option";
-                if(inputs.get(8).equals("1")){
-                    response = "1. Yes";
-
-                }else{
-                    response = response + "Enter Amount\n";
-                }
-
-
-            }else if (inputs.get(1).equals("2") && inputs.size() == 10) {
-
-                InternalStkPushRequest data = new InternalStkPushRequest();
-                data.setTransactionAmount(Double.valueOf(amount));
-
-                if(inputs.get(6).equals("1")){
-                    Members mem = currentMemberx.get();
-                    data.setMemberNumber(mem.getMemberNumber());
-//                    System.out.println(mem.getMemberNumber());
-                }else{
-                    data.setMemberNumber(inputs.get(7));
-
-                }
-                if(inputs.get(5).length() != 10){
-
-                }
-                if(inputs.get(4).equals("1")){
-                    Members mem = currentMemberx.get();
-                    data.setTransactionNumber(convertPhoneNumber(mem.getPhoneNumber()));
-                }else{
-                    if(inputs.get(5).length() < 10){
-                        response = "END Enter a 10 digit Number 07xxxxxxxx";
-                    }
-                    data.setTransactionNumber(convertPhoneNumber(inputs.get(5)));
-                }
-
-                if(inputs.get(8).equals("1")){
-                    Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
-                    if(giving.isPresent()){
-                        Giving existingGiving = giving.get();
-                        data.setTransactionAmount(Double.valueOf(existingGiving.getAmount()));
-                    }
-                }else{
-                    data.setTransactionAmount(Double.valueOf(inputs.get(9)));
-                }
-
-                data.setGivingId(inputs.get(2));
-
-                StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
-                 if(response1.getResultCode().equals("0")){
-                    response = "END Giving successfull";
-                 }else{
-                    response = "END Failed\n";
-                    response = response + response1.getResultDesc();
-                 }
-
-                System.out.println(response1);
-
-            }else if (inputs.get(1).equals("1") && inputs.size() == 2) {
-                response = "CON 1. Enter National Id";
+                response = "CON Lets start\n Enter National ID Number";
             }else if (inputs.get(1).equals("1") && inputs.size() == 3) {
 
                 String nationalIdInput = inputs.get(2);
@@ -466,7 +199,7 @@ public class USSDService {
 
                     }
                 } catch (NumberFormatException e) {
-                        response =  "CON Enter Last Name";
+                    response =  "CON Enter Last Name";
 
                 }
 
@@ -688,7 +421,7 @@ public class USSDService {
                         // Return to the previous step and ask for a valid Oustation
 
 //                        Start of Community
-                                response = "CON 7. Invalid Choice. Try again.\nSelect Community\n";
+                        response = "CON 7. Invalid Choice. Try again.\nSelect Community\n";
                         List<Community> communities = this.communityRepository.findAll();
                         if (communities.size() > 0) {
                             int pageSize = 10; // Number of records per page
@@ -913,7 +646,7 @@ public class USSDService {
 
             }
 
-            else if (inputs.size() == 11) {
+            else if (inputs.get(1).equals("1") && inputs.size() == 11) {
                 if (inputs.get(1).equalsIgnoreCase("1")) {
                     Optional <USSD> member = ussdRepo.findByPhoneNumber(msisdn);
                     if (member.isPresent()){
@@ -979,7 +712,7 @@ public class USSDService {
                         emtSmsService.sendSms(new SmsDto(msisdn, message));}
                 }
             }
-            else if (inputs.size() == 13) {
+            else if (inputs.get(1).equals("1") && inputs.size() == 12) {
                 if (inputs.get(1).equalsIgnoreCase("1")){
                     String memberNumber = generateMemberNumber();
                     log.info("{ " + msisdn + " }{ END Session }");
@@ -1031,157 +764,314 @@ public class USSDService {
 
 
 
+            /**
+             * Handle GIVING
+             * Option
+             * Menu List
+             */
+            else if(inputs.get(1).equals("2") && inputs.size() == 2) {
+                List<Giving> giving = givingRepo.findAll();
+                if (giving.size() > 0) {
+                    System.out.println(giving);
+                    int pageSize = 10; // Number of records per page
+                    int totalPages = (giving.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                    int currentPage = 1;
+                    if (inputs.size() > 4) {
+                        currentPage = Integer.parseInt(inputs.get(4));
+                    }
+                    int startIndex = (currentPage - 1) * pageSize;
+                    int endIndex = Math.min(startIndex + pageSize, giving.size());
+                    StringBuilder givingList = new StringBuilder();
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Giving giving1 = giving.get(i);
+                        givingList.append("\n").append(giving1.getId()).append(". ").append(giving1.getGivingTitle());
+                    }
+                    if (currentPage < totalPages) {
+                        givingList.append("\n98. Next Page");
+                    }
+                    response = "CON  Choose an Option\n" + givingList;
+                } else {
+                    response = "END No active givings";
+                }
+            }else if(inputs.get(1).equals("2") && inputs.size() == 3) {
+
+                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                if (giving.isPresent()) {
+                    Giving existingGiving = giving.get();
+                    response = response + "CON *Giving: " + existingGiving.getGivingTitle() + "\n";
+                    response = response + "*Description: " + existingGiving.getDescription() + "\n";
+                    response = response + "*Target Amount: " + existingGiving.getTargetAmount() + "\n";
+                    response = response + "*Amount: " + existingGiving.getGivingTitle() + "\n";
+                    response = response + "1. Give\n";
+                }
+
+
+            } else if (inputs.get(1).equals("2") && inputs.size() == 4) {
+                response = "CON Choose Option\n";
+
+                if (currentMemberx.isPresent()) {
+                    Members mem = currentMemberx.get();
+                    response = "1. " + mem.getPhoneNumber() + "\n";
+
+                }
+                response = response + "2. Enter New Phone Number\n";
+            } else if (inputs.get(1).equals("2") && inputs.size() == 5) {
+
+                if(inputs.get(4).equals("1")){
+                    Members mem = currentMemberx.get();
+                    response = "CON Use "+ mem.getPhoneNumber() +"\n";
+                    response = "1. Yes\n";
+                }else{
+                    response = response + "Enter Phone Number\n";
+                }
+                
+            } else if (inputs.get(1).equals("2") && inputs.size() == 6) {
+                if(currentMemberx.isPresent()) {
+                    Members mem = currentMemberx.get();
+                    response = "CON 1. "+ mem.getMemberNumber() +"\n";
+                    response = response + "2. Enter Member Number\n";
+                }else{
+                    response = response + "2. Enter Member Number\n";
+                }
+                
+            } else if (inputs.get(1).equals("2") && inputs.size() == 7) {
+
+                response = "CON Choose Option\n";
+                if(inputs.get(6).equals("1")){
+                    if(currentMemberx.isPresent()) {
+                        Members mem = currentMemberx.get();
+                        response = response + "Use "+ mem.getMemberNumber() +"\n";
+                        response = response+ "1. Yes\n";
+
+                    }
+                }else{
+                    response = response + "Enter Member Number\n";
+
+                }
+                
+            }else if(inputs.get(1).equals("2") && inputs.size() == 8){
+
+                response = "CON Choose Option\n";
+                Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                if(giving.isPresent()){
+                    Giving existingGiving = giving.get();
+                    response = response + "1. Amount: "+existingGiving.getAmount() +"\n";
+                }
+                response = response + "2. Enter New Amount";
+
+            } else if (inputs.get(1).equals("2") && inputs.size() == 9) {
+                response = "CON Choose Option\n";
+                if(inputs.get(8).equals("1")){
+                    response = "1. Yes";
+
+                }else{
+                    response = response + "Enter Amount\n";
+                }
+
+            } else if (inputs.get(1).equals("2") && inputs.size() == 10) {
+//                Save Giving
+                InternalStkPushRequest data = new InternalStkPushRequest();
+                data.setTransactionAmount(Double.valueOf(amount));
+
+                if(inputs.get(6).equals("1")){
+                    Members mem = currentMemberx.get();
+                    data.setMemberNumber(mem.getMemberNumber());
+                }else{
+                    data.setMemberNumber(inputs.get(7));
+
+                }
+                if(inputs.get(5).length() != 10){
+
+                }
+                if(inputs.get(4).equals("1")){
+                    Members mem = currentMemberx.get();
+                    data.setTransactionNumber(convertPhoneNumber(mem.getPhoneNumber()));
+                }else{
+                    if(inputs.get(5).length() < 10){
+                        response = "END Enter a 10 digit Number 07xxxxxxxx";
+                    }
+                    data.setTransactionNumber(convertPhoneNumber(inputs.get(5)));
+                }
+
+                if(inputs.get(8).equals("1")){
+                    Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
+                    if(giving.isPresent()){
+                        Giving existingGiving = giving.get();
+                        data.setTransactionAmount(Double.valueOf(existingGiving.getAmount()));
+                    }
+                }else{
+                    data.setTransactionAmount(Double.valueOf(inputs.get(9)));
+                }
+
+                data.setGivingId(inputs.get(2));
+
+                StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
+                if(response1.getResultCode().equals("0")){
+                    response = "END Giving successfull";
+                }else{
+                    response = "END Failed\n";
+                    response = response + response1.getResultDesc();
+                }
+
+                System.out.println(response1);
+
+
+                
+            }
+
+
+            /**
+             * Handle Inquery
+             * Option
+             * Menu List
+             */
+
+            else if(inputs.get(1).equals("3")){
+                response = "CON Enquriy\n";
+
+                if(inputs.size() == 2){
+                    response = "Choose Option\n";
+                    response = response + "1. My Details\n";
+                    response = response + "2. Givings\n";
+                    response = response + "3. Announcements\n";
+                    
+                } else if ( inputs.size() == 3 && inputs.get(2).equals("1")) {
+                    response = "CON Enter Member Number";
+
+                }else if ( inputs.size() == 4 && inputs.get(2).equals("1")) {
+                    Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
+                    if(existingMember.isPresent()){
+                        Members memDetails = (Members) existingMember.get();
+                        response = "Dear " + memDetails.getFirstName() +", your request has been received. \n";
+                        String message = "Kindly this is your account infomation.\n";
+                        message = message + "Name: "+ memDetails.getFirstName() +" "+ memDetails.getLastName() +"\n";
+                        message = message + "Phone Number: "+ memDetails.getPhoneNumber() +"\n";
+                        message = message + "Gender: "+ memDetails.getGender() +" \n";
+                        message = message + "Outstation: "+ getOutstaionName(memDetails.getOutStationId()) +" \n";
+                        message = message + "Comminity: "+ getCommunityName(memDetails.getCommunityId())+ " \n";
+                        message = message + "Family: "+ getFamilyName(memDetails.getFamilyId()) +"\n";
+                        message = message + "National Id: "+ memDetails.getNationalID() +"\n";
+                        response = response + message;
+                        emtSmsService.sendSms(new SmsDto(msisdn, message));
+
+                    }else{
+                        response = "END Member Number not Found!";
+                    }
+                } else if (inputs.size() == 3 && inputs.get(2).equals("2")) {
+                    response = "CON Enter Member Number";
+                } else if (inputs.size() == 4 && inputs.get(2).equals("2")) {
+                    Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
+                    if(existingMember.isPresent()){
+                        Members memDetails = (Members) existingMember.get();
+                        response = "CON Dear " + memDetails.getFirstName() +", your Givings.\n ";
+                        List<SuccessfullyTransactions> allTransactions = transactionRepo.findByUssdMemberNumber(memDetails.getMemberNumber());
+                        if(allTransactions.size() > 0){
+                            int pageSize = 10; // Number of records per page
+                            int totalPages = (allTransactions.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                            int currentPage = 1;
+                            if (inputs.size() > 4) {
+                                currentPage = Integer.parseInt(inputs.get(4));
+                            }
+                            int startIndex = (currentPage - 1) * pageSize;
+                            int endIndex = Math.min(startIndex + pageSize, allTransactions.size());
+
+                            StringBuilder givingList = new StringBuilder();
+                            for (int i = startIndex; i < endIndex; i++) {
+                                SuccessfullyTransactions giving1 = allTransactions.get(i);
+                                givingList.append("\n").append(giving1.getGivingId()).append(". ").append(giving1.getTitle());
+                            }
+                            if (currentPage < totalPages) {
+                                givingList.append("\n98. Next Page");
+                            }
+                            response = response + givingList;
+                            emtSmsService.sendSms(new SmsDto(msisdn, response));
+                        }else{
+                            response = "END No Givings found";
+                        }
+                    }else{
+                        response = "END Member Number not Found!";
+                    }
+                    
+                } else if (inputs.size() == 3 && inputs.get(2).equals("3")) {
+
+                    response = "CON Announcements\n";
+
+                    List<Announcements> allAnnouncements = announcementsRepo.findAll();
+                    if(allAnnouncements.size() > 0){
+                        int pageSize = 10; // Number of records per page
+                        int totalPages = (allAnnouncements.size() + pageSize - 1) / pageSize; // Calculate total pages
+
+                        int currentPage = 1;
+                        if (inputs.size() > 4) {
+                            currentPage = Integer.parseInt(inputs.get(4));
+                        }
+                        int startIndex = (currentPage - 1) * pageSize;
+                        int endIndex = Math.min(startIndex + pageSize, allAnnouncements.size());
+
+                        StringBuilder announcementsList = new StringBuilder();
+                        for (int i = startIndex; i < endIndex; i++) {
+                            Announcements announcement = allAnnouncements.get(i);
+                            announcementsList.append("\n").append(announcement.getId()).append(". ").append(announcement.getTitle());
+                        }
+                        if (currentPage < totalPages) {
+                            announcementsList.append("\n98. Next Page");
+                        }
+                        response = response + announcementsList;
+                        emtSmsService.sendSms(new SmsDto(msisdn, response));
+                    }else{
+                        response = "END No Announcements found";
+                    }
+                    
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                Handle Member Update
+            }else if(inputs.get(1).equals("4") && inputs.size() == 2){
+
+                response = "CON Update Member Dateils\n";
+
+            }else{
+                response = "END Invalid Option";
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         }
-
-
-// GIVING
-//        if (inputs.size() ==2 && (inputs.get(1).equals("2") && inputs.get(1).equalsIgnoreCase("2"))) {
-//
-//            response = " Select Giving Type";
-//            log.info("Church Giving  - display Giving");
-
-//
-//
-//
-//                response = "CON  Select a Church Giving\n" + givingList;
-//                System.out.println("checkkkkkkkkkkkkkkkkk" + response);
-//
-//                if(inputs.size() ==3 && (inputs.get(1).equals("2"))){
-//                    String id = inputs.get(3);
-//
-//                    System.out.println(id);
-//
-//
-//
-//                }
-//
-//
-//
-//
-//
-//                }
-//            }
-
-
-
-// INQUIRE OPTION
-//        if (inputs.size() == 2 && (inputs.get(1).equals("3") && inputs.get(1).equalsIgnoreCase("3"))) {
-//            response = "Choose Option\n";
-//            response = response + "1. My Details\n";
-//            response = response + "2. Givings\n";
-//            response = response + "3. Announcements\n";
-//        }else if(inputs.size() == 3 && inputs.get(1).equals("3")  && inputs.get(2).equals("1")){
-//
-//            response = "Enter Member Number";
-//        }else if(inputs.size() == 4 && inputs.get(1).equals("3") && inputs.get(2).equals("1")){
-//            Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
-//            if(existingMember.isPresent()){
-//                Members memDetails = (Members) existingMember.get();
-//                response = "Dear " + memDetails.getFirstName() +", your request has been received. \n";
-//                String message = "Kindly this is your account infomation.\n";
-//                message = message + "Name: "+ memDetails.getFirstName() +" "+ memDetails.getLastName() +"\n";
-//                message = message + "Phone Number: "+ memDetails.getPhoneNumber() +"\n";
-//                message = message + "Gender: "+ memDetails.getGender() +" \n";
-//                message = message + "Outstation: "+ getOutstaionName(memDetails.getOutStationId()) +" \n";
-//                message = message + "Comminity: "+ getCommunityName(memDetails.getCommunityId())+ " \n";
-//                message = message + "Family: "+ getFamilyName(memDetails.getFamilyId()) +"\n";
-//                message = message + "National Id: "+ memDetails.getNationalID() +"\n";
-//                response = response + message;
-//                emtSmsService.sendSms(new SmsDto(msisdn, message));
-//
-//            }else{
-//                response = "END Member Number not Found!";
-//            }
-//
-//        }else if(inputs.size() == 3 && inputs.get(1).equals("3")  && inputs.get(2).equals("2")){
-//
-//            response = "Enter Member Number";
-//
-//
-//        }else if(inputs.size() == 4 && inputs.get(1).equals("3") && inputs.get(2).equals("2")){
-//            Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
-//            if(existingMember.isPresent()){
-//                Members memDetails = (Members) existingMember.get();
-//                response = "CON Dear " + memDetails.getFirstName() +", your Givings.\n ";
-//                List<SuccessfullyTransactions> allTransactions = transactionRepo.findByUssdMemberNumber(memDetails.getMemberNumber());
-//                if(allTransactions.size() > 0){
-//                    int pageSize = 10; // Number of records per page
-//                    int totalPages = (allTransactions.size() + pageSize - 1) / pageSize; // Calculate total pages
-//
-//                    int currentPage = 1;
-//                    if (inputs.size() > 4) {
-//                        currentPage = Integer.parseInt(inputs.get(4));
-//                    }
-//
-//                    int startIndex = (currentPage - 1) * pageSize;
-//                    int endIndex = Math.min(startIndex + pageSize, allTransactions.size());
-//
-//                    StringBuilder givingList = new StringBuilder();
-//                    for (int i = startIndex; i < endIndex; i++) {
-//                        SuccessfullyTransactions giving1 = allTransactions.get(i);
-//                        givingList.append("\n").append(giving1.getGivingId()).append(". ").append(giving1.getTitle());
-//                    }
-////                     Append options for navigating to the next page or saving data
-//                    if (currentPage < totalPages) {
-//                        givingList.append("\n98. Next Page");
-//                    }
-//                    response = response + givingList;
-//
-//
-//
-//                    emtSmsService.sendSms(new SmsDto(msisdn, response));
-//
-//
-//                }else{
-//                    response = "END No Givings found";
-//                }
-//
-//
-//            }else{
-//                response = "END Member Number not Found!";
-//            }
-//
-//        }else if(inputs.size() == 3 && inputs.get(1).equals("3") && inputs.get(2).equals("3")) {
-//            response = "CON Announcemnts";
-//            List<Announcements> allAnnouncements = announcementsRepo.findAll();
-//            if (allAnnouncements.size() > 0) {
-//                int pageSize = 10; // Number of records per page
-//                int totalPages = (allAnnouncements.size() + pageSize - 1) / pageSize; // Calculate total pages
-//
-//                int currentPage = 1;
-//                if (inputs.size() > 4) {
-//                    currentPage = Integer.parseInt(inputs.get(4));
-//                }
-//
-//                int startIndex = (currentPage - 1) * pageSize;
-//                int endIndex = Math.min(startIndex + pageSize, allAnnouncements.size());
-//
-//                StringBuilder announcements = new StringBuilder();
-//                for (int i = startIndex; i < endIndex; i++) {
-//                    Announcements announcement = allAnnouncements.get(i);
-//                    announcements.append("\n").append(announcement.getId()).append(". ").append(announcement.getTitle());
-//                }
-////                     Append options for navigating to the next page or saving data
-//                if (currentPage < totalPages) {
-//                    announcements.append("\n98. Next Page");
-//                }
-//                response = response + announcements;
-//
-//
-//            }
-//        }
-//
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1192,16 +1082,16 @@ public class USSDService {
 
 
 
-public  String getOutstaionName(Long id){
-    Optional existingChurch = outStationRepository.findById(id);
+    public  String getOutstaionName(Long id){
+        Optional existingChurch = outStationRepository.findById(id);
 
-    if(existingChurch.isPresent()){
-        OutStation outStation = (OutStation) existingChurch.get();
-        return outStation.getOutStationName();
+        if(existingChurch.isPresent()){
+            OutStation outStation = (OutStation) existingChurch.get();
+            return outStation.getOutStationName();
 
+        }
+        return  null;
     }
-    return  null;
-}
 
     public  String getCommunityName(Long id){
         Optional existingCommunity = communityRepository.findById(id);

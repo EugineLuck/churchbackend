@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class USSDController {
     @Autowired
     private USSDService ussdService;
+    @Autowired
+    private USSDChecker ussdChecker;
     @RequestMapping("/callback")
     public ResponseEntity<?> getUSSDCallback(@RequestParam("SESSIONID") String sessionId, @RequestParam("USSDCODE") String ussdCode, @RequestParam("MSISDN") String msisDn, @RequestParam("INPUT") String input, @RequestParam("NETWORK") String network) {
         log.info("Session Id - "+sessionId);
@@ -23,7 +25,7 @@ public class USSDController {
         log.info("Network - "+network);
         String response = "";
 
-        return ussdService.processUSSDRequests(msisDn, input, ussdCode, sessionId);
+        return ussdChecker.processUSSDRequests(msisDn, input, ussdCode, sessionId);
     }
 
 }
