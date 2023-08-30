@@ -52,6 +52,8 @@ public class AppUser {
 
     @Column(name = "modifiedOn", nullable = true)
     private String modifiedOn;
+
+
     @Lob
     private String imageBanner;
 

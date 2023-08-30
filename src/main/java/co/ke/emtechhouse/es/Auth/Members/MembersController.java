@@ -172,6 +172,7 @@ public class MembersController {
         token.setDeviceToken(signUpRequest.getDeviceToken());
         token.setMemberNumber(memberNumber);
         members.setMemberNumber(memberNumber);
+        members.setDeletedFlag("N");
         members.setDateOfBirth(signUpRequest.getDateOfBirth());
 
         // Set roles
@@ -390,7 +391,7 @@ public class MembersController {
         }
         response.setStatusCode(HttpStatus.CREATED.value());
         response.setMessage("Member Updated successfully");
-        response.setEntity(new MessageResponse("Member " + updateMember.getMemberNumber() + " With Role " + updateMember.getMemberRole() + " Updated successfully!"));
+        response.setEntity(updateMember);
 
         return ResponseEntity.ok(response);
     }
@@ -584,7 +585,8 @@ public class MembersController {
 //            check if account is active
             Members members1 = members.get();
             members1.setActive(true);
-            members1.setDeletedFlag('N');
+            members1.setDeletedFlag("N");
+//            members1.setDeleteFlag("N");
 //            user.setVerifiedFlag('N');
 //            user.setModifiedFlag('Y');
 //            user.setModifiedBy(UserRequestContext.getCurrentUser());
@@ -630,7 +632,7 @@ public class MembersController {
                 } else {
                     Members memberToDelete = members.get();
                     memberToDelete.setActive(false);
-                    memberToDelete.setDeletedFlag('Y');
+                    memberToDelete.setDeletedFlag("Y");
                     memberToDelete.setDeletedBy(UserRequestContext.getCurrentUser());
                     memberToDelete.setDeletedTime(new Date());
                     membersRepository.save(memberToDelete);
