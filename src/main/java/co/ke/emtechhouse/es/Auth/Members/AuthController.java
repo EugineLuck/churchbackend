@@ -144,7 +144,7 @@ public class AuthController {
 
                 //Add records to audit table
 
-                return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
+                return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),userDetails.getImageBanner(), roles));
             }
         }
     }

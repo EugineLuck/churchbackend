@@ -456,70 +456,8 @@ public class MembersController {
         Optional<Members> membersOptional = membersRepository.findByMemberNumber(signUpRequest.getMemberNumber());
         if (membersOptional.isPresent()) {
             log.info("User exist...");
-            Members existingMember = membersOptional.get();
 
 
-
-
-//            existingMember.setEmail(signUpRequest.getEmail());
-//            existingMember.setPostedTime(dtf.format(now));
-//            existingMember.setUsername(signUpRequest.getEmail());
-//            existingMember.setFirstName(signUpRequest.getFirstName());
-//            existingMember.setLastName(signUpRequest.getLastName());
-//            existingMember.setPhoneNumber(signUpRequest.getPhoneNo());
-//            existingMember.setCommunityId(signUpRequest.getCommunityId());
-//            existingMember.setOutStationId(signUpRequest.getOutStationId());
-//            existingMember.setDateOfBirth(signUpRequest.getDateOfBirth());
-
-
-
-//            List<Long> groupsId = signUpRequest.getGroupsId();
-
-//            List  groupMemberGroups = Collections.singletonList(groupMemberRepo.findByMemberId(existingMember.getId()));
-
-//            Update Groups
-//            List<GroupMember> groupMemberGroups = groupMemberRepo.findByMemberId(existingMember.getId());
-//
-//            if(!groupMemberGroups.isEmpty()){
-//                for(GroupMember gmember : groupMemberGroups){
-//                    gmember.setStatus("Inactive");
-//                    groupMemberRepo.save(gmember);
-//
-//                }
-//            }
-
-//            Check if it Updation
-
-//            List<Long> groupsId = signUpRequest.getGroupsId();
-//            if (groupsId != null && !groupsId.isEmpty()) {
-//                List<GroupMember> groupMembers = new ArrayList<>();
-//                for (Long groupId : groupsId) {
-//                    Groups group = groupsRepo.findById(groupId)
-//                            .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
-//
-//                    GroupMember groupMember = new GroupMember();
-//                    groupMember.setGroup(group);
-//                    groupMember.setMember(existingMember);
-//                    groupMember.setUpdationTime(new Date());
-//                    groupMember.setModifiedTime(new Date());
-//                    groupMember.setStatus("Active");
-//                    groupMember = groupMemberRepo.save(groupMember);
-//                    groupMembers.add(groupMember);
-//                }
-//
-//            }
-
-
-
-
-
-
-
-
-
-//            membersRepository.save(existingMember);
-
-//            String mailMessage = "Dear " + signUpRequest.getFirstName() + ", your account details have been updated by " + UserRequestContext.getCurrentUser() + " on " + new Date() + ". Your Credentials are <b>" + existingMember.getUsername() + "</b> Password <b>" + ".</b>";
 
 
             response.setMessage("Member " + signUpRequest.getMemberNumber() + " has been updated successfully!");
@@ -877,10 +815,10 @@ public class MembersController {
         return membersRepository.allRoleMember();
     }
 
-    @GetMapping(path = "/all/members")
-    public List<MemberDetails> getAllMembers() {
-        return membersRepository.getAllMembers();
-    }
+//    @GetMapping(path = "/all/members")
+//    public List<MemberDetails> getAllMembers() {
+//        return membersRepository.getAllMembers();
+//    }
     public String generateMemberNumber() {
         String newMemberNo = "";
         Optional<Members> memberNumber = membersRepository.getMemberNumber();
@@ -898,7 +836,7 @@ public class MembersController {
         return newMemberNo;
 
     }
-    @GetMapping(path = "/all/members/active")
+    @GetMapping(path = "/all/members")
     public List<MemberDetails> getAllActiveMembers() {
         return membersRepository.getAllActiveMembers();
     }
