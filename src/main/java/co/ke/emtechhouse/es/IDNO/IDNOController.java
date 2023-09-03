@@ -7,9 +7,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +16,7 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
@@ -27,6 +25,9 @@ public class IDNOController {
     public  IDNOController(){
 
     }
+
+    @Autowired
+    IDNOCheckerRepository idnoCheckerRepository;
 
 
 
@@ -44,16 +45,19 @@ public class IDNOController {
     // Assuming you have a RestTemplate bean
     private RestTemplate restTemplate;
 
-
         @PostMapping("/verify")
-        @Async
-    public CompletableFuture<ResponseEntity<ApiResponse>> verifyNow(@RequestBody IDNOdto details) {
-//        ApiResponse responsex = new ApiResponse();
+//        @Async
+    public ApiResponse verifyNow(@RequestBody IDNOdto details) {
+        ApiResponse responsex = new ApiResponse();
         try {
             String accessToken = getAccessToken(apiKey,merchantCode,customerSecret);
             JSONObject json = new JSONObject(accessToken);
             String accessTokenx = json.getString("accessToken");
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .connectTimeout(100, TimeUnit.SECONDS)
+                    .readTimeout(300, TimeUnit.SECONDS)
+                    .build();
+
             String requestBody = String.format("{\"identity\":{\"documentType\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\",\"dateOfBirth\":\"%s\",\"documentNumber\":\"%s\",\"countryCode\":\"%s\"}}",
                     "ID", details.getFirstName(), details.getLastName(), details.getDateOfBirth(), details.getDocumentNumber(), "KE");
 
@@ -69,35 +73,56 @@ public class IDNOController {
                     .build();
 
             // Execute the request asynchronously
-            CompletableFuture<Response> futureResponse = CompletableFuture.supplyAsync(() -> {
                 try {
                     Response response = client.newCall(request).execute();
-                    System.out.println("Checking........." + response);
-                    return response;
+                    String response2 = response.body().string();
+                    JSONObject jsonObject = new JSONObject(response2);
+                    if (jsonObject.has("status") && jsonObject.getBoolean("status")) {
+                        System.out.println("Response:: " + jsonObject);
+
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        JSONObject identity = data.getJSONObject("identity");
+                        JSONObject customer = identity.getJSONObject("customer");
+                        JSONObject address = identity.getJSONObject("address");
+
+                        String documentSerialNumber = identity.has("documentSerialNumber") ? identity.getString("documentSerialNumber") : "";
+                        String villageName = address.has("villageName") ? address.getString("villageName") : "";
+                        String location = address.has("location") ? address.getString("location") : "";
+                        String birthDate = customer.has("birthDate") ? customer.getString("birthDate") : "";
+                        String fullName = customer.has("fullName") ? customer.getString("fullName") : "";
+                        String documentNumber = identity.has("documentNumber") ? identity.getString("documentNumber") : "";
+
+                        IDNODetails idnoDetails = new IDNODetails();
+                        idnoDetails.setBirthDate(birthDate);
+                        idnoDetails.setDocumentNumber(documentNumber);
+                        idnoDetails.setDocumentSerialNumber(documentSerialNumber);
+                        idnoDetails.setDocumentType("ID");
+                        idnoDetails.setFullName(fullName);
+                        idnoDetails.setVillageName(villageName);
+                        idnoDetails.setLocationName(location);
+                        idnoDetails.setCountryCode("KE");
+
+                        idnoCheckerRepository.save(idnoDetails);
+                        System.out.println("Saved");
+
+                    } else {
+                        responsex.setMessage("Invalid Identification Number");
+                        responsex.setStatusCode(404);
+
+                    }
+                    return responsex;
                 } catch (Exception e) {
                     log.error("Error: " + e.getMessage());
                     return null;
                 }
-            });
-
-            // Wait for the response and create a ResponseEntity
-            Response response = futureResponse.get(); // This will block until a response is available
-            ApiResponse responsex = new ApiResponse();
-            if (response != null && response.isSuccessful()) {
-                responsex.setMessage("OKay");
-                responsex.setEntity(response);
-                return CompletableFuture.completedFuture(new ResponseEntity<>(responsex, HttpStatus.OK));
-            } else {
-                responsex.setMessage("Error");
-                return CompletableFuture.completedFuture(new ResponseEntity<>(responsex, HttpStatus.INTERNAL_SERVER_ERROR));
-            }
 
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+//            return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
         }
 
-    }
+            return null;
+        }
 
 
 

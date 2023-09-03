@@ -1,5 +1,9 @@
 package co.ke.emtechhouse.es.Auth.Members;
 import co.ke.emtechhouse.es.Auth.utils.DatesCalculator;
+import co.ke.emtechhouse.es.IDNO.IDNOCheckerRepository;
+import co.ke.emtechhouse.es.IDNO.IDNOController;
+import co.ke.emtechhouse.es.IDNO.IDNODetails;
+import co.ke.emtechhouse.es.IDNO.IDNOdto;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 import org.apache.commons.text.WordUtils;
@@ -40,6 +44,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -58,6 +64,9 @@ public class MembersController {
     OutStationRepository outStationRepository;
     @Autowired
     FamilyRepository familyRepo;
+
+    @Autowired
+    IDNOController idnoController;
     @Autowired
     private FamilyRepository frepo;
     @Autowired
@@ -77,6 +86,9 @@ public class MembersController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    IDNOCheckerRepository idnoCheckerRepository;
 
 
     @Autowired
@@ -106,7 +118,7 @@ public class MembersController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerMember(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
+    public ResponseEntity<?> registerMember(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException, ParseException {
         ApiResponse response = new ApiResponse();
 
         if (membersRepository.existsByUsername(signUpRequest.getPhoneNo())) {
@@ -129,10 +141,22 @@ public class MembersController {
 //            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 //        }
 
-        String familyNumber = generateFamily();
+
+
+
+        IDNOdto details = new IDNOdto();
+        details.setDateOfBirth(signUpRequest.getDateOfBirth());
+        details.setLastName(signUpRequest.getLastName());
+        details.setDateOfBirth("1990-01-01");
+        details.setFirstName(signUpRequest.getFirstName());
+
+        String verify = String.valueOf(idnoController.verifyNow(details));
+
+
+        Optional<IDNODetails> mem = idnoCheckerRepository.findByDocumentNumber(signUpRequest.getNationalID());
+        if(mem.isPresent()){
+            String familyNumber = generateFamily();
         String memberNumber = generateMemberNumber();
-        String firstName = signUpRequest.getFirstName();
-        String lastName = signUpRequest.getLastName();
 
         // Capitalize the first letter of each word in the first name and last name
         String capitalizedFirstName = WordUtils.capitalizeFully(signUpRequest.getFirstName());
@@ -191,8 +215,9 @@ public class MembersController {
 
 
         // Save the member without adding groups to the GroupMember table yet
-        Members savedMembers = membersRepository.save(members);
-        Token saveToken = tokenRepo.save(token);
+
+            Members savedMembers = membersRepository.save(members);
+            Token saveToken = tokenRepo.save(token);
 
         List<Long> groupsId = signUpRequest.getGroupsId();
         if (groupsId != null && !groupsId.isEmpty()) {
@@ -205,24 +230,36 @@ public class MembersController {
                 groupMember.setGroup(group);
                 groupMember.setMember(savedMembers);
                 groupMember.setStatus("Active");
-//                group.addGroupMember(groupMember);
                 groupMember = groupMemberRepo.save(groupMember);
                 groupMembers.add(groupMember);
             }
 
         }
 
-        // Send SMS and create the response
-        String message = "CONGRATULATIONS " + members.getFirstName() + "!" +
-                " You have successfully registered to EMT Church. " +
-                "Your member number is " + memberNumber + ". And your Family Number is " + familyNumber + " Use your username to login.";
-        emtSmsService.sendSms(new SmsDto(members.getPhoneNumber(), message));
 
-        response.setMessage("CONGRATULATIONS " + members.getFirstName() + "!" +
-                " You have successfully registered to EMT Church. " +
-                "Your member number is " + memberNumber + ". And your Family Number is " + familyNumber + " Use your username to login.");
-        response.setStatusCode(HttpStatus.CREATED.value());
-        response.setEntity(savedMembers);
+
+
+
+            String message = "CONGRATULATIONS " + members.getFirstName() + "!" +
+                    " You have successfully registered to EMT Church. " +
+                    "Your member number is " + memberNumber + ". And your Family Number is " + familyNumber + " Use your username to login.";
+            emtSmsService.sendSms(new SmsDto(members.getPhoneNumber(), message));
+
+            response.setMessage("CONGRATULATIONS " + members.getFirstName() + "!" +
+                    " You have successfully registered to EMT Church. " +
+                    "Your member number is " + memberNumber + ". And your Family Number is " + familyNumber + " Use your username to login.");
+            response.setStatusCode(HttpStatus.CREATED.value());
+            response.setEntity(savedMembers);
+
+
+        }else{
+            response.setMessage("Invalid Identification Number");
+            response.setStatusCode(404);
+        }
+
+
+        // Send SMS and create the response
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

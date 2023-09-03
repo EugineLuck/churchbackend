@@ -561,8 +561,6 @@ public class USSDChecker {
                             groupList.append("\n").append(groups1.getId()).append(". ").append(groups1.getGroupName());
                             churchCount++;
                         }
-
-
                         response = response + groupList;
 
                     }
