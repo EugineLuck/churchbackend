@@ -692,10 +692,12 @@ public class MembersController {
 
         membersRepository.deleteUserAccount(isActive, delete_flag, modified_on, modified_by, update.getMemberNumber());
 
-        //Add Audit
 
         return ResponseEntity.ok(new MessageResponse("Member Account Deleted successfully!"));
     }
+
+
+
     @GetMapping(path = "/find/by/memberNumber/{member}")
     public ApiResponse getMemberByMemberNumber(@PathVariable String member) {
         ApiResponse response = new ApiResponse<>();
@@ -797,6 +799,28 @@ public class MembersController {
             response.setMessage(HttpStatus.FOUND.getReasonPhrase());
             response.setStatusCode(HttpStatus.FOUND.value());
             response.setEntity(members1);
+            return response;
+        } else {
+            response.setMessage("Member not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return response;
+        }
+
+    }
+
+    @GetMapping(path = "memberDetails/find/by/formData")
+    public ApiResponse getMemberByFormData( @RequestParam String memberNumber, @RequestParam String phoneNumber ) {
+        ApiResponse response = new ApiResponse<>();
+        List<MemberDetails> members1 = membersRepository.searchByFormData(memberNumber,phoneNumber);
+        if (!members1.isEmpty()) {
+            MemberDetails  members = members1.get(0);
+
+
+
+            response.setMessage("Member " + members.getFirstname() + " " + members.getLastname() + " " + members.getFirstname() +  " " + members.getNumber() + " Found!");
+            response.setStatusCode(HttpStatus.OK.value());
+            response.setEntity(members1);
+
             return response;
         } else {
             response.setMessage("Member not found");

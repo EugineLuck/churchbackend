@@ -26,7 +26,7 @@ public class Giving {
 
     @Lob
     private String description;
-    private Long groupId;
+//    private Long groupId;
     private Double targetAmount;
     private Double amount;
     private String status;

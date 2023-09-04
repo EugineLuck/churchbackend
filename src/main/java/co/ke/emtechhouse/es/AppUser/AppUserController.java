@@ -1,10 +1,6 @@
 package co.ke.emtechhouse.es.AppUser;
 
 
-import co.ke.emtechhouse.es.Advertisement.Advertisement;
-import co.ke.emtechhouse.es.Auth.DTO.Mailparams;
-import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
-import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
 import co.ke.emtechhouse.es.Auth.Requests.*;
 import co.ke.emtechhouse.es.Auth.Responses.JwtResponse;
@@ -18,7 +14,6 @@ import co.ke.emtechhouse.es.Auth.utils.Session.Activesession;
 import co.ke.emtechhouse.es.utils.Responses.MessageResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -371,16 +365,27 @@ String username = user.getUsername();
 
 
     }
-//    @PutMapping("/changepassword")
-//    public ResponseEntity<?> updateYourPassword(@Valid @RequestBody UpdatePassword update) {
-//
-//        modified_by = "Admin";
-//        appUserRepo.updateUserPassword(encoder.encode(update.getPassword()), modified_on, modified_by, update.ge());
-//
-//
-//
-//        return ResponseEntity.ok(new MessageResponse("Password Updated successfully!"));
-//    }
+    @DeleteMapping("/deleteProfile/{id}")
+    public ResponseEntity<ApiResponse> deleteProfile(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse();
+        Optional<AppUser> userOptional = appUserRepo.findById(id);
+
+        if (userOptional.isPresent()) {
+            AppUser user = userOptional.get();
+            user.setImageBanner(null);
+            appUserRepo.save(user);
+
+            response.setMessage("Profile Photo Deleted successfully!");
+            response.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.setMessage("User not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }
 
 

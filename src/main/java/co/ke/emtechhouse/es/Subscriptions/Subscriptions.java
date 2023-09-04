@@ -27,6 +27,7 @@ public class Subscriptions {
     private String subscriptionType;
     private Double charges;
     private String descriptionInfo;
+    @Lob
     private String banner;
 
 

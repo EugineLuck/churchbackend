@@ -1,6 +1,10 @@
 package co.ke.emtechhouse.es.Giving;
 
+import co.ke.emtechhouse.es.AppUser.AppUser;
+import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Requests.GivingRequest;
+import co.ke.emtechhouse.es.Auth.Requests.UpdateGiving;
+import co.ke.emtechhouse.es.Auth.Requests.UpdateMember;
 import co.ke.emtechhouse.es.Auth.utils.CONSTANTS;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Community.Community;
@@ -9,6 +13,7 @@ import co.ke.emtechhouse.es.Family.Family;
 import co.ke.emtechhouse.es.Family.FamilyRepository;
 import co.ke.emtechhouse.es.GivingLevels.GivingLevel;
 import co.ke.emtechhouse.es.GivingLevels.GivingLevelRepo;
+import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
@@ -84,7 +89,7 @@ public class GivingController {
         giv.setGivingTitle(WordUtils.capitalizeFully(givingRequest.getGivingTitle()));
         giv.setStartDate(givingRequest.getStartDate());
         giv.setTargetAmount(givingRequest.getTargetAmount());
-        giv.setStatus("Active");
+        giv.setStatus(givingRequest.getStatus());
         giv.setPostedFlag(CONSTANTS.YES);
         giv.setPostedTime(new Date());
 
@@ -253,4 +258,52 @@ public class GivingController {
         }
         return null;
     }
+    @PutMapping("/updateGiving")
+    public ResponseEntity<?> updateGiving(@Valid @RequestBody UpdateGiving updateGiving) {
+        ApiResponse response = new ApiResponse();
+
+        givingRepo.updateGiving(
+                updateGiving.getId(),
+                updateGiving.getGivingLevel(),
+                updateGiving.getGivingTitle(),
+                updateGiving.getTargetAmount(),
+
+                updateGiving.getStartDate(),
+                updateGiving.getEndDate(),
+
+                updateGiving.getDescription(),
+
+                updateGiving.getStatus()
+
+        );
+
+        response.setStatusCode(HttpStatus.CREATED.value());
+        response.setMessage("Giving Updated successfully");
+        response.setEntity(updateGiving);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/deleteGiving/{id}")
+    public ResponseEntity<ApiResponse> deleteGiving(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse();
+        Optional<Giving> giving = givingRepo.findById(id);
+
+        if (giving.isPresent()) {
+            Giving give = giving.get();
+
+
+            givingRepo.deleteGiving( give.getId());
+
+            response.setMessage("Giving Deleted successfully!");
+            response.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.setMessage("Giving not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }

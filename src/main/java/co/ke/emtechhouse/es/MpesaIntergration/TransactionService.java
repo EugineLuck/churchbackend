@@ -1,7 +1,9 @@
 package co.ke.emtechhouse.es.MpesaIntergration;
 
 import co.ke.emtechhouse.es.Auth.Members.Members;
+import co.ke.emtechhouse.es.Auth.Members.MembersController;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
+import co.ke.emtechhouse.es.Auth.Members.MembersService;
 import co.ke.emtechhouse.es.Auth.Security.jwt.CurrentUserContext;
 import co.ke.emtechhouse.es.DTO.MpesaExpress.MpesaExpressDTO.MpesaexpresscallbackDTO;
 import co.ke.emtechhouse.es.DTO.MpesaExpress.MpesaexpressRequestDTO;
@@ -11,12 +13,15 @@ import co.ke.emtechhouse.es.Giving.GivingRepo;
 
 
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushStatusResponse;
+import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushSyncResponse;
 import co.ke.emtechhouse.es.NotificationComponent.*;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.Token;
 import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
+import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.EmtSmsService;
 import co.ke.emtechhouse.es.Stages.Stages;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -41,8 +46,12 @@ public class TransactionService {
     @Autowired
     TransactionRepo transactionRepo;
     @Autowired
+    MembersController membersController;
+    @Autowired
     MembersRepository membersRepository;
 
+    @Autowired
+    private EmtSmsService emtSmsService;
 
 //    @Autowired
 //    StkPushStatusResponse stkPushStatusResponse;
@@ -101,43 +110,54 @@ public class TransactionService {
 
         try {
             ApiResponse response = new ApiResponse();
+            Optional<Members> members1 = membersRepository.findByMemberNumber(transaction.getMemberNumber());
+            Optional<Giving> give = givingRepo.findById(transaction.getGivingId());
+            if (members1.isPresent()) {
+                Members members = members1.get();
+                Giving giving = give.get();
+
+                Transaction cash = new Transaction();
+
+                cash.setResultDesc("Cash Giving");
+                cash.setStatus("Recorded");
+                cash.setResultCode("0");
+
+                cash.setTransactionAmount(transaction.getTransactionAmount());
+                cash.setMemberNumber(transaction.getMemberNumber());
+                if (transaction.getChequeNumber() != null) {
+                    cash.setChequeNumber(transaction.getChequeNumber());
+                }
+                if (transaction.getEnvelopeNumber() != null) {
+                    cash.setEnvelopeNumber(transaction.getEnvelopeNumber());
+                }
+                if (transaction.getTransactionNumber() != null) {
+                    cash.setTransactionNumber(transaction.getTransactionNumber());
+                }
+
+                cash.setGivingId(transaction.getGivingId());
+                cash.setTransactionDate(new Date());
+                cash.setTransactionMode(transaction.getTransactionMode());
 
 
 
+                Transaction saveTransaction =  transactionRepo.save(cash);
 
-//                          TODO: Call mpesa initiate transaction request
-                            MpesaexpressRequestDTO mpesaexpressRequestDTO = new MpesaexpressRequestDTO();
-                            mpesaexpressRequestDTO.setAmount(String.valueOf(Math.round(transaction.getTransactionAmount())));
-                            mpesaexpressRequestDTO.setPhoneNumber(transaction.getPhoneNumber());
-                            System.out.println(transaction.getPhoneNumber());
-//                                            mpesaexpressRequestDTO.setAccountReference(transaction.getWalletNumber()); //wallet
-                            System.out.println(mpesaexpressRequestDTO);
-//                                            mpesaexpressRequestDTO.setCallBackURL(MPESA_EXPRESS_CALLBACK_URL);
-//                                            mpesaexpressRequestDTO.setTransactionDesc("Saving Schedule Payment");
-                            MpesaexpressResponseDTO mpesaresponse = mpesaCallerService.initiateMpesaexpress(mpesaexpressRequestDTO);
 
-//                  TODO: Update the transaction entry with transaction details
-//                            transaction.setMerchantRequestID(mpesaresponse.getMerchantRequestID());
-//                            transaction.setCheckoutRequestID(mpesaresponse.getCheckoutRequestID());
-//                            transaction.setResponseCode(mpesaresponse.getResponseCode());
-//                            transaction.setResponseDescription(mpesaresponse.getResponseDescription());
-//                            transaction.setCustomerMessage(mpesaresponse.getCustomerMessage());
-                            transaction.setStatus("Processing");
-                            transaction.setPhoneNumber(String.valueOf(Long.valueOf(transaction.getPhoneNumber())));
+                response.setMessage("Transaction Entered Successfully. Transaction for member " + transaction.getMemberNumber());
+                response.setStatusCode(HttpStatus.CREATED.value());
 
-                            response.setMessage("Transaction Entered Successfully. Transaction code is " + transaction.getTransactionCode());
-                            response.setStatusCode(HttpStatus.CREATED.value());
-                            Transaction saveTransaction = transactionRepo.save(transaction);
-                            response.setEntity(saveTransaction);
+                response.setEntity(saveTransaction);
 
-//                            if (Objects.equals(transaction.getStatus(), "Success")){
-//
-//
-//
-//                                notifySuccessMember(transaction);
-//                            } else {
-//                                notifyFailureMember(transaction);
-//                            }
+                String message = "Dear " + members.getFirstName() + members.getLastName() + " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() + " ! " + "at Muumini Church was sucessfully recorded ";
+                emtSmsService.sendSms(new SmsDto(members.getPhoneNumber(), message));
+            } else {
+
+                response.setMessage("MemberNumber not found");
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return response;
+
+            }
+
 
             return response;
         } catch (Exception e) {
