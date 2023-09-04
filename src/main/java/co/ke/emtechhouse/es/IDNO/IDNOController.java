@@ -1,6 +1,7 @@
 package co.ke.emtechhouse.es.IDNO;
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+import com.google.api.Http;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -8,6 +9,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,6 +18,7 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -75,10 +78,11 @@ public class IDNOController {
             // Execute the request asynchronously
                 try {
                     Response response = client.newCall(request).execute();
+                    System.out.println(response);
                     String response2 = response.body().string();
                     JSONObject jsonObject = new JSONObject(response2);
                     if (jsonObject.has("status") && jsonObject.getBoolean("status")) {
-                        System.out.println("Response:: " + jsonObject);
+//                        System.out.println("Response:: " + jsonObject);
 
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONObject identity = data.getJSONObject("identity");
@@ -102,15 +106,19 @@ public class IDNOController {
                         idnoDetails.setLocationName(location);
                         idnoDetails.setCountryCode("KE");
 
-                        idnoCheckerRepository.save(idnoDetails);
-                        System.out.println("Saved");
-
+                        Optional<IDNODetails> existing = idnoCheckerRepository.findByDocumentNumber(documentNumber);
+                        if(!existing.isPresent()){
+                            idnoCheckerRepository.save(idnoDetails);
+                            System.out.println("Saved");
+                        }
+                        responsex.setMessage("Identiticication Found");
+                        responsex.setStatusCode(HttpStatus.FOUND.value());
+                        return responsex;
                     } else {
                         responsex.setMessage("Invalid Identification Number");
-                        responsex.setStatusCode(404);
-
+                        responsex.setStatusCode(HttpStatus.NOT_FOUND.value());
+                        return  responsex;
                     }
-                    return responsex;
                 } catch (Exception e) {
                     log.error("Error: " + e.getMessage());
                     return null;
