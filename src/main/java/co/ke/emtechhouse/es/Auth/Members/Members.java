@@ -57,7 +57,7 @@ public class Members {
     @Column(name = "locked")
     private boolean isAcctLocked;
     private Boolean isAdmin = false;
-    private Long roleFk;
+
 
     @Column(name = "postedTime", nullable = false)
     private String postedTime;

@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Lob;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -17,15 +18,17 @@ public class UserDetailsImpl implements UserDetails {
 	private final Long id;
 
 	private final String userName;
+	private  String imageBanner;
 	@JsonIgnore
 	private final String password;
 
 	private final Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Long id, String userName, String password,
+	public UserDetailsImpl(Long id, String userName,String imageBanner, String password,
 						   Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.userName = userName;
+		this.imageBanner = imageBanner;
 		this.password = password;
 		this.authorities = authorities;
 	}
@@ -37,7 +40,9 @@ public class UserDetailsImpl implements UserDetails {
 		return new UserDetailsImpl(
 				appUser.getId(),
 				appUser.getUserName(),
+				appUser.getImageBanner(),
 				appUser.getPassword(),
+
 				authorities);
 	}
 	@Override
@@ -59,6 +64,12 @@ public class UserDetailsImpl implements UserDetails {
 	public String getUsername() {
 		return userName;
 	}
+
+
+	public String getImageBanner() {
+		return imageBanner;
+	}
+
 
 	@Override
 	public boolean isAccountNonExpired() {

@@ -3,6 +3,7 @@ package co.ke.emtechhouse.es.AppUser;
 
 import co.ke.emtechhouse.es.Auth.Members.MemberDetails;
 import co.ke.emtechhouse.es.Auth.Members.Members;
+import org.hibernate.annotations.OnDelete;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -79,5 +80,16 @@ public interface AppUserRepo extends JpaRepository<AppUser,Long> {
             @Param(value = "modified_by") String modifiedby,
             @Param(value = "username") String username
     );
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,value = "update app_user set password = :password,modified_on= :modified_on,modified_by = :modified_by where user_name = :userName")
+    void changePassword(
+            @Param(value = "password") String password,
+            @Param(value = "modified_on") String modified_on,
+            @Param(value = "modified_by") String modified_by,
+            @Param(value = "userName") String userName
+    );
+
 
 }
