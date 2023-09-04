@@ -672,7 +672,7 @@ public class USSDChecker {
                         USSD user = new USSD();
                         user.setFirstName(inputs.get(4));
                         user.setLastName(inputs.get(5));
-                        user.setPhoneNumber(convertPhoneNumber(msisdn));
+                        user.setPhoneNumber(getfomatedPhoneNumber(msisdn));
                         user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(6))));
                         user.setCommunityId(Long.valueOf(inputs.get(7)));
                         user.setGroupsId(Long.valueOf(inputs.get(8)));
@@ -692,7 +692,7 @@ public class USSDChecker {
                         members1.setMemberRole(inputs.get(10));
                         members1.setActive(true);
 
-                        members1.setPhoneNumber(convertPhoneNumber(msisdn));
+                        members1.setPhoneNumber(getfomatedPhoneNumber(msisdn));
                         members1.setMemberNumber(memberNumber);
                         members1.setOutStationId(Long.valueOf(inputs.get(6)));
                         members1.setCommunityId(Long.valueOf(inputs.get(7)));
@@ -746,7 +746,7 @@ public class USSDChecker {
                         USSD user = new USSD();
                         user.setFirstName(inputs.get(2));
                         user.setLastName(inputs.get(3));
-                        user.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
+                        user.setPhoneNumber(getfomatedPhoneNumber(inputs.get(8)));
                         user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(4))));
                         user.setCommunityId(Long.valueOf(inputs.get(5)));
                         user.setGroupsId(Long.valueOf(inputs.get(6)));
@@ -758,7 +758,7 @@ public class USSDChecker {
                         members1.setModeOfRegistration("USSD");
                         members1.setFirstName(inputs.get(2));
                         members1.setLastName(inputs.get(3));
-                        members1.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
+                        members1.setPhoneNumber(getfomatedPhoneNumber(inputs.get(8)));
                         members1.setMemberNumber(memberNumber);
                         members1.setOutStationId(Long.valueOf(inputs.get(4)));
                         members1.setCommunityId(Long.valueOf(inputs.get(5)));
@@ -913,12 +913,12 @@ public class USSDChecker {
                 }
                 if(inputs.get(4).equals("1")){
                     Members mem = currentMemberx.get();
-                    data.setTransactionNumber(convertPhoneNumber(mem.getPhoneNumber()));
+                    data.setTransactionNumber(getfomatedPhoneNumber(mem.getPhoneNumber()));
                 }else{
                     if(inputs.get(5).length() < 10){
                         response = "END Enter a 10 digit Number 07xxxxxxxx";
                     }
-                    data.setTransactionNumber(convertPhoneNumber(inputs.get(5)));
+                    data.setTransactionNumber(getfomatedPhoneNumber(inputs.get(5)));
                 }
 
                 if(inputs.get(8).equals("1")){
@@ -956,10 +956,14 @@ public class USSDChecker {
 
             else if(inputs.get(1).equals("3") && inputs.size() == 2){
 
-                    response = "CON Choose Option\n";
-                    response = response + "1. My Details\n";
-                    response = response + "2. Givings\n";
+                log.info("Choose Option");
+                {
+                    response = "\n";
+                    response = response + "1. My  Details\n";
+                    response = response + "2. Giving Statement\n";
                     response = response + "3. Announcements\n";
+                }
+
                 } else if ( inputs.size() == 3 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
                     response = "CON Enter Member Number";
 
@@ -1054,25 +1058,10 @@ public class USSDChecker {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //                Handle Member Update
            else if(inputs.get(1).equals("4") && inputs.size() == 2){
 
-                response = "CON Update Member Dateils\n";
+                response = "CON Update Your Dateils\n";
 
             }else{
                 response = "END Invalid Option";
@@ -1159,15 +1148,15 @@ public class USSDChecker {
         return newMemberNo;
 
     }
-    public String convertPhoneNumber(String phoneNumber) {
-        // Check if the number starts with '0' (indicating a Kenyan number).
-        if (phoneNumber != null && phoneNumber.length() == 10 && phoneNumber.startsWith("0")) {
-            // Remove the leading '0' and add the country code '254'.
-            return "254" + phoneNumber.substring(1);
-        }
-        // If the number is already in international format, return it as is.
-        return phoneNumber;
-    }
+//    public String convertPhoneNumber(String phoneNumber) {
+//        // Check if the number starts with '0' (indicating a Kenyan number).
+//        if (phoneNumber != null && phoneNumber.length() == 10 && phoneNumber.startsWith("0")) {
+//            // Remove the leading '0' and add the country code '254'.
+//            return "254" + phoneNumber.substring(1);
+//        }
+//        // If the number is already in international format, return it as is.
+//        return phoneNumber;
+//    }
 
     public  String getfomatedPhoneNumber(String input) {
         // Ensure the input string is not null and has at least 9 characters
@@ -1179,6 +1168,10 @@ public class USSDChecker {
             return "Invalid input";
         }
     }
+
+
+
+
 
 }
 
