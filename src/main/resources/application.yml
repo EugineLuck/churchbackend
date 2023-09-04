@@ -29,6 +29,7 @@ spring:
     url:  jdbc:mariadb://localhost/emt_church
     username: root
     password:
+
 #    url:  jdbc:mariadb://52.15.152.26:3306/muumini
 #    username: emtech
 #    password: emtech@2022

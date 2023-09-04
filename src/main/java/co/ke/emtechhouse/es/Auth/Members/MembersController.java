@@ -134,29 +134,22 @@ public class MembersController {
             response.setEntity("");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-//        if (membersRepository.findByNationalID(signUpRequest.getNationalID())) {
-//            response.setMessage("The IDNO is already registered to another account!");
-//            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-//            response.setEntity("");
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-
 
 
 
         IDNOdto details = new IDNOdto();
-        details.setDateOfBirth(signUpRequest.getDateOfBirth());
+//        details.setDateOfBirth(signUpRequest.getDateOfBirth());
         details.setLastName(signUpRequest.getLastName());
         details.setDateOfBirth("1990-01-01");
         details.setFirstName(signUpRequest.getFirstName());
+        details.setDocumentNumber(signUpRequest.getNationalID());
 
-        String verify = String.valueOf(idnoController.verifyNow(details));
+        ApiResponse verify = idnoController.verifyNow(details);
 
+        if(verify.getStatusCode() == 302){
 
-        Optional<IDNODetails> mem = idnoCheckerRepository.findByDocumentNumber(signUpRequest.getNationalID());
-        if(mem.isPresent()){
             String familyNumber = generateFamily();
-        String memberNumber = generateMemberNumber();
+            String memberNumber = generateMemberNumber();
 
         // Capitalize the first letter of each word in the first name and last name
         String capitalizedFirstName = WordUtils.capitalizeFully(signUpRequest.getFirstName());
@@ -253,8 +246,8 @@ public class MembersController {
 
 
         }else{
-            response.setMessage("Invalid Identification Number");
-            response.setStatusCode(404);
+            response.setMessage(verify.getMessage());
+            response.setStatusCode(verify.getStatusCode());
         }
 
 

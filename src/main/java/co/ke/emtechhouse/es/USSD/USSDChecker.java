@@ -8,6 +8,7 @@ import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
 import co.ke.emtechhouse.es.Auth.Roles.ERole;
 import co.ke.emtechhouse.es.Auth.Roles.Role;
 import co.ke.emtechhouse.es.Auth.Roles.RoleRepository;
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Community.Community;
 import co.ke.emtechhouse.es.Community.CommunityRepository;
 import co.ke.emtechhouse.es.Deanery.DeaneryRepository;
@@ -19,6 +20,8 @@ import co.ke.emtechhouse.es.Giving.GivingRepo;
 import co.ke.emtechhouse.es.Groups.Groups;
 import co.ke.emtechhouse.es.Groups.GroupsRepo;
 //import co.ke.emtechhouse.es.NotificationComponent.NotificationRepo;
+import co.ke.emtechhouse.es.IDNO.IDNOController;
+import co.ke.emtechhouse.es.IDNO.IDNOdto;
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.InternalStkPushRequest;
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushSyncResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
@@ -85,6 +88,8 @@ public class USSDChecker {
 
     @Autowired
     TransactionRepo transactionRepo;
+    @Autowired
+    IDNOController idnoController;
 
 
 
@@ -655,8 +660,15 @@ public class USSDChecker {
                         String memberNumber = generateMemberNumber();
                         log.info("{ " + msisdn + " }{ END Session }");
 
+                        IDNOdto details1 = new IDNOdto();
+                        details1.setLastName(inputs.get(5));
+                        details1.setDateOfBirth("1990-01-01");
+                        details1.setFirstName(inputs.get(4));
+                        details1.setDocumentNumber(inputs.get(2));
+                        System.out.println(details1);
+                        ApiResponse verify = idnoController.verifyNow(details1);
 
-//Send Message With Link to terms and Conditions
+                        if(verify.getStatusCode() == 302) {
 
                         USSD user = new USSD();
                         user.setFirstName(inputs.get(4));
@@ -679,6 +691,7 @@ public class USSDChecker {
                         members1.setIdOwnership(inputs.get(3));
                         members1.setNationalID(inputs.get(2));
                         members1.setMemberRole(inputs.get(10));
+                        members1.setActive(true);
 
                         members1.setPhoneNumber(convertPhoneNumber(msisdn));
                         members1.setMemberNumber(memberNumber);
@@ -704,10 +717,14 @@ public class USSDChecker {
                         members1.setRoles(roles);
                         members1.setPostedTime(dtf.format(now));
                         membersRepository.save(members1);
-                        response = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber" + memberNumber + " to login";
+                        response = "CONGRATULATIONS!! You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
 
                         String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
-                        emtSmsService.sendSms(new SmsDto(msisdn, message));}
+                        emtSmsService.sendSms(new SmsDto(msisdn, message));
+                        }else{
+                            response = "END Invalid Identification Number";
+                        }
+                    }
                 }
             }
             else if (inputs.get(1).equals("1") && inputs.size() == 12) {
@@ -715,48 +732,63 @@ public class USSDChecker {
                     String memberNumber = generateMemberNumber();
                     log.info("{ " + msisdn + " }{ END Session }");
 
-                    USSD user = new USSD();
-                    user.setFirstName(inputs.get(2));
-                    user.setLastName(inputs.get(3));
-                    user.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
-                    user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(4))));
-                    user.setCommunityId(Long.valueOf(inputs.get(5)));
-                    user.setGroupsId(Long.valueOf(inputs.get(6)));
-                    user.setFamilyId(Long.valueOf(inputs.get(7)));
-                    user.setMemberNumber(memberNumber);
-                    ussdRepo.save(user);
 
-                    Members members1 = new Members();
-                    members1.setModeOfRegistration("USSD");
-                    members1.setFirstName(inputs.get(2));
-                    members1.setLastName(inputs.get(3));
-                    members1.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
-                    members1.setMemberNumber(memberNumber);
-                    members1.setOutStationId(Long.valueOf(inputs.get(4)));
-                    members1.setCommunityId(Long.valueOf(inputs.get(5)));
-                    members1.setFamilyId(Long.valueOf(inputs.get(7)));
+                    IDNOdto details1 = new IDNOdto();
+                    details1.setLastName(inputs.get(3));
+                    details1.setDateOfBirth("1990-01-01");
+                    details1.setFirstName(inputs.get(2));
+                    details1.setDocumentNumber(inputs.get(2));
+
+                    System.out.println(details1);
+
+                    ApiResponse verify = idnoController.verifyNow(details1);
+
+                    if(verify.getStatusCode() == 302) {
+                        USSD user = new USSD();
+                        user.setFirstName(inputs.get(2));
+                        user.setLastName(inputs.get(3));
+                        user.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
+                        user.setOutStationId(Long.valueOf(Long.valueOf(inputs.get(4))));
+                        user.setCommunityId(Long.valueOf(inputs.get(5)));
+                        user.setGroupsId(Long.valueOf(inputs.get(6)));
+                        user.setFamilyId(Long.valueOf(inputs.get(7)));
+                        user.setMemberNumber(memberNumber);
+                        ussdRepo.save(user);
+
+                        Members members1 = new Members();
+                        members1.setModeOfRegistration("USSD");
+                        members1.setFirstName(inputs.get(2));
+                        members1.setLastName(inputs.get(3));
+                        members1.setPhoneNumber(convertPhoneNumber(inputs.get(8)));
+                        members1.setMemberNumber(memberNumber);
+                        members1.setOutStationId(Long.valueOf(inputs.get(4)));
+                        members1.setCommunityId(Long.valueOf(inputs.get(5)));
+                        members1.setFamilyId(Long.valueOf(inputs.get(7)));
 //                    members1.setPassword(encoder.encode("7777"));
 
-                    Set<Groups> groups = new HashSet<>();
+                        Set<Groups> groups = new HashSet<>();
 
-                    Groups memberGroups = groupsRepo.findById(Long.valueOf(inputs.get(6)))
-                            .orElseThrow(() -> new RuntimeException("Error: Group is not found."));
-                    groups.add(memberGroups);
+                        Groups memberGroups = groupsRepo.findById(Long.valueOf(inputs.get(6)))
+                                .orElseThrow(() -> new RuntimeException("Error: Group is not found."));
+                        groups.add(memberGroups);
 //                    members1.setGroups(groups);
 
-                    Set<Role> roles = new HashSet<>();
+                        Set<Role> roles = new HashSet<>();
 
-                    Role memberRoles = roleRepository.findById(Long.valueOf(1))
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    roles.add(memberRoles);
+                        Role memberRoles = roleRepository.findById(Long.valueOf(1))
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(memberRoles);
 //                    members1.setGroups(groups);
-                    members1.setRoles(roles);
-                    members1.setPostedTime(dtf.format(now));
-                    membersRepository.save(members1);
-                    response = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber" + memberNumber + " to login";
+                        members1.setRoles(roles);
+                        members1.setPostedTime(dtf.format(now));
+                        membersRepository.save(members1);
+                        response = "CONGRATULATIONS You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
 
-                    String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
-                    emtSmsService.sendSms(new SmsDto(msisdn, message));
+                        String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
+                        emtSmsService.sendSms(new SmsDto(msisdn, message));
+                    }else{
+                        response = "END Invalid Identification Number";
+                    }
                 }
             }
 

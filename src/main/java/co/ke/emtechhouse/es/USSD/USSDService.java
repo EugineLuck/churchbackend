@@ -1022,9 +1022,9 @@ public class USSDService {
                     members1.setRoles(roles);
                     members1.setPostedTime(dtf.format(now));
                     membersRepository.save(members1);
-                    response = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber" + memberNumber + " to login";
+                    response = "CCONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber" + memberNumber + " to login";
 
-                    String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
+                    String message = "CCONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
                     emtSmsService.sendSms(new SmsDto(msisdn, message));
                 }
             }
