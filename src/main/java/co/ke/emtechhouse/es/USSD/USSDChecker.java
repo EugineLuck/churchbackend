@@ -964,7 +964,7 @@ public class USSDChecker {
                     response = response + "3. Announcements\n";
                 }
 
-                } else if ( inputs.size() == 3 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
+                } else if ( inputs.get(1).equals("3") &&  inputs.get(2).equals("1") && inputs.size() == 3 ) {
                     response = "CON Enter Member Number";
 
                 }else if ( inputs.size() == 4 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
