@@ -296,7 +296,7 @@ public class USSDChecker {
                     long owner = Long.parseLong(value);
                     if (owner >= 0 ) {
 //                        Start of Community
-                        response = "CON 7. Select Community";
+                        response = "CON Select Community";
                         List<Community> communities = this.communityRepository.findAll();
                         if (communities.size() > 0) {
                             int pageSize = 10; // Number of records per page
@@ -321,7 +321,7 @@ public class USSDChecker {
                                 communityList.append("\n98. Next Page");
                             }
 
-                            response = "CON 8.  Select an Community\n" + communityList;
+                            response = "CON   Select an Community\n" + communityList;
 
                         }
 
@@ -391,7 +391,7 @@ public class USSDChecker {
                     long owner = Long.parseLong(value);
                     if (owner >= 0 ) {
 //
-                        response = "CON 9. Select Groups";
+                        response = "CON Select Groups";
                         log.info("Updating details - display Groups");
                         List<Groups> groups = groupsRepo.findAll();
                         if (groups.size() > 0) {
@@ -418,7 +418,7 @@ public class USSDChecker {
                                 groupsList.append("\n98. Next Page");
                             }
 
-                            response = "CON 10.  Select a Group\n" + groupsList;
+                            response = "CON   Select a Group\n" + groupsList;
                             System.out.println("checkkkkkkkkkkkkkkkkk" + response);
                         }
 //                        End Of Community
@@ -426,7 +426,7 @@ public class USSDChecker {
                         // Return to the previous step and ask for a valid Oustation
 
 //                        Start of Community
-                        response = "CON 7. Invalid Choice. Try again.\nSelect Community\n";
+                        response = "CON  Invalid Choice. Try again.\nSelect Community\n";
                         List<Community> communities = this.communityRepository.findAll();
                         if (communities.size() > 0) {
                             int pageSize = 10; // Number of records per page
@@ -451,7 +451,7 @@ public class USSDChecker {
                                 communityList.append("\n98. Next Page");
                             }
 
-                            response = "CON 8.  Select an Community\n" + communityList;
+                            response = "CON   Select an Community\n" + communityList;
 
                         }
 
@@ -459,7 +459,7 @@ public class USSDChecker {
                     }
                 } catch (NumberFormatException e) {
                     // Return to the previous step and ask for a valid National ID
-                    response = "CON 7. Invalid Choice. Try again.\nSelect Community\n";
+                    response = "CON Invalid Choice. Try again.\nSelect Community\n";
                     log.info("Updating details - display Out Station");
                     List<Community> communities = this.communityRepository.findAll();
                     if (communities.size() > 0) {
@@ -490,7 +490,7 @@ public class USSDChecker {
                     long owner = Long.parseLong(value);
                     if (owner >= 0 ) {
 //
-                        response = "CON 11. Select Family\n";
+                        response = "CON Select Family\n";
                         log.info("Updating details - display Family");
                         List<Family> families = this.familyRepository.findAll();
                         if (families.size() > 0) {
@@ -524,7 +524,7 @@ public class USSDChecker {
                         // Return to the previous step and ask for a valid Oustation
 
 //                        Start of Community
-                        response = "CON 9. Select Groups\n";
+                        response = "CON  Select Groups\n";
                         log.info("Updating details - display Groups");
                         List<Groups> groups = groupsRepo.findAll();
                         if (groups.size() > 0) {
@@ -558,7 +558,7 @@ public class USSDChecker {
                     }
                 } catch (NumberFormatException e) {
                     // Return to the previous step and ask for a valid National ID
-                    response = "CON 7. Invalid Choice. Try again.\nSelect Group\n";
+                    response = "CON  Invalid Choice. Try again.\nSelect Group\n";
                     List<Groups> groups = this.groupsRepo.findAll();
                     if (groups.size() > 0) {
                         StringBuilder groupList = new StringBuilder();
@@ -582,7 +582,7 @@ public class USSDChecker {
                     long owner = Long.parseLong(value);
                     if (owner >= 0 ) {
 //
-                        response = "CON 13. Select Family Role \n";
+                        response = "CON  Select Family Role \n";
                         response = response + "1. Father\n";
                         response = response + "2. Mother\n";
                         response = response + "3. Son\n";
@@ -593,7 +593,7 @@ public class USSDChecker {
                     } else {
                         // Return to the previous step and ask for a valid Oustation
 
-                        response = "CON 7. Invalid Choice. Try again.\nSelect Group\n";
+                        response = "CON  Invalid Choice. Try again.\nSelect Group\n";
                         log.info("Updating details - display Family");
                         List<Family> families = this.familyRepository.findAll();
                         if (families.size() > 0) {
@@ -627,7 +627,7 @@ public class USSDChecker {
                     }
                 } catch (NumberFormatException e) {
                     // Return to the previous step and ask for a valid National ID
-                    response = "CON 7. Invalid Choice. Try again.\nSelect Group\n";
+                    response = "CON  Invalid Choice. Try again.\nSelect Group\n";
                     List<Groups> groups = this.groupsRepo.findAll();
                     if (groups.size() > 0) {
                         StringBuilder groupList = new StringBuilder();
@@ -653,7 +653,7 @@ public class USSDChecker {
                 if (inputs.get(1).equalsIgnoreCase("1")) {
                     Optional <USSD> member = ussdRepo.findByPhoneNumber(msisdn);
                     if (member.isPresent()){
-                        response = "CON 14. Enter your phoneNumber";
+                        response = "CON  Enter your phoneNumber";
                     }
                     else {
                         String memberNumber = generateMemberNumber();
@@ -716,7 +716,7 @@ public class USSDChecker {
                         members1.setRoles(roles);
                         members1.setPostedTime(dtf.format(now));
                         membersRepository.save(members1);
-                        response = "CONGRATULATIONS!! You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
+                        response = "----CONGRATULATIONS!! You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
 
                         String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
                         emtSmsService.sendSms(new SmsDto(msisdn, message));
@@ -781,7 +781,7 @@ public class USSDChecker {
                         members1.setRoles(roles);
                         members1.setPostedTime(dtf.format(now));
                         membersRepository.save(members1);
-                        response = "CONGRATULATIONS You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
+                        response = "----CONGRATULATIONS You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
                         String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
                         emtSmsService.sendSms(new SmsDto(msisdn, message));
                     }else{
@@ -819,15 +819,14 @@ public class USSDChecker {
                         givingList.append("\n98. Next Page");
                     }
                     response = "CON  Choose an Option\n" + givingList;
-                } else {
-                    response = "END No active givings";
                 }
             }else if(inputs.get(1).equals("2") && inputs.size() == 3) {
 
                 Optional<Giving> giving = givingRepo.findById(Long.valueOf(inputs.get(2)));
                 if (giving.isPresent()) {
                     Giving existingGiving = giving.get();
-                    response = response + "CON *Giving: " + existingGiving.getGivingTitle() + "\n";
+                    response = "CON\n";
+                    response = response + "*Giving: " + existingGiving.getGivingTitle() + "\n";
                     response = response + "*Description: " + existingGiving.getDescription() + "\n";
                     response = response + "*Target Amount: " + existingGiving.getTargetAmount() + "\n";
                     response = response + "*Amount: " + existingGiving.getGivingTitle() + "\n";
@@ -849,7 +848,7 @@ public class USSDChecker {
                 if(inputs.get(4).equals("1")){
                     Members mem = currentMemberx.get();
                     response = "CON Use "+ mem.getPhoneNumber() +"\n";
-                    response = "1. Yes\n";
+                    response = response + "1. Yes\n";
                 }else{
                     response = response + "Enter Phone Number\n";
                 }
@@ -857,7 +856,7 @@ public class USSDChecker {
             } else if (inputs.get(1).equals("2") && inputs.size() == 6) {
                 if(currentMemberx.isPresent()) {
                     Members mem = currentMemberx.get();
-                    response = "CON 1. "+ mem.getMemberNumber() +"\n";
+                    response = "CON  "+ mem.getMemberNumber() +"\n";
                     response = response + "2. Enter Member Number\n";
                 }else{
                     response = response + "2. Enter Member Number\n";
@@ -955,23 +954,20 @@ public class USSDChecker {
              * Menu List
              */
 
-            else if(inputs.get(1).equals("3")){
-                response = "CON Enquriy\n";
+            else if(inputs.get(1).equals("3") && inputs.size() == 2){
 
-                if(inputs.size() == 2){
-                    response = "Choose Option\n";
+                    response = "CON Choose Option\n";
                     response = response + "1. My Details\n";
                     response = response + "2. Givings\n";
                     response = response + "3. Announcements\n";
-                    
-                } else if ( inputs.size() == 3 && inputs.get(2).equals("1")) {
+                } else if ( inputs.size() == 3 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
                     response = "CON Enter Member Number";
 
-                }else if ( inputs.size() == 4 && inputs.get(2).equals("1")) {
+                }else if ( inputs.size() == 4 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
                     Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
                     if(existingMember.isPresent()){
                         Members memDetails = (Members) existingMember.get();
-                        response = "Dear " + memDetails.getFirstName() +", your request has been received. \n";
+                        response = "END Dear " + memDetails.getFirstName() +", your request has been received. \n";
                         String message = "Kindly this is your account infomation.\n";
                         message = message + "Name: "+ memDetails.getFirstName() +" "+ memDetails.getLastName() +"\n";
                         message = message + "Phone Number: "+ memDetails.getPhoneNumber() +"\n";
@@ -986,9 +982,9 @@ public class USSDChecker {
                     }else{
                         response = "END Member Number not Found!";
                     }
-                } else if (inputs.size() == 3 && inputs.get(2).equals("2")) {
+                } else if (inputs.size() == 3 && inputs.get(2).equals("2") && inputs.get(1).equals("3")) {
                     response = "CON Enter Member Number";
-                } else if (inputs.size() == 4 && inputs.get(2).equals("2")) {
+                } else if (inputs.size() == 4 && inputs.get(2).equals("2") && inputs.get(1).equals("3")) {
                     Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
                     if(existingMember.isPresent()){
                         Members memDetails = (Members) existingMember.get();
@@ -1022,7 +1018,7 @@ public class USSDChecker {
                         response = "END Member Number not Found!";
                     }
                     
-                } else if (inputs.size() == 3 && inputs.get(2).equals("3")) {
+                } else if (inputs.size() == 3 && inputs.get(2).equals("3") && inputs.get(1).equals("3")) {
 
                     response = "END Announcements\n";
 
@@ -1074,7 +1070,7 @@ public class USSDChecker {
 
 
 //                Handle Member Update
-            }else if(inputs.get(1).equals("4") && inputs.size() == 2){
+           else if(inputs.get(1).equals("4") && inputs.size() == 2){
 
                 response = "CON Update Member Dateils\n";
 
