@@ -1072,7 +1072,7 @@ public class USSDChecker {
 //                Handle Member Update
            else if(inputs.get(1).equals("4") && inputs.size() == 2){
 
-                response = "CON Update Member Dateils\n";
+                response = "CON Update Your Dateils\n";
 
             }else{
                 response = "END Invalid Option";
