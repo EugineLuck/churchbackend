@@ -954,17 +954,16 @@ public class USSDChecker {
              * Menu List
              */
 
-            else if(inputs.get(1).equals("3")){
-                if(inputs.size() == 2){
+            else if(inputs.get(1).equals("3") && inputs.size() == 2){
+
                     response = "CON Choose Option\n";
                     response = response + "1. My Details\n";
                     response = response + "2. Givings\n";
                     response = response + "3. Announcements\n";
-                    
-                } else if ( inputs.size() == 3 && inputs.get(2).equals("1")) {
+                } else if ( inputs.size() == 3 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
                     response = "CON Enter Member Number";
 
-                }else if ( inputs.size() == 4 && inputs.get(2).equals("1")) {
+                }else if ( inputs.size() == 4 && inputs.get(2).equals("1") && inputs.get(1).equals("3")) {
                     Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
                     if(existingMember.isPresent()){
                         Members memDetails = (Members) existingMember.get();
@@ -983,9 +982,9 @@ public class USSDChecker {
                     }else{
                         response = "END Member Number not Found!";
                     }
-                } else if (inputs.size() == 3 && inputs.get(2).equals("2")) {
+                } else if (inputs.size() == 3 && inputs.get(2).equals("2") && inputs.get(1).equals("3")) {
                     response = "CON Enter Member Number";
-                } else if (inputs.size() == 4 && inputs.get(2).equals("2")) {
+                } else if (inputs.size() == 4 && inputs.get(2).equals("2") && inputs.get(1).equals("3")) {
                     Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
                     if(existingMember.isPresent()){
                         Members memDetails = (Members) existingMember.get();
@@ -1019,7 +1018,7 @@ public class USSDChecker {
                         response = "END Member Number not Found!";
                     }
                     
-                } else if (inputs.size() == 3 && inputs.get(2).equals("3")) {
+                } else if (inputs.size() == 3 && inputs.get(2).equals("3") && inputs.get(1).equals("3")) {
 
                     response = "END Announcements\n";
 
@@ -1071,7 +1070,7 @@ public class USSDChecker {
 
 
 //                Handle Member Update
-            }else if(inputs.get(1).equals("4") && inputs.size() == 2){
+           else if(inputs.get(1).equals("4") && inputs.size() == 2){
 
                 response = "CON Update Member Dateils\n";
 
