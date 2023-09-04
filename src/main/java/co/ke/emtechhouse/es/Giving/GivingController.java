@@ -189,7 +189,7 @@ public class GivingController {
 
 
         response.setMessage(HttpStatus.CREATED.getReasonPhrase());
-        response.setMessage("GIVING " + givingRequest.getGivingTitle() + " CREATED SUCCESSFULLY AT " + givingRequest.getPostedTime());
+        response.setMessage("GIVING " + givingRequest.getGivingTitle() + " CREATED SUCCESSFULLY AT " + new Date());
         response.setStatusCode(HttpStatus.CREATED.value());
         response.setEntity(saveGiving);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
