@@ -23,7 +23,6 @@ public class Transaction {
     private Long id;
     private String transactionCode;
 
-
     private Date transactionDate;
     private String phoneNumber;
     private Double transactionAmount;

@@ -107,9 +107,6 @@ public class TransactionService {
 
 //                          TODO: Call mpesa initiate transaction request
                             MpesaexpressRequestDTO mpesaexpressRequestDTO = new MpesaexpressRequestDTO();
-                            System.out.println("sffs");
-//                                            mpesaexpressRequestDTO.setBusinessShortCode();
-//                                            mpesaexpressRequestDTO.setTransactionType(MPESA_EXPRESS_BUSINESS_TRANSACTION_TYPE);
                             mpesaexpressRequestDTO.setAmount(String.valueOf(Math.round(transaction.getTransactionAmount())));
                             mpesaexpressRequestDTO.setPhoneNumber(transaction.getPhoneNumber());
                             System.out.println(transaction.getPhoneNumber());
@@ -118,8 +115,7 @@ public class TransactionService {
 //                                            mpesaexpressRequestDTO.setCallBackURL(MPESA_EXPRESS_CALLBACK_URL);
 //                                            mpesaexpressRequestDTO.setTransactionDesc("Saving Schedule Payment");
                             MpesaexpressResponseDTO mpesaresponse = mpesaCallerService.initiateMpesaexpress(mpesaexpressRequestDTO);
-                            System.out.println("cheeeeeeetsssssss");
-                            System.out.println(mpesaresponse);
+
 //                  TODO: Update the transaction entry with transaction details
 //                            transaction.setMerchantRequestID(mpesaresponse.getMerchantRequestID());
 //                            transaction.setCheckoutRequestID(mpesaresponse.getCheckoutRequestID());
@@ -127,25 +123,21 @@ public class TransactionService {
 //                            transaction.setResponseDescription(mpesaresponse.getResponseDescription());
 //                            transaction.setCustomerMessage(mpesaresponse.getCustomerMessage());
                             transaction.setStatus("Processing");
-                            //upishi
-
-
                             transaction.setPhoneNumber(String.valueOf(Long.valueOf(transaction.getPhoneNumber())));
 
-                            System.out.println("checkkkkkkkk");
                             response.setMessage("Transaction Entered Successfully. Transaction code is " + transaction.getTransactionCode());
                             response.setStatusCode(HttpStatus.CREATED.value());
                             Transaction saveTransaction = transactionRepo.save(transaction);
                             response.setEntity(saveTransaction);
 
-                            if (Objects.equals(transaction.getStatus(), "Success")){
-
-
-
-                                notifySuccessMember(transaction);
-                            } else {
-                                notifyFailureMember(transaction);
-                            }
+//                            if (Objects.equals(transaction.getStatus(), "Success")){
+//
+//
+//
+//                                notifySuccessMember(transaction);
+//                            } else {
+//                                notifyFailureMember(transaction);
+//                            }
 
             return response;
         } catch (Exception e) {
