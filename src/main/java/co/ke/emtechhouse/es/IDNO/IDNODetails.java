@@ -24,7 +24,6 @@ public class IDNODetails {
     private String countryCode;
     private String fullName;
     private String birthDate;
-    private String nationality;
     private String documentSerialNumber;
     private String locationName;
     private String villageName;
