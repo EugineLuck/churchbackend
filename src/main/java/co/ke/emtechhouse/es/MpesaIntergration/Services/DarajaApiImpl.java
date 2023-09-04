@@ -1,5 +1,10 @@
 package co.ke.emtechhouse.es.MpesaIntergration.Services;
 
+import co.ke.emtechhouse.es.Auth.Members.Members;
+import co.ke.emtechhouse.es.Auth.Members.MembersController;
+import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
+import co.ke.emtechhouse.es.Giving.Giving;
+import co.ke.emtechhouse.es.Giving.GivingRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.B2C_Transaction.B2CTransactionRequest;
 import co.ke.emtechhouse.es.MpesaIntergration.B2C_Transaction.B2CTransactionSyncResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.B2C_Transaction.InternalB2CTransactionRequest;
@@ -15,6 +20,8 @@ import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.FailedRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.FailedTransactions;
 import co.ke.emtechhouse.es.MpesaIntergration.Utils.HelperUtility;
+import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
+import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.EmtSmsService;
 import co.ke.emtechhouse.es.Subscriptions.SubsPaymentsRepository;
 import co.ke.emtechhouse.es.Subscriptions.SubscriptionPayments;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +38,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 import static co.ke.emtechhouse.es.MpesaIntergration.Utils.Constants.*;
 
@@ -46,6 +54,19 @@ public class DarajaApiImpl implements DarajaApi {
     @Autowired
     private TransactionRepo transactionRepo;
 
+    @Autowired
+    MembersController membersController;
+    @Autowired
+    MembersRepository membersRepository;
+
+    @Autowired
+    private EmtSmsService emtSmsService;
+
+//    @Autowired
+//    StkPushStatusResponse stkPushStatusResponse;
+
+    @Autowired
+    GivingRepo givingRepo;
 
     @Autowired
     private FailedRepo failedRepo;
@@ -248,26 +269,30 @@ public class DarajaApiImpl implements DarajaApi {
                         subsPaymentsRepository.save(subscriptionPayments);
 
                     } else {
-                        //Normal transactions
+                        Optional<Members> members1 = membersRepository.findByMemberNumber(internalStkPushRequest.getMemberNumber());
+                        Optional<Giving> give = givingRepo.findById(internalStkPushRequest.getGivingId());
+                        if (members1.isPresent()) {
+                            Members members = members1.get();
+                            Giving giving = give.get();
                         Transaction transaction = new Transaction();
                         transaction.setResultDesc(res.getResultDesc());
                         transaction.setStatus("Processing");
                         transaction.setResultCode(res.getResultCode());
 
-                        transaction.setTransactionAmount(Double.valueOf(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber())));
-                        transaction.setPhoneNumber(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber()));
+                        transaction.setTransactionAmount(internalStkPushRequest.getTransactionAmount());
+                        transaction.setTransactionNumber(getfomatedPhoneNumber(internalStkPushRequest.getTransactionNumber()));
 
                         transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
+
                         transaction.setGivingId(internalStkPushRequest.getGivingId());
                         transaction.setTransactionDate(new Date());
                         transaction.setTransactionMode("M-pesa");
                         transactionRepo.save(transaction);
+                        String message = "Dear "+ members.getFirstName() + members.getLastName() +  " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() +  " ! " + "at Muumini Church was sucessfully recorded ";
+                        emtSmsService.sendSms(new SmsDto(members.getPhoneNumber(), message));
 
-                    }
-//                Transactions
-
+                    }  }
 //
-//                if (!transactionRepo.save(transaction).equals(null)) ;
 
 
             return res;

@@ -16,7 +16,10 @@ public class InternalStkPushRequest {
     @JsonProperty("transactionDate")
     private String transactionDate;
     @JsonProperty("givingId")
-    private String givingId;
+    private Long givingId;
     private String transactionType;
+    private String envelopeNumber;
+    private String chequeNumber;
+    private String transactionMode;
 
 }

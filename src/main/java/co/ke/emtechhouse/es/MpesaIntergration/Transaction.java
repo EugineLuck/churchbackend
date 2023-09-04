@@ -25,10 +25,12 @@ public class Transaction {
 
 
     private Date transactionDate;
-    private String phoneNumber;
+    private String transactionNumber;
     private Double transactionAmount;
-    private String givingId;
+    private Long givingId;
     private String memberNumber;
+    private String chequeNumber;
+    private String envelopeNumber;
     private String transactionMode;
     private String resultCode;
     private String resultDesc;

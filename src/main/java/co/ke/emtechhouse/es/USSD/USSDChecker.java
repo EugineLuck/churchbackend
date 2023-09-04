@@ -904,7 +904,7 @@ public class USSDChecker {
                     data.setTransactionAmount(Double.valueOf(inputs.get(9)));
                 }
 
-                data.setGivingId(inputs.get(2));
+                data.setGivingId(Long.valueOf(inputs.get(2)));
 
                 StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
                 if(response1.getResultCode().equals("0")){

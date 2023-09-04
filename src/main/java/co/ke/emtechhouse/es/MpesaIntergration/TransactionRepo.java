@@ -22,14 +22,14 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 //    List<SuccessfullyTransactions> findByGivingId(Long givingId);
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title,t.phone_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.result_code = 0")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, CONCAT_WS(' ',  COALESCE(t.envelope_number, ''),COALESCE(t.cheque_number, ''), COALESCE(t.transaction_number, '')) AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions> findAllTransations();
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title,t.phone_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode,t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number WHERE t.result_code = 0")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions> getAllSucessfullyTransactions();
   @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title,t.phone_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode,t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.member_number=:memberNumber AND t.result_code = 0")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions>  findByMemberNumber(@Param(value = "memberNumber")String memberNumber);
 
 
@@ -37,7 +37,7 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
     @Query(nativeQuery = true,value = "SELECT * FROM `transaction` where member_number=:memberNumber  AND result_code = 0")
     List<SuccessfullyTransactions>  findByUssdMemberNumber(@Param(value = "memberNumber")String memberNumber);
   @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title,t.phone_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode,t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.giving_id=:givingId AND t.result_code = 0")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where   t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions> findByGivingId(@Param(value = "givingId")Long givingId);
 
 
