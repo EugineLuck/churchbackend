@@ -656,7 +656,6 @@ public class USSDChecker {
                         response = "CON 14. Enter your phoneNumber";
                     }
                     else {
-
                         String memberNumber = generateMemberNumber();
                         log.info("{ " + msisdn + " }{ END Session }");
 
@@ -783,7 +782,6 @@ public class USSDChecker {
                         members1.setPostedTime(dtf.format(now));
                         membersRepository.save(members1);
                         response = "CONGRATULATIONS You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
-
                         String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
                         emtSmsService.sendSms(new SmsDto(msisdn, message));
                     }else{
@@ -994,8 +992,8 @@ public class USSDChecker {
                     Optional existingMember = membersRepository.findByMemberNumber(inputs.get(3));
                     if(existingMember.isPresent()){
                         Members memDetails = (Members) existingMember.get();
-                        response = "CON Dear " + memDetails.getFirstName() +", your Givings.\n ";
-                        List<SuccessfullyTransactions> allTransactions = transactionRepo.findByUssdMemberNumber(memDetails.getMemberNumber());
+                        response = "END Dear " + memDetails.getFirstName() +", your Givings.\n ";
+                        List<SuccessfullyTransactions> allTransactions = transactionRepo.findByMemberNumber(memDetails.getMemberNumber());
                         if(allTransactions.size() > 0){
                             int pageSize = 10; // Number of records per page
                             int totalPages = (allTransactions.size() + pageSize - 1) / pageSize; // Calculate total pages
@@ -1010,7 +1008,7 @@ public class USSDChecker {
                             StringBuilder givingList = new StringBuilder();
                             for (int i = startIndex; i < endIndex; i++) {
                                 SuccessfullyTransactions giving1 = allTransactions.get(i);
-                                givingList.append("\n").append(giving1.getGivingId()).append(". ").append(giving1.getTitle());
+                                givingList.append("\n").append(i+1).append(". ").append(giving1.getTitle()).append(" - ").append(giving1.getAmount());
                             }
                             if (currentPage < totalPages) {
                                 givingList.append("\n98. Next Page");
@@ -1026,7 +1024,7 @@ public class USSDChecker {
                     
                 } else if (inputs.size() == 3 && inputs.get(2).equals("3")) {
 
-                    response = "CON Announcements\n";
+                    response = "END Announcements\n";
 
                     List<Announcements> allAnnouncements = announcementsRepo.findAll();
                     if(allAnnouncements.size() > 0){

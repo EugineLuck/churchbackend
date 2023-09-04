@@ -183,11 +183,6 @@ public class GivingController {
 
         }
 
-
-
-
-
-
         response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         response.setMessage("GIVING " + givingRequest.getGivingTitle() + " CREATED SUCCESSFULLY AT " + new Date());
         response.setStatusCode(HttpStatus.CREATED.value());
