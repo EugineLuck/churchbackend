@@ -9,6 +9,8 @@ import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.Subscribers.Subscibers;
+import co.ke.emtechhouse.es.Subscribers.SubscribersRepository;
+import co.ke.emtechhouse.es.Subscribers.SubscribersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Slf4j
@@ -36,6 +36,12 @@ public class SubscriptionController {
 
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    SubscribersRepository subscribersRepository;
+
+    @Autowired
+    SubscribersService subscribersService;
 
 
 
@@ -98,15 +104,36 @@ public class SubscriptionController {
 
 
     @GetMapping("/get/all")
-    public ResponseEntity<?> getAllSubscriptions() {
-        try{
-            ApiResponse response = subscriptionService.getAll();
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (Exception e){
-            log.info("Catched Error {} " + e);
-            return null;
+    public ResponseEntity<?> getAllSubscriptionsWithSubscribers() {
+        try {
+            List<Subscriptions> subscriptions = subscriptionsRepo.findAll();
+
+            // Create a map to store subscriptions by subscriber ID
+            Map<Long, List<Subscriptions>> subscriptionsBySubscriberId = new HashMap<>();
+
+            // Group subscriptions by subscriber ID
+            for (Subscriptions subscription : subscriptions) {
+                Long subscriberId = subscription.getId(); // Assuming you have a relationship between Subscription and Subscriber
+                subscriptionsBySubscriberId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscription);
+            }
+
+            // Fetch subscribers using the unique subscriber IDs
+            List<Subscibers> allsubs = new ArrayList<>();
+            for (Long subscriberId : subscriptionsBySubscriberId.keySet()) {
+                Subscibers subscibers = subscribersService.searchById(subscriberId);
+                if (subscibers != null) {
+                    subscibers.setSubscriptions(subscriptionsBySubscriberId.get(subscriberId));
+                    allsubs.add(subscibers);
+                }
+            }
+
+            return new ResponseEntity<>(allsubs, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error occurred", e);
+            return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
     @GetMapping("/get/by/{memberNumber}")

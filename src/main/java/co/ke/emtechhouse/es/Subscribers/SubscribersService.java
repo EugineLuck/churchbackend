@@ -36,7 +36,7 @@ public class SubscribersService {
     public List<Subscibers> getAll() {
         try {
             List<Subscibers> subs = subscribersRepository.findAll();
-            subs.add(subscribersRepository.findAllSubscribersWithSubscriptions());
+//            subs.add(subscribersRepository.findAllSubscribersWithSubscriptions());
             return subs;
         }catch (Exception e) {
             log.info("Catched Error {} " + e);
@@ -66,9 +66,13 @@ public class SubscribersService {
     }
 
 
-
-
-
-
-
+    public Subscibers searchById(Long subscriberId) {
+        try {
+            Subscibers savedSubs = subscribersRepository.searchById(subscriberId);
+            return savedSubs;
+        }catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
 }

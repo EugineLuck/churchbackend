@@ -15,7 +15,8 @@ public interface SubscribersRepository extends JpaRepository<Subscibers, Long> {
 
     Subscibers findBymemberNumber(String memberNumber);
 
-    @Query("SELECT s FROM Subscibers s LEFT JOIN FETCH s.subscriptions")
-    Subscibers findAllSubscribersWithSubscriptions();
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT * FROM subscribers WHERE id =:id")
+    Subscibers searchById(@Param(value = "id") Long id);
 
 }
