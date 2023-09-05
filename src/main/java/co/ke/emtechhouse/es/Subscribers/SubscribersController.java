@@ -7,6 +7,8 @@ import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 
+import co.ke.emtechhouse.es.Subscriptions.Subscriptions;
+import co.ke.emtechhouse.es.Subscriptions.SubscriptionsRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -26,6 +28,12 @@ public class SubscribersController {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    SubscriptionsRepo subscriptionsRepo;
+
+    @Autowired
+            SubscribersRepository subscribersRepository;
 
     LocalDateTime now = LocalDateTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -39,6 +47,12 @@ public class SubscribersController {
 
         try {
             subS.setDateSubscribed(nowDate);
+
+
+
+//                    .//fetch all subscriptions
+//                    //subscriber.subcriptions
+
             Subscibers save = subscribersService.saveSubscriber(subS);
 
             response.setMessage("Subscriber Added");
@@ -64,10 +78,30 @@ public class SubscribersController {
     @GetMapping("/get/all")
     public ResponseEntity<Object> getAllSubscribers() {
         try {
-            List<Subscibers> allsubs= subscribersService.getAll();
+            List<Subscriptions> subscriptions = subscriptionsRepo.findAll();
+
+            // Create a map to store subscriptions by subscriber ID
+            Map<Long, List<Subscriptions>> subscriptionsBySubscriberId = new HashMap<>();
+
+            // Group subscriptions by subscriber ID
+            for (Subscriptions subscription : subscriptions) {
+                Long subscriberId = subscription.getId();
+                subscriptionsBySubscriberId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscription);
+            }
+
+            // Fetch subscribers using the unique subscriber IDs
+            List<Subscibers> allsubs = new ArrayList<>();
+            for (Long subscriberId : subscriptionsBySubscriberId.keySet()) {
+                Subscibers subscibers = subscribersService.searchById(subscriberId);
+                if (subscibers != null) {
+                    subscibers.setSubscriptions(subscriptionsBySubscriberId.get(subscriberId));
+                    allsubs.add(subscibers);
+                }
+            }
+
             return new ResponseEntity<>(allsubs, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("Error" + e);
+            log.error("Error", e);
             return null;
         }
     }
