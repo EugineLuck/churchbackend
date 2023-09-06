@@ -20,8 +20,7 @@ public class Announcements {
     private String title;
     private String message;
     private String announcementDate;
-    @Lob
-    private String uploads;
+
 
 
     private String postedBy;
