@@ -1,11 +1,13 @@
 package co.ke.emtechhouse.es.Announcements;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +30,9 @@ public class Announcements {
     private String announcementCategory;
     @Column(name = "isActive")
     private boolean isActive = true;
+
+    @OneToMany(targetEntity = Files.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fileId", referencedColumnName = "id")
+    private List<Files> files;
+
 }

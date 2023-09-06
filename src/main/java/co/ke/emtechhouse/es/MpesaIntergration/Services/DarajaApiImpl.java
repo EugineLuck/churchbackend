@@ -18,7 +18,6 @@ import co.ke.emtechhouse.es.MpesaIntergration.Register_URL.RegisterUrlResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
 import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.FailedRepo;
-import co.ke.emtechhouse.es.MpesaIntergration.FailedTransactions;
 import co.ke.emtechhouse.es.MpesaIntergration.Utils.HelperUtility;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.EmtSmsService;

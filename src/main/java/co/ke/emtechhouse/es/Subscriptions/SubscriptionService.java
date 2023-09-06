@@ -3,7 +3,6 @@ package co.ke.emtechhouse.es.Subscriptions;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
-import co.ke.emtechhouse.es.Subscribers.Subscibers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

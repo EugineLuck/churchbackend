@@ -56,8 +56,6 @@ public class SubscriptionController {
         try {
             subS.setDateCreated(nowDate);
 
-
-
             InternalStkPushRequest data = new InternalStkPushRequest();
             data.setMemberNumber(subS.getMemberNumber());
             data.setTransactionAmount(subS.getCharges());
@@ -90,9 +88,6 @@ public class SubscriptionController {
                 notificationService.CreateServiceNotificationAll(notificationsDTO);
 
             }
-
-
-
             return new ResponseEntity<>(response, HttpStatus.OK);
 
 
@@ -104,26 +99,26 @@ public class SubscriptionController {
 
 
     @GetMapping("/get/all")
-    public ResponseEntity<?> getAllSubscriptionsWithSubscribers() {
+    public ResponseEntity<?> getAllSubscriptions() {
         try {
-            List<Subscriptions> subscriptions = subscriptionsRepo.findAll();
+            List<Subscibers> subscibers = subscribersRepository.findAll();
 
             // Create a map to store subscriptions by subscriber ID
-            Map<Long, List<Subscriptions>> subscriptionsBySubscriberId = new HashMap<>();
+            Map<Long, List<Subscibers>> subcsriberBySubscriptionId = new HashMap<>();
 
             // Group subscriptions by subscriber ID
-            for (Subscriptions subscription : subscriptions) {
-                Long subscriberId = subscription.getId(); // Assuming you have a relationship between Subscription and Subscriber
-                subscriptionsBySubscriberId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscription);
+            for (Subscibers subscriber : subscibers) {
+                Long subscriberId = subscriber.getId(); // Assuming you have a relationship between Subscription and Subscriber
+                subcsriberBySubscriptionId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscriber);
             }
 
             // Fetch subscribers using the unique subscriber IDs
-            List<Subscibers> allsubs = new ArrayList<>();
-            for (Long subscriberId : subscriptionsBySubscriberId.keySet()) {
-                Subscibers subscibers = subscribersService.searchById(subscriberId);
-                if (subscibers != null) {
-                    subscibers.setSubscriptions(subscriptionsBySubscriberId.get(subscriberId));
-                    allsubs.add(subscibers);
+            List<Subscriptions> allsubs = new ArrayList<>();
+            for (Long subscriptionId : subcsriberBySubscriptionId.keySet()) {
+                Subscriptions subscription = subscriptionsRepo.searchById(subscriptionId);
+                if (subscription != null) {
+                    subscription.setSubscibers(subcsriberBySubscriptionId.get(subscriptionId));
+                    allsubs.add(subscription);
                 }
             }
 
