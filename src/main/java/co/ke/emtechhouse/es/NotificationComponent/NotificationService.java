@@ -4,9 +4,7 @@ import co.ke.emtechhouse.es.Auth.Members.Members;
 import co.ke.emtechhouse.es.Auth.Members.MembersRepository;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.Community.Community;
-import co.ke.emtechhouse.es.Community.CommunityDetails;
 import co.ke.emtechhouse.es.Family.Family;
-import co.ke.emtechhouse.es.Family.FamilyMember.FamilyMember;
 import co.ke.emtechhouse.es.Family.FamilyRepository;
 import co.ke.emtechhouse.es.GoalComponent.GoalRepo;
 import co.ke.emtechhouse.es.Groups.GroupMemberComponent.GroupMember;
@@ -19,7 +17,6 @@ import co.ke.emtechhouse.es.NotificationComponent.TokenComponent.TokenRepo;
 import co.ke.emtechhouse.es.NotificationComponent.TokenNotifications.TokenNotificationKey;
 import co.ke.emtechhouse.es.NotificationComponent.TokenNotifications.TokenNotifications;
 import co.ke.emtechhouse.es.OutStation.OutStation;
-import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
 import co.ke.emtechhouse.es.Subscriptions.Subscriptions;
 import co.ke.emtechhouse.es.Subscriptions.SubscriptionsRepo;
 import com.google.gson.Gson;
@@ -28,12 +25,9 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service

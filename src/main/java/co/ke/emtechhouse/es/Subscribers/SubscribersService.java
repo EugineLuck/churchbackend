@@ -2,14 +2,12 @@ package co.ke.emtechhouse.es.Subscribers;
 
 
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
-import co.ke.emtechhouse.es.Subscriptions.Subscriptions;
 import co.ke.emtechhouse.es.Subscriptions.SubscriptionsRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class Survey {
     private String gender;
     private String churchAttendanceDuration;
 
-    private  String dateCreated;
+    private Date dateCreated;
     @Column(name = "isAvailable")
     private boolean isActive = true;
 }
