@@ -2,6 +2,7 @@ package co.ke.emtechhouse.es.Subscriptions;
 
 
 
+import co.ke.emtechhouse.es.Advertisement.Advertisement;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +28,13 @@ public class SubscriptionService {
         }
     }
 
-    public ApiResponse<?> getAll() {
+    public List<Subscriptions> getAll() {
 
         try {
-            ApiResponse response=new ApiResponse<>();
-            List<Subscriptions> subs = subscriptionsRepo.findAll();
-            if (subs.size()>0) {
-                response.setMessage(HttpStatus.FOUND.getReasonPhrase());
-                response.setStatusCode(HttpStatus.FOUND.value());
-                response.setEntity(subs);
-            } else {
-                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
-                response.setStatusCode(HttpStatus.NOT_FOUND.value());
-            }
-            return response;
+            List<Subscriptions> subs= subscriptionsRepo.findAll();
+            return subs;
         }catch (Exception e) {
-            System.out.println("Catched Error {} " + e);
+            log.info("Catched Error {} " + e);
             return null;
         }
 
@@ -72,16 +64,15 @@ public class SubscriptionService {
 
     }
 
-    public Subscriptions searchById(Long subscriberId) {
-        try {
-            Subscriptions savedSubs = subscriptionsRepo.searchById(subscriberId);
-            return savedSubs;
-        }catch (Exception e) {
-            log.info("Catched Error {} " + e);
-            return null;
-        }
-    }
-
+//    public Subscriptions searchById(Long subscriberId) {
+//        try {
+//            Subscriptions savedSubs = subscriptionsRepo.searchById(subscriberId);
+//            return savedSubs;
+//        }catch (Exception e) {
+//            log.info("Catched Error {} " + e);
+//            return null;
+//        }
+//    }
 
 
 

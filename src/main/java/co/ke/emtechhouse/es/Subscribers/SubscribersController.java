@@ -78,28 +78,28 @@ public class SubscribersController {
     @GetMapping("/get/all")
     public ResponseEntity<Object> getAllSubscribers() {
         try {
-            List<Subscriptions> subscriptions = subscriptionsRepo.findAll();
+            List<Subscibers> subscriptions = subscribersService.getAll();
 
-            // Create a map to store subscriptions by subscriber ID
-            Map<Long, List<Subscriptions>> subscriptionsBySubscriberId = new HashMap<>();
+//            // Create a map to store subscriptions by subscriber ID
+//            Map<Long, List<Subscriptions>> subscriptionsBySubscriberId = new HashMap<>();
+//
+//            // Group subscriptions by subscriber ID
+//            for (Subscriptions subscription : subscriptions) {
+//                Long subscriberId = subscription.getId();
+//                subscriptionsBySubscriberId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscription);
+//            }
+//
+//            // Fetch subscribers using the unique subscriber IDs
+//            List<Subscibers> allsubs = new ArrayList<>();
+//            for (Long subscriberId : subscriptionsBySubscriberId.keySet()) {
+//                Subscibers subscibers = subscribersService.searchById(subscriberId);
+//                if (subscibers != null) {
+////                    subscibers.setSubscriptions(subscriptionsBySubscriberId.get(subscriberId));
+//                    allsubs.add(subscibers);
+//                }
+//            }
 
-            // Group subscriptions by subscriber ID
-            for (Subscriptions subscription : subscriptions) {
-                Long subscriberId = subscription.getId();
-                subscriptionsBySubscriberId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscription);
-            }
-
-            // Fetch subscribers using the unique subscriber IDs
-            List<Subscibers> allsubs = new ArrayList<>();
-            for (Long subscriberId : subscriptionsBySubscriberId.keySet()) {
-                Subscibers subscibers = subscribersService.searchById(subscriberId);
-                if (subscibers != null) {
-                    subscibers.setSubscriptions(subscriptionsBySubscriberId.get(subscriberId));
-                    allsubs.add(subscibers);
-                }
-            }
-
-            return new ResponseEntity<>(allsubs, HttpStatus.OK);
+            return new ResponseEntity<>(subscriptions, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error", e);
             return null;

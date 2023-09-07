@@ -19,9 +19,9 @@ public interface SubscriptionsRepo extends JpaRepository<Subscriptions, Long> {
 
     Optional<Subscriptions> findBymemberNumber(String memberNumber);
 
-    @Transactional
-    @Query(nativeQuery = true,value = "SELECT * FROM subscriptions WHERE id =:id")
-    Subscriptions searchById(@Param(value = "id") Long id);
+//    @Transactional
+//    @Query(nativeQuery = true,value = "SELECT * FROM subscriptions WHERE id =:id")
+//    Subscriptions searchById(@Param(value = "id") Long id);
 
 
 

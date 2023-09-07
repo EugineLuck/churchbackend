@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -29,12 +30,18 @@ public class Subscibers {
     @Column(name = "isActive")
     private boolean isActive = true;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "subscribers_subscriptions",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    Set<Subscriptions> subscriptionsSet;
+
+
     // a list of all subscritions subscribed to;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "subscriber_subscription", joinColumns = @JoinColumn(name = "subscriber_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id"))
-    private List<Subscriptions> subscriptions;
+
 
 
 
