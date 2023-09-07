@@ -101,28 +101,21 @@ public class SubscriptionController {
     @GetMapping("/get/all")
     public ResponseEntity<?> getAllSubscriptions() {
         try {
-            List<Subscibers> subscibers = subscribersRepository.findAll();
+            List<Subscriptions> subscriptions = subscriptionsRepo.findAll();
 
-            // Create a map to store subscriptions by subscriber ID
-            Map<Long, List<Subscibers>> subcsriberBySubscriptionId = new HashMap<>();
-
-            // Group subscriptions by subscriber ID
-            for (Subscibers subscriber : subscibers) {
-                Long subscriberId = subscriber.getId(); // Assuming you have a relationship between Subscription and Subscriber
-                subcsriberBySubscriptionId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscriber);
-            }
-
-            // Fetch subscribers using the unique subscriber IDs
-            List<Subscriptions> allsubs = new ArrayList<>();
-            for (Long subscriptionId : subcsriberBySubscriptionId.keySet()) {
-                Subscriptions subscription = subscriptionsRepo.searchById(subscriptionId);
-                if (subscription != null) {
-                    subscription.setSubscibers(subcsriberBySubscriptionId.get(subscriptionId));
-                    allsubs.add(subscription);
-                }
-            }
-
-            return new ResponseEntity<>(allsubs, HttpStatus.OK);
+//            List allsubs = new ArrayList<>();
+//            if(subscriptions.size() > 0){
+//                for (Subscriptions subscriptions1 : subscriptions){
+//                    List<Subscibers> subscibers = subscribersRepository.findBySubscriptionItemId(subscriptions1.getId());
+//                    System.out.println("Checking... "+ subscriptions1.getId());
+//                    if(subscibers != null){
+//                        allsubs.add("subscribers" + subscibers);
+//                        allsubs.add(subscriptions1);
+//
+//                    }
+//                }
+//            }
+            return new ResponseEntity<>(subscriptions, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error occurred", e);
             return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);

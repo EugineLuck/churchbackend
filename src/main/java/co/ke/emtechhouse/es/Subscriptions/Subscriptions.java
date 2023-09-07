@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -36,7 +37,9 @@ public class Subscriptions {
     private boolean isActive = true;
 
     //A list of all subscribers subcribed
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    List<Subscibers> subscibers;
+    @ManyToMany(mappedBy = "subscriptionsSet")
+    Set<Subscibers> subscibersSet;
+
+
     
 }
