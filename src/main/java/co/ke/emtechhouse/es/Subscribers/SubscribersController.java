@@ -7,6 +7,7 @@ import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 
+import co.ke.emtechhouse.es.Subscriptions.DTO;
 import co.ke.emtechhouse.es.Subscriptions.Subscriptions;
 import co.ke.emtechhouse.es.Subscriptions.SubscriptionsRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,9 @@ public class SubscribersController {
     SubscriptionsRepo subscriptionsRepo;
 
     @Autowired
+    subscribersSubscriptionsRepo subscribersSubscriptionsRepo;
+
+    @Autowired
             SubscribersRepository subscribersRepository;
 
     LocalDateTime now = LocalDateTime.now();
@@ -48,16 +52,33 @@ public class SubscribersController {
         try {
             subS.setDateSubscribed(nowDate);
 
+//            System.out.println(subS);
+            Optional<Subscibers> existingSubscriber = subscribersRepository.findByMemberNumber(subS.getMemberNumber());
+            if(existingSubscriber.isPresent()){
+
+                Subscibers saved = existingSubscriber.get();
+                subscribersSubscriptions allSubs = new subscribersSubscriptions();
+                allSubs.setSubscriberId(saved.getId());
+                allSubs.setSubscriptionId(saved.getSubscriptionItemId());
+                subscribersSubscriptionsRepo.save(allSubs);
+
+                response.setMessage("Subscriber Added");
+                response.setEntity(saved);
+                response.setStatusCode(HttpStatus.CREATED.value());
+
+            }else{
+                Subscibers saved = subscribersService.saveSubscriber(subS);
+                subscribersSubscriptions allSubs = new subscribersSubscriptions();
+                allSubs.setSubscriberId(saved.getId());
+                allSubs.setSubscriptionId(saved.getSubscriptionItemId());
+                subscribersSubscriptionsRepo.save(allSubs);
+
+                response.setMessage("Subscriber Added");
+                response.setEntity(saved);
+                response.setStatusCode(HttpStatus.CREATED.value());
+            }
 
 
-//                    .//fetch all subscriptions
-//                    //subscriber.subcriptions
-
-            Subscibers save = subscribersService.saveSubscriber(subS);
-
-            response.setMessage("Subscriber Added");
-            response.setEntity(save);
-            response.setStatusCode(HttpStatus.CREATED.value());
 
             NotificationDTO notificationsDTO = new NotificationDTO();
             notificationsDTO.setTitle("New Subscriber");
@@ -76,41 +97,72 @@ public class SubscribersController {
     }
 
     @GetMapping("/get/all")
-    public ResponseEntity<Object> getAllSubscribers() {
+    public ResponseEntity<?> getAllSubscribers() {
+        ApiResponse response = new ApiResponse<>();
         try {
-            List<Subscibers> subscriptions = subscribersService.getAll();
+            List<Subscibers> subscribers = subscribersRepository.findAll();
 
-//            // Create a map to store subscriptions by subscriber ID
-//            Map<Long, List<Subscriptions>> subscriptionsBySubscriberId = new HashMap<>();
-//
-//            // Group subscriptions by subscriber ID
-//            for (Subscriptions subscription : subscriptions) {
-//                Long subscriberId = subscription.getId();
-//                subscriptionsBySubscriberId.computeIfAbsent(subscriberId, k -> new ArrayList<>()).add(subscription);
-//            }
-//
-//            // Fetch subscribers using the unique subscriber IDs
-//            List<Subscibers> allsubs = new ArrayList<>();
-//            for (Long subscriberId : subscriptionsBySubscriberId.keySet()) {
-//                Subscibers subscibers = subscribersService.searchById(subscriberId);
-//                if (subscibers != null) {
-////                    subscibers.setSubscriptions(subscriptionsBySubscriberId.get(subscriberId));
-//                    allsubs.add(subscibers);
-//                }
-//            }
+            List allsubs = new ArrayList<>();
+            if (subscribers.size() > 0) {
+                for (Subscibers subscriber : subscribers) {
+                    subscriberDTO dto = new subscriberDTO();
+                    dto.setId(subscriber.getId());
+                    dto.setPhoneNumber(subscriber.getPhoneNumber());
+                    dto.setMemberNumber(subscriber.getMemberNumber());
+                    dto.setDateSubscribed(subscriber.getDateSubscribed());
+                    dto.setSubscriptionItemId(subscriber.getSubscriptionItemId());
 
-            return new ResponseEntity<>(subscriptions, HttpStatus.OK);
+                    List<subscribersSubscriptions> subscriptionsItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriber.getSubscriptionItemId());
+                    List<Subscriptions> subscriptions = new ArrayList<>(); // Create a list to store subscriptions
+                    if (subscriptionsItems.size() > 0) {
+                        for (subscribersSubscriptions item : subscriptionsItems) {
+                            List<Subscriptions> itemSubscriptions = subscriptionsRepo.searchById(item.getSubscriptionId());
+                            subscriptions.addAll(itemSubscriptions);
+                        }
+                    }
+                    dto.setSubscriptions(subscriptions); // Set the list of subscriptions in DTO
+                    allsubs.add(dto);
+                }
+            }
+
+            response.setEntity(allsubs);
+            response.setMessage("Found");
+            response.setStatusCode(HttpStatus.FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Error", e);
-            return null;
+            log.error("Error occurred", e);
+            return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @GetMapping("/get/by/{memberNumber}")
     public ResponseEntity<Object> getByIdAd(@PathVariable String memberNumber) {
+        ApiResponse response = new ApiResponse<>();
         try {
-            Subscibers sub = subscribersService.findSubscriptionsByMemberNumber(memberNumber);
-            return new ResponseEntity<>(sub, HttpStatus.OK);
+            List allsubs = new ArrayList<>();
+            Subscibers subscriptions1 = subscribersService.findSubscriptionsByMemberNumber(memberNumber);
+            subscriberDTO dto = new subscriberDTO();
+            dto.setId(subscriptions1.getId());
+            dto.setPhoneNumber(subscriptions1.getPhoneNumber());
+            dto.setMemberNumber(subscriptions1.getMemberNumber());
+            dto.setDateSubscribed(subscriptions1.getDateSubscribed());
+            dto.setSubscriptionItemId(subscriptions1.getSubscriptionItemId());
+
+            List<subscribersSubscriptions> subscriptionsItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getSubscriptionItemId());
+            List<Subscriptions> subscriptions = new ArrayList<>(); // Create a list to store subscriptions
+            if (subscriptionsItems.size() > 0) {
+                for (subscribersSubscriptions item : subscriptionsItems) {
+                    List<Subscriptions> itemSubscriptions = subscriptionsRepo.searchById(item.getSubscriptionId());
+                    subscriptions.addAll(itemSubscriptions);
+                }
+            }
+            dto.setSubscriptions(subscriptions);
+            allsubs.add(dto);
+            response.setEntity(allsubs);
+            response.setMessage("Found");
+            response.setStatusCode(HttpStatus.FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

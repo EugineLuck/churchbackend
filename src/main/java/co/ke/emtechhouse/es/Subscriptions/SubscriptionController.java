@@ -1,6 +1,7 @@
 package co.ke.emtechhouse.es.Subscriptions;
 
 
+import co.ke.emtechhouse.es.Subscribers.*;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 
 import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.InternalStkPushRequest;
@@ -8,9 +9,7 @@ import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushSyncResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Services.DarajaApiImpl;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
-import co.ke.emtechhouse.es.Subscribers.Subscibers;
-import co.ke.emtechhouse.es.Subscribers.SubscribersRepository;
-import co.ke.emtechhouse.es.Subscribers.SubscribersService;
+import co.ke.emtechhouse.es.Subscribers.subscribersSubscriptionsRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +35,9 @@ public class SubscriptionController {
 
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    subscribersSubscriptionsRepo subscribersSubscriptionsRepo;
 
     @Autowired
     SubscribersRepository subscribersRepository;
@@ -100,22 +102,45 @@ public class SubscriptionController {
 
     @GetMapping("/get/all")
     public ResponseEntity<?> getAllSubscriptions() {
+        ApiResponse response = new ApiResponse<>();
         try {
-            List<Subscriptions> subscriptions = subscriptionsRepo.findAll();
+            List<Subscriptions> subscribers = subscriptionsRepo.findAll();
 
-//            List allsubs = new ArrayList<>();
-//            if(subscriptions.size() > 0){
-//                for (Subscriptions subscriptions1 : subscriptions){
-//                    List<Subscibers> subscibers = subscribersRepository.findBySubscriptionItemId(subscriptions1.getId());
-//                    System.out.println("Checking... "+ subscriptions1.getId());
-//                    if(subscibers != null){
-//                        allsubs.add("subscribers" + subscibers);
-//                        allsubs.add(subscriptions1);
-//
-//                    }
-//                }
-//            }
-            return new ResponseEntity<>(subscriptions, HttpStatus.OK);
+            List allsubs = new ArrayList<>();
+            if (subscribers.size() > 0) {
+                for (Subscriptions subscriptions1 : subscribers) {
+                    DTO dto = new DTO();
+                    dto.setId(subscriptions1.getId());
+                    dto.setPhoneNumber(subscriptions1.getPhoneNumber());
+                    dto.setMemberNumber(subscriptions1.getMemberNumber());
+                    dto.setFullName(subscriptions1.getFullName());
+                    dto.setSubscriptionType(subscriptions1.getSubscriptionType());
+                    dto.setCharges(subscriptions1.getCharges());
+                    dto.setDescriptionInfo(subscriptions1.getDescriptionInfo());
+                    dto.setBanner(subscriptions1.getBanner());
+                    dto.setDateCreated(subscriptions1.getDateCreated());
+
+                    System.out.println("Checking ......" + subscriptions1.getId());
+
+                    List<subscribersSubscriptions> subscribersItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getId());
+                    System.out.println("Cheking .... " + subscribersItems);
+                    if (subscribersItems.size() > 0) {
+                        List<Subscibers> subs = new ArrayList<>(); // Create a list to store subscribers
+                        for (subscribersSubscriptions item : subscribersItems) {
+                            System.out.println("Checking.... " + item);
+                            List<Subscibers> itemSubs = subscribersRepository.searchByItemId(item.getSubscriberId());
+                            subs.addAll(itemSubs); // Add the subscribers to the list
+                        }
+                        dto.setSubscribers(subs); // Set the list of subscribers in DTO
+                    }
+                    allsubs.add(dto);
+                }
+            }
+
+            response.setEntity(allsubs);
+            response.setMessage("Found");
+            response.setStatusCode(HttpStatus.FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error occurred", e);
             return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -124,12 +149,40 @@ public class SubscriptionController {
 
 
 
+
     @GetMapping("/get/by/{memberNumber}")
     public ApiResponse getSubscriptionByMemberNumber(@PathVariable String memberNumber) {
         ApiResponse response = new ApiResponse<>();
+
+        List subscription = new ArrayList<>();
+
         Optional<Subscriptions> subscr = subscriptionsRepo.findBymemberNumber(memberNumber);
         if (subscr.isPresent()) {
-            Subscriptions subscription = subscr.get();
+            Subscriptions subscriptions1 = subscr.get();
+            DTO dto = new DTO();
+            dto.setFullName(subscriptions1.getFullName());
+            dto.setId(subscriptions1.getId());
+            dto.setPhoneNumber(subscriptions1.getPhoneNumber());
+            dto.setMemberNumber(subscriptions1.getMemberNumber());
+            dto.setSubscriptionType(subscriptions1.getSubscriptionType());
+            dto.setCharges(subscriptions1.getCharges());
+            dto.setDescriptionInfo(subscriptions1.getDescriptionInfo());
+            dto.setBanner(subscriptions1.getBanner());
+            dto.setDateCreated(subscriptions1.getDateCreated());
+
+            List<subscribersSubscriptions> subscribersItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getId());
+            System.out.println("Cheking .... " + subscribersItems);
+            if (subscribersItems.size() > 0) {
+                List<Subscibers> subs = new ArrayList<>(); // Create a list to store subscribers
+                for (subscribersSubscriptions item : subscribersItems) {
+                    System.out.println("Checking.... " + item);
+                    List<Subscibers> itemSubs = subscribersRepository.searchByItemId(item.getSubscriberId());
+                    subs.addAll(itemSubs); // Add the subscribers to the list
+                }
+                dto.setSubscribers(subs); // Set the list of subscribers in DTO
+            }
+
+            subscription.add(dto);
             response.setMessage(HttpStatus.FOUND.getReasonPhrase());
             response.setStatusCode(HttpStatus.FOUND.value());
             response.setEntity(subscription);

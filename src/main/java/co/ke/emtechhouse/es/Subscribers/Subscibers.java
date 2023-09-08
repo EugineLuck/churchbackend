@@ -31,16 +31,20 @@ public class Subscibers {
     private boolean isActive = true;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "subscribers_subscriptions",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
-    Set<Subscriptions> subscriptionsSet;
-
-
-    // a list of all subscritions subscribed to;
-
+////    @ManyToMany
+////    @JoinTable(
+////            name = "subscribers_subscriptions",
+////            joinColumns = @JoinColumn(name = "subscriptionsId"),
+////            inverseJoinColumns = @JoinColumn(name = "subscribersId"))
+////    Set<Subscriptions> subscriptions;
+//
+//    @OneToMany(targetEntity = Subscriptions.class, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "subsciber_fk", referencedColumnName = "id")
+//    private List<Subscriptions> subscriptionsList;
+//
+//
+//    // a list of all subscritions subscribed to;
+//
 
 
 
