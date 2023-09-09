@@ -120,14 +120,10 @@ public class SubscriptionController {
                     dto.setBanner(subscriptions1.getBanner());
                     dto.setDateCreated(subscriptions1.getDateCreated());
 
-                    System.out.println("Checking ......" + subscriptions1.getId());
-
                     List<subscribersSubscriptions> subscribersItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getId());
-                    System.out.println("Cheking .... " + subscribersItems);
                     if (subscribersItems.size() > 0) {
                         List<Subscibers> subs = new ArrayList<>(); // Create a list to store subscribers
                         for (subscribersSubscriptions item : subscribersItems) {
-                            System.out.println("Checking.... " + item);
                             List<Subscibers> itemSubs = subscribersRepository.searchByItemId(item.getSubscriberId());
                             subs.addAll(itemSubs); // Add the subscribers to the list
                         }
@@ -171,11 +167,9 @@ public class SubscriptionController {
             dto.setDateCreated(subscriptions1.getDateCreated());
 
             List<subscribersSubscriptions> subscribersItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getId());
-            System.out.println("Cheking .... " + subscribersItems);
             if (subscribersItems.size() > 0) {
                 List<Subscibers> subs = new ArrayList<>(); // Create a list to store subscribers
                 for (subscribersSubscriptions item : subscribersItems) {
-                    System.out.println("Checking.... " + item);
                     List<Subscibers> itemSubs = subscribersRepository.searchByItemId(item.getSubscriberId());
                     subs.addAll(itemSubs); // Add the subscribers to the list
                 }
