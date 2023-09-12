@@ -34,8 +34,8 @@ public class Subscibers {
     @ManyToMany
     @JoinTable(
             name = "subscribers_subscriptions",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+            joinColumns = @JoinColumn(name = "subscriptionId"),
+            inverseJoinColumns = @JoinColumn(name = "subscribersId"))
     Set<Subscriptions> subscriptionsSet;
 
 
