@@ -1,5 +1,7 @@
 package co.ke.emtechhouse.es.Announcements;
 
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +16,25 @@ import java.util.List;
 public class AnnouncementsController {
     @Autowired
     AnnouncementsService announcementsService;
+
+    @Autowired
+    NotificationService notificationService;
     public AnnouncementsController(){
     }
     @PostMapping("/add")
     public ResponseEntity<Object> addAnnouncements(@RequestBody Announcements announcements) {
         try {
             Announcements savedAnnouncements = announcementsService.saveAnnouncements(announcements);
+
+
+//            Send Notification
+            NotificationDTO notif = new NotificationDTO();
+            notif.setMessage(announcements.getMessage());
+            notif.setTitle("Announcement");
+            notif.setNotificationtype("All");
+            notif.setSubtitle(announcements.getAnnouncementDate());
+            notificationService.CreateServiceNotificationAll(notif);
+
             return new ResponseEntity<>(savedAnnouncements, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
