@@ -180,6 +180,35 @@ public class NotificationService {
         }
     }
 
+    public ApiResponse CreateServiceNotificationforMember(NotificationDTO notificationsDTO, String memberNumber ) {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+
+                Optional<Token> tokenOptional = tokenRepo.findByMemberNumber(memberNumber);
+                System.out.println("Checking here......" + memberNumber);
+//
+                if (tokenOptional.isPresent()) {
+
+                    Notification notification1 = new Notification();
+                    notification1.setTitle(notificationsDTO.getTitle());
+                    notification1.setMessage(notificationsDTO.getMessage());
+                    notification1.setSubtitle(notificationsDTO.getSubtitle());
+
+                    Notification savedNotification = notificationRepo.save(notification1);
+                    saveTokensInNotification(savedNotification, tokenOptional.get());
+                    apiResponse.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                    apiResponse.setStatusCode(HttpStatus.FOUND.value());
+                    apiResponse.setEntity(savedNotification);
+                } else {
+                    log.info("Member's token  does not exist");
+                }
+            return apiResponse;
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
+
 
 
 
