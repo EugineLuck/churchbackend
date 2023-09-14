@@ -27,7 +27,6 @@ public class AnnouncementsController {
     @Autowired AnnouncementsRepo announcementsRepo;
 
 
-
     @Autowired
     NotificationService notificationService;
 
