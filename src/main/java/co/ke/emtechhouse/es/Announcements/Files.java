@@ -18,9 +18,9 @@ public class Files {
     private Long id;
 
     @Lob
-    @Column(length = 10000)
+
     private String file;
-    private String fileType;
-    private String fileName;
+    private String filetype;
+    private String filename;
 
 }
