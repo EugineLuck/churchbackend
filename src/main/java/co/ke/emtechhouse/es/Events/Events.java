@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.checkerframework.checker.optional.qual.OptionalBottom;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +20,9 @@ public class Events {
     @Column(name = "id", nullable = false)
     private Long id;
     private String eventName;
-    private String eventGroup;
-    private String eventDate;
-    private String targetAmount;
+    private String participants;
+    private Date datePosted;
+    private String requirements;
+    private String description;
+    private boolean status;
 }

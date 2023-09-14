@@ -146,6 +146,13 @@ public class TransactionService {
                 response.setMessage("Transaction Entered Successfully. Transaction for member " + transaction.getMemberNumber());
                 response.setStatusCode(HttpStatus.CREATED.value());
 
+                NotificationDTO notif = new NotificationDTO();
+                notif.setMessage("Giving transaction was updated Successfully");
+                notif.setTitle("Giving Update");
+                notif.setNotificationtype("All");
+                notif.setSubtitle("Giving status");
+                notificationService.CreateServiceNotificationforMember(notif, transaction.getMemberNumber());
+
                 response.setEntity(saveTransaction);
 
                 String message = "Dear " + members.getFirstName() + members.getLastName() + " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() + " ! " + "at Muumini Church was sucessfully recorded ";

@@ -45,40 +45,22 @@ public class SubscribersController {
 
 
     @PostMapping("/add")
-
     public ResponseEntity<Object> addSubscriber(@RequestBody Subscibers subS) {
         ApiResponse response = new ApiResponse();
 
         try {
             subS.setDateSubscribed(nowDate);
 
-//            System.out.println(subS);
-            Optional<Subscibers> existingSubscriber = subscribersRepository.findByMemberNumber(subS.getMemberNumber());
-            if(existingSubscriber.isPresent()){
+            Subscibers save = subscribersService.saveSubscriber(subS);
 
-                Subscibers saved = existingSubscriber.get();
-                subscribersSubscriptions allSubs = new subscribersSubscriptions();
-                allSubs.setSubscriberId(saved.getId());
-                allSubs.setSubscriptionId(saved.getSubscriptionItemId());
-                subscribersSubscriptionsRepo.save(allSubs);
+            subscribersSubscriptions subscribersSubscriptions = new subscribersSubscriptions();
+            subscribersSubscriptions.setSubscriberId(save.getId());
+            subscribersSubscriptions.setSubscriptionId(subS.getSubscriptionItemId());
+            subscribersSubscriptionsRepo.save(subscribersSubscriptions);
 
-                response.setMessage("Subscriber Added");
-                response.setEntity(saved);
-                response.setStatusCode(HttpStatus.CREATED.value());
-
-            }else{
-                Subscibers saved = subscribersService.saveSubscriber(subS);
-                subscribersSubscriptions allSubs = new subscribersSubscriptions();
-                allSubs.setSubscriberId(saved.getId());
-                allSubs.setSubscriptionId(saved.getSubscriptionItemId());
-                subscribersSubscriptionsRepo.save(allSubs);
-
-                response.setMessage("Subscriber Added");
-                response.setEntity(saved);
-                response.setStatusCode(HttpStatus.CREATED.value());
-            }
-
-
+            response.setMessage("Subscriber Added");
+            response.setEntity(save);
+            response.setStatusCode(HttpStatus.CREATED.value());
 
             NotificationDTO notificationsDTO = new NotificationDTO();
             notificationsDTO.setTitle("New Subscriber");
@@ -95,6 +77,8 @@ public class SubscribersController {
             return null;
         }
     }
+
+
 
     @GetMapping("/get/all")
     public ResponseEntity<?> getAllSubscribers() {
@@ -141,7 +125,8 @@ public class SubscribersController {
         ApiResponse response = new ApiResponse<>();
         try {
             List allsubs = new ArrayList<>();
-            Subscibers subscriptions1 = subscribersService.findSubscriptionsByMemberNumber(memberNumber);
+            Subscibers subscriptions1 = subscribersRepository.findBymemberNumber(memberNumber);
+            System.out.println(subscriptions1);
             subscriberDTO dto = new subscriberDTO();
             dto.setId(subscriptions1.getId());
             dto.setPhoneNumber(subscriptions1.getPhoneNumber());

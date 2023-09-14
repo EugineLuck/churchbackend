@@ -33,7 +33,7 @@ public class AnnouncementsService {
     }
     public List<Announcements> findAll() {
         try {
-            List<Announcements> announcements = announcementsRepo.findAll();
+            List<Announcements> announcements = announcementsRepo.findAllActive();
             return announcements;
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
