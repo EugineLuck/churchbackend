@@ -33,12 +33,7 @@ public class Community {
     private String communityLocation;
     private Long outStationId;
 
-//    @OneToMany(targetEntity = Members.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "communityId", referencedColumnName = "id")
-//    private List<Members> members = new ArrayList<>();
 
-//    @OneToOne(mappedBy = "community" ,  fetch = FetchType.LAZY)
-//    private Members members;
 
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -46,9 +41,7 @@ public class Community {
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date postedTime;
-//    @Column(nullable = false, length = 200)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    private String postedBy;
+
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Character verifiedFlag;

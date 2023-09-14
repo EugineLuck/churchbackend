@@ -22,6 +22,7 @@ public class Events {
     private String eventName;
     private String participants;
     private Date datePosted;
+    private String eventDate;
     private String requirements;
     private String description;
     private boolean status;
