@@ -1,5 +1,7 @@
 package co.ke.emtechhouse.es.Announcements;
 
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
+
 import co.ke.emtechhouse.es.AppUser.AppUser;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 
@@ -23,6 +25,9 @@ public class AnnouncementsController {
     AnnouncementsService announcementsService;
 
     @Autowired AnnouncementsRepo announcementsRepo;
+
+    @Autowired
+    AnnouncementsRepo announcementsRepo;
 
     @Autowired
     NotificationService notificationService;
@@ -69,6 +74,27 @@ public class AnnouncementsController {
             return null;
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateAnnouncement(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse<>();
+        try {
+            Optional<Announcements> announcement = announcementsRepo.findById(id);
+            if(announcement.isPresent()){
+                Announcements existing = announcement.get();
+                existing.setActive(false);
+                announcementsRepo.save(existing);
+            }
+            response.setMessage("Updated");
+            response.setStatusCode(201);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
+   
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteAnnouncement(@PathVariable Long id) {
         ApiResponse response = new ApiResponse();
@@ -86,6 +112,7 @@ public class AnnouncementsController {
             response.setMessage("Announcement not found");
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
         }
     }
 }
