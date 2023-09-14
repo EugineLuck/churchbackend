@@ -27,8 +27,9 @@ public class Announcements {
 
     private String postedBy;
     private String announcementCategory;
-    @Column(name = "isActive")
-    private boolean isActive = true;
+    private boolean status;
+//    @Column(name = "status")
+//    private boolean isActive = true;
 
     @OneToMany(targetEntity = Files.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "fileId", referencedColumnName = "id")
