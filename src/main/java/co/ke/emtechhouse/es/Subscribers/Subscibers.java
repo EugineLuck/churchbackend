@@ -32,16 +32,6 @@ public class Subscibers {
 
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "subscribers_subscriptions",
-            joinColumns = @JoinColumn(name = "subscriptionId"),
-            inverseJoinColumns = @JoinColumn(name = "subscribersId"))
-    Set<Subscriptions> subscriptionsSet;
-
-
-    // a list of all subscritions subscribed to;
-
 
 
 
