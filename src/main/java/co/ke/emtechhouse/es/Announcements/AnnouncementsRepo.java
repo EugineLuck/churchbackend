@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface AnnouncementsRepo extends JpaRepository< Announcements, Long> {
     List<Announcements> findAll();
+
 }
