@@ -1,5 +1,6 @@
 package co.ke.emtechhouse.es.Announcements;
 
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -16,6 +18,9 @@ import java.util.List;
 public class AnnouncementsController {
     @Autowired
     AnnouncementsService announcementsService;
+
+    @Autowired
+    AnnouncementsRepo announcementsRepo;
 
     @Autowired
     NotificationService notificationService;
@@ -61,7 +66,25 @@ public class AnnouncementsController {
             return null;
         }
     }
-    @PutMapping("/delete/temp/")
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateAnnouncement(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse<>();
+        try {
+            Optional<Announcements> announcement = announcementsRepo.findById(id);
+            if(announcement.isPresent()){
+                Announcements existing = announcement.get();
+                existing.setActive(false);
+                announcementsRepo.save(existing);
+            }
+            response.setMessage("Updated");
+            response.setStatusCode(201);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
+    @DeleteMapping("/delete/temp/")
     public ResponseEntity<Object> delete(Long id) {
         try {
             announcementsService.delete(id);
