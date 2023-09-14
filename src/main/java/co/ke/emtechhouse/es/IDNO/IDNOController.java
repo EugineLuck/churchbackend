@@ -78,7 +78,7 @@ public class IDNOController {
             // Execute the request asynchronously
                 try {
                     Response response = client.newCall(request).execute();
-                    System.out.println(response);
+                    System.out.println(response.message());
                     String response2 = response.body().string();
                     JSONObject jsonObject = new JSONObject(response2);
                     if (jsonObject.has("status") && jsonObject.getBoolean("status")) {

@@ -137,16 +137,16 @@ public class MembersController {
 
 
 
-        IDNOdto details = new IDNOdto();
-//        details.setDateOfBirth(signUpRequest.getDateOfBirth());
-        details.setLastName(signUpRequest.getLastName());
-        details.setDateOfBirth("1990-01-01");
-        details.setFirstName(signUpRequest.getFirstName());
-        details.setDocumentNumber(signUpRequest.getNationalID());
-
-        ApiResponse verify = idnoController.verifyNow(details);
-
-        if(verify.getStatusCode() == 302){
+//        IDNOdto details = new IDNOdto();
+////        details.setDateOfBirth(signUpRequest.getDateOfBirth());
+//        details.setLastName(signUpRequest.getLastName());
+//        details.setDateOfBirth("1990-01-01");
+//        details.setFirstName(signUpRequest.getFirstName());
+//        details.setDocumentNumber(signUpRequest.getNationalID());
+//
+//        ApiResponse verify = idnoController.verifyNow(details);
+//
+//        if(verify.getStatusCode() == 302){
 
             String familyNumber = generateFamily();
             String memberNumber = generateMemberNumber();
@@ -245,10 +245,10 @@ public class MembersController {
             response.setEntity(savedMembers);
 
 
-        }else{
-            response.setMessage(verify.getMessage());
-            response.setStatusCode(verify.getStatusCode());
-        }
+//        }else{
+//            response.setMessage(verify.getMessage());
+//            response.setStatusCode(verify.getStatusCode());
+//        }
 
 
         // Send SMS and create the response

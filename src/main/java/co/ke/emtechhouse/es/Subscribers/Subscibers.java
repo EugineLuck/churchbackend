@@ -31,6 +31,7 @@ public class Subscibers {
     private boolean isActive = true;
 
 
+
     @ManyToMany
     @JoinTable(
             name = "subscribers_subscriptions",
@@ -40,6 +41,7 @@ public class Subscibers {
 
 
     // a list of all subscritions subscribed to;
+
 
 
 

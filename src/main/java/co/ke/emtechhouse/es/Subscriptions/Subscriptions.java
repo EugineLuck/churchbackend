@@ -36,9 +36,10 @@ public class Subscriptions {
     @Column(name = "isActive")
     private boolean isActive = true;
 
-    //A list of all subscribers subcribed
-    @ManyToMany(mappedBy = "subscriptionsSet")
-    Set<Subscibers> subscibersSet;
+//    //A list of all subscribers subcribed
+//    @ManyToMany(mappedBy = "subscriptions")
+//    Set<Subscibers> subscibers;
+
 
 
     
