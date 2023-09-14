@@ -51,19 +51,6 @@ public class Groups {
     @OneToMany(targetEntity = Giving.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "groupId", referencedColumnName = "id")
     private List<Giving> givings = new ArrayList<>();
-//    @OneToMany(mappedBy = "group")
-//    private List<GroupMember> groupMembers = new ArrayList<>();
 
-//
-//    public void addGroupMember(GroupMember groupMember) {
-//        groupMembers.add(groupMember);
-//        groupMember.setGroup(this);
-//    }
-//
-//    // Helper method to remove GroupMember and unset bidirectional relationship
-//    public void removeGroupMember(GroupMember groupMember) {
-//        groupMembers.remove(groupMember);
-//        groupMember.setGroup(null);
-//    }
 
 }

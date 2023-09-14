@@ -151,6 +151,7 @@ public class TransactionService {
                 notif.setTitle("Giving Update");
                 notif.setNotificationtype("All");
                 notif.setSubtitle("Giving status");
+                System.out.println("cheking if noti---------------"+notif);
                 notificationService.CreateServiceNotificationforMember(notif, transaction.getMemberNumber());
 
                 response.setEntity(saveTransaction);

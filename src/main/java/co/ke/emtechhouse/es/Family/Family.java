@@ -53,7 +53,4 @@ public class Family {
     private List<Members> members = new ArrayList<>();
 
 
-//    @OneToMany(targetEntity = Giving.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "familyId", referencedColumnName = "id")
-//    private List<Giving> givings = new ArrayList<>();
 }
