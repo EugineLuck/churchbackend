@@ -51,15 +51,10 @@ public class SubscribersController {
         try {
             subS.setDateSubscribed(nowDate);
 
-
-
-//                    .//fetch all subscriptions
-//                    //subscriber.subcriptions
-
             Subscibers save = subscribersService.saveSubscriber(subS);
 
             subscribersSubscriptions subscribersSubscriptions = new subscribersSubscriptions();
-            subscribersSubscriptions.setSubscriberId(subS.getId());
+            subscribersSubscriptions.setSubscriberId(save.getId());
             subscribersSubscriptions.setSubscriptionId(subS.getSubscriptionItemId());
             subscribersSubscriptionsRepo.save(subscribersSubscriptions);
 
@@ -130,7 +125,8 @@ public class SubscribersController {
         ApiResponse response = new ApiResponse<>();
         try {
             List allsubs = new ArrayList<>();
-            Subscibers subscriptions1 = subscribersService.findSubscriptionsByMemberNumber(memberNumber);
+            Subscibers subscriptions1 = subscribersRepository.findBymemberNumber(memberNumber);
+            System.out.println(subscriptions1);
             subscriberDTO dto = new subscriberDTO();
             dto.setId(subscriptions1.getId());
             dto.setPhoneNumber(subscriptions1.getPhoneNumber());
