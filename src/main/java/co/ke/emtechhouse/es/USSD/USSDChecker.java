@@ -659,15 +659,15 @@ public class USSDChecker {
                         String memberNumber = generateMemberNumber();
                         log.info("{ " + msisdn + " }{ END Session }");
 
-                        IDNOdto details1 = new IDNOdto();
-                        details1.setLastName(inputs.get(5));
-                        details1.setDateOfBirth("1990-01-01");
-                        details1.setFirstName(inputs.get(4));
-                        details1.setDocumentNumber(inputs.get(2));
-                        System.out.println(details1);
-                        ApiResponse verify = idnoController.verifyNow(details1);
-
-                        if(verify.getStatusCode() == 302) {
+//                        IDNOdto details1 = new IDNOdto();
+//                        details1.setLastName(inputs.get(5));
+//                        details1.setDateOfBirth("1990-01-01");
+//                        details1.setFirstName(inputs.get(4));
+//                        details1.setDocumentNumber(inputs.get(2));
+//                        System.out.println(details1);
+//                        ApiResponse verify = idnoController.verifyNow(details1);
+//
+//                        if(verify.getStatusCode() == 302) {
 
                         USSD user = new USSD();
                         user.setFirstName(inputs.get(4));
@@ -720,9 +720,9 @@ public class USSDChecker {
 
                         String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
                         emtSmsService.sendSms(new SmsDto(msisdn, message));
-                        }else{
-                            response = "END Invalid Identification Number";
-                        }
+//                        }else{
+//                            response = "END Invalid Identification Number";
+//                        }
                     }
                 }
             }
@@ -732,17 +732,17 @@ public class USSDChecker {
                     log.info("{ " + msisdn + " }{ END Session }");
 
 
-                    IDNOdto details1 = new IDNOdto();
-                    details1.setLastName(inputs.get(3));
-                    details1.setDateOfBirth("1990-01-01");
-                    details1.setFirstName(inputs.get(2));
-                    details1.setDocumentNumber(inputs.get(2));
-
-                    System.out.println(details1);
-
-                    ApiResponse verify = idnoController.verifyNow(details1);
-
-                    if(verify.getStatusCode() == 302) {
+//                    IDNOdto details1 = new IDNOdto();
+//                    details1.setLastName(inputs.get(3));
+//                    details1.setDateOfBirth("1990-01-01");
+//                    details1.setFirstName(inputs.get(2));
+//                    details1.setDocumentNumber(inputs.get(2));
+//
+//                    System.out.println(details1);
+//
+//                    ApiResponse verify = idnoController.verifyNow(details1);
+//
+//                    if(verify.getStatusCode() == 302) {
                         USSD user = new USSD();
                         user.setFirstName(inputs.get(2));
                         user.setLastName(inputs.get(3));
@@ -784,9 +784,9 @@ public class USSDChecker {
                         response = "----CONGRATULATIONS You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Enjoy";
                         String message = "CONGRATULATIONS " + members1.getFirstName() + " ! " + "You have Successfully Registered to EMT Church.Your member number is " + memberNumber + ". Use your memberNumber " + memberNumber + " to login";
                         emtSmsService.sendSms(new SmsDto(msisdn, message));
-                    }else{
-                        response = "END Invalid Identification Number";
-                    }
+//                    }else{
+//                        response = "END Invalid Identification Number";
+//                    }
                 }
             }
 
