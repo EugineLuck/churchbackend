@@ -36,6 +36,7 @@ public class AnnouncementsController {
     @PostMapping("/add")
     public ResponseEntity<Object> addAnnouncements(@RequestBody Announcements announcements) {
         try {
+            announcements.setStatus(true);
             Announcements savedAnnouncements = announcementsService.saveAnnouncements(announcements);
 
 
@@ -63,6 +64,16 @@ public class AnnouncementsController {
             return null;
         }
     }
+    @GetMapping("/get/all/scheduled")
+    public ResponseEntity<Object> getAllInactive() {
+        try {
+            List<Announcements> allAnnouncements = announcementsRepo.scheduled();
+            return new ResponseEntity<>(allAnnouncements, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Error" + e);
+            return null;
+        }
+    }
     @GetMapping("/get/by/id")
     public ResponseEntity<Object> getByIdAnnouncements(Long id) {
         try {
@@ -79,9 +90,13 @@ public class AnnouncementsController {
         ApiResponse response = new ApiResponse<>();
         try {
             Optional<Announcements> announcement = announcementsRepo.findById(id);
-            if(announcement.isPresent()){
+            if (announcement.isPresent()) {
                 Announcements existing = announcement.get();
-                existing.setActive(false);
+
+                // Toggle the status boolean value
+                boolean status = existing.isStatus();
+                existing.setStatus(!status);
+
                 announcementsRepo.save(existing);
             }
             response.setMessage("Updated");
@@ -89,10 +104,11 @@ public class AnnouncementsController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
-            return null;
+            return null; // You should handle errors more gracefully here
         }
     }
-   
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteAnnouncement(@PathVariable Long id) {

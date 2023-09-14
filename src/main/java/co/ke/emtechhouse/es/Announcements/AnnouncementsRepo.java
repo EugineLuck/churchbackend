@@ -16,4 +16,8 @@ public interface AnnouncementsRepo extends JpaRepository< Announcements, Long> {
     @Query(nativeQuery = true,value = "SELECT * FROM announcements WHERE is_active = 1 ")
     List<Announcements> findAllActive();
 
+    @Transactional
+    @Query(nativeQuery = true,value = "SELECT * FROM announcements WHERE is_active = 0 ")
+    List<Announcements> scheduled();
+
 }
