@@ -1,5 +1,7 @@
 package co.ke.emtechhouse.es.Announcements;
 
+import co.ke.emtechhouse.es.AppUser.AppUser;
+import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -14,6 +17,7 @@ import java.util.List;
 public class AnnouncementsController {
     @Autowired
     AnnouncementsService announcementsService;
+    @Autowired AnnouncementsRepo announcementsRepo;
     public AnnouncementsController(){
     }
     @PostMapping("/add")
@@ -46,14 +50,23 @@ public class AnnouncementsController {
             return null;
         }
     }
-    @PutMapping("/delete/temp/")
-    public ResponseEntity<Object> delete(Long id) {
-        try {
-            announcementsService.delete(id);
-        } catch (Exception e) {
-            log.info("Error" + e);
-            return null;
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteAnnouncement(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse();
+        Optional<Announcements> announcements = announcementsRepo.findById(id);
+
+        if (announcements.isPresent()) {
+            Announcements announcements1 = announcements.get();
+
+            announcementsRepo.deleteById(id);
+
+            response.setMessage(" Deleted successfully!");
+            response.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.setMessage("Announcement not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
-        return null;
     }
 }

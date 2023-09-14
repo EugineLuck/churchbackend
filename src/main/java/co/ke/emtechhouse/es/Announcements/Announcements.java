@@ -32,6 +32,6 @@ public class Announcements {
 
     @OneToMany(targetEntity = Files.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "fileId", referencedColumnName = "id")
-    private List<Files> files;
+    private List<Files> filedetails;
 
 }
