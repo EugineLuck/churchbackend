@@ -2,6 +2,7 @@ package co.ke.emtechhouse.es.MpesaIntergration;
 
 
 
+import co.ke.emtechhouse.es.Auth.utils.DatesCalculator;
 import co.ke.emtechhouse.es.Auth.utils.Response.ApiResponse;
 
 
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +28,9 @@ public class  TransactionController {
     TransactionService transactionService;
     @Autowired
     TransactionRepo transactionRepo;
+
+    @Autowired
+    private DatesCalculator datesCalculator;
     @RequestMapping(path = "api/v1/transaction")
 
 
@@ -95,9 +100,11 @@ public class  TransactionController {
     }
 
     @PostMapping("/fetch/daterange")
-    public ResponseEntity<?> fetchDateRange(@RequestBody fetchDTO fetchDTO) {
+    public ResponseEntity<?> fetchDateRange(@RequestParam Date fromDate, @RequestParam Date toDate) {
         try {
-            List<SuccessfullyTransactions> response = transactionRepo.fetchByDateRange(fetchDTO.getStartDate(), fetchDTO.getEndDate());
+            System.out.println("Checking.........start Date....."+ datesCalculator.toMilliseconds(fromDate));
+            System.out.println("Checking.........End Date....."+ datesCalculator.toMilliseconds(toDate));
+            List<SuccessfullyTransactions> response = transactionRepo.fetchByDateRange(datesCalculator.toMilliseconds(fromDate), datesCalculator.toMilliseconds(toDate));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Catched Error {} " + e);

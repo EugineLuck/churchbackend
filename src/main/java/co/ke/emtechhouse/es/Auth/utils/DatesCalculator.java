@@ -3,6 +3,7 @@ package co.ke.emtechhouse.es.Auth.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -203,7 +204,7 @@ public class DatesCalculator {
         }
     }
 
-    public LocalDate convertDateToLocalDate(Date date){
+    public  LocalDate convertDateToLocalDate(Date date){
         try{
             return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         }catch (Exception e) {
@@ -211,6 +212,21 @@ public class DatesCalculator {
             return null;
         }
     }
+        public long toMilliseconds(Date date) {
+//            String dateString = "15/9/2023"; // Your date string in the format "15/9/2023"
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
+
+            //                // Parse the date string into a Date object
+//                Date datex = dateFormat.parse(date);
+
+            // Convert the Date object to milliseconds since epoch
+            long milliseconds = date.getTime();
+            return  milliseconds;
+
+//            System.out.println("Milliseconds since epoch: " + milliseconds);
+        }
+
+
     public Date convertLocalDateToDate(LocalDate date){
         try{
             return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
