@@ -48,8 +48,9 @@ public class DarajaApiImpl implements DarajaApi {
     private final MpesaConfiguration mpesaConfiguration;
     private final OkHttpClient okHttpClient;
     private final ObjectMapper objectMapper;
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    String nowDate = now.format(formatter);
     @Autowired
     private TransactionRepo transactionRepo;
 
@@ -284,7 +285,7 @@ public class DarajaApiImpl implements DarajaApi {
                         transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
 
                         transaction.setGivingId(internalStkPushRequest.getGivingId());
-                        transaction.setTransactionDate(new Date());
+                        transaction.setTransactionDate(nowDate);
                         transaction.setTransactionMode("M-pesa");
                         transactionRepo.save(transaction);
                         String message = "Dear "+ members.getFirstName() + members.getLastName() +  " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() +  " ! " + "at Muumini Church was sucessfully recorded ";
