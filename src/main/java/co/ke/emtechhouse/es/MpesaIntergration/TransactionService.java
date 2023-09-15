@@ -34,6 +34,8 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -70,6 +72,10 @@ public class TransactionService {
 
     @Autowired
     MpesaCallerService mpesaCallerService;
+
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    String nowDate = now.format(formatter);
 
 
 
@@ -135,7 +141,7 @@ public class TransactionService {
                 }
 
                 cash.setGivingId(transaction.getGivingId());
-                cash.setTransactionDate(new Date());
+                cash.setTransactionDate(nowDate);
                 cash.setTransactionMode(transaction.getTransactionMode());
 
 

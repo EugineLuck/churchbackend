@@ -81,7 +81,9 @@ public class  TransactionController {
             log.info("Catched Error {} " + e);
             return null;
         }
-    } @GetMapping("/get/by/memberNumber/{memberNumber}")
+    }
+
+    @GetMapping("/get/by/memberNumber/{memberNumber}")
     public ResponseEntity<?> fetchTransactionByMemberNumber(@PathVariable("memberNumber") String memberNumber) {
         try {
             ApiResponse response = transactionService.getByMemberNumber(memberNumber);
@@ -91,6 +93,79 @@ public class  TransactionController {
             return null;
         }
     }
+
+    @PostMapping("/fetch/daterange")
+    public ResponseEntity<?> fetchDateRange(@RequestBody fetchDTO fetchDTO) {
+        try {
+            List<SuccessfullyTransactions> response = transactionRepo.fetchByDateRange(fetchDTO.getStartDate(), fetchDTO.getEndDate());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
+    @PostMapping("/fetch/daterange/{memberNumber}")
+    public ResponseEntity<?> fetchMemberDateRange(@PathVariable String memberNumber , @RequestBody fetchDTO fetchDTO) {
+        try {
+            ApiResponse response = new ApiResponse();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
+    @PostMapping("/fetch/daterange/{outStationId}")
+    public ResponseEntity<?> fetcheoutStationDateRange(@PathVariable String outStationId , @RequestBody fetchDTO fetchDTO) {
+        try {
+            ApiResponse response = new ApiResponse();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
+    @PostMapping("/fetch/daterange/{communityId}")
+    public ResponseEntity<?> fetcheCommunityDateRange(@PathVariable String communityId , @RequestBody fetchDTO fetchDTO) {
+        try {
+            ApiResponse response = new ApiResponse();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+    @PostMapping("/fetch/daterange/{givingId}")
+    public ResponseEntity<?> fetcheGivingDateRange(@PathVariable String givingId , @RequestBody fetchDTO fetchDTO) {
+        try {
+            ApiResponse response = new ApiResponse();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
+    @PostMapping("/fetch/daterange/{groupId}")
+    public ResponseEntity<?> fetcheGroupDateRange(@PathVariable String groupId , @RequestBody fetchDTO fetchDTO) {
+        try {
+            ApiResponse response = new ApiResponse();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 
