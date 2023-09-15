@@ -8,6 +8,7 @@ import org.checkerframework.checker.optional.qual.OptionalBottom;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,4 +27,7 @@ public class Events {
     private String requirements;
     private String description;
     private String status;
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Participants> participantsx;
+
 }

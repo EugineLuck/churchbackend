@@ -231,6 +231,9 @@ public class EventsController {
         if (events.isPresent()) {
             Events events1 = events.get();
 
+            List<Participants> participants = participantsRepo.findByEvents(events);
+            participantsRepo.deleteAll(participants);
+
 
             eventsRepo.deleteEvent( events1.getId());
 
