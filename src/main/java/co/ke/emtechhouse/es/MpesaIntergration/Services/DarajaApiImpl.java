@@ -19,6 +19,8 @@ import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
 import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.FailedRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.Utils.HelperUtility;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
+import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.Dtos.SmsDto;
 import co.ke.emtechhouse.es.SmsComponent.Emtech.Dtos.EmtSmsService;
 import co.ke.emtechhouse.es.Subscriptions.SubsPaymentsRepository;
@@ -52,7 +54,8 @@ public class DarajaApiImpl implements DarajaApi {
     LocalDateTime now = LocalDateTime.now();
     @Autowired
     private TransactionRepo transactionRepo;
-
+    @Autowired
+    NotificationService notificationService;
     @Autowired
     MembersController membersController;
     @Autowired
@@ -266,6 +269,14 @@ public class DarajaApiImpl implements DarajaApi {
                         subscriptionPayments.setAmountPaid(internalStkPushRequest.getTransactionAmount());
                         subscriptionPayments.setDatePaid(String.valueOf(new Date()));
                         subsPaymentsRepository.save(subscriptionPayments);
+                        NotificationDTO notif = new NotificationDTO();
+                        notif.setMessage("Subscription added Successfully");
+                        notif.setTitle("Subscription Update");
+                        notif.setNotificationtype("All");
+                        notif.setSubtitle("Subscription status");
+                        System.out.println("cheking if noti---------------"+notif);
+                        notificationService.CreateServiceNotificationforMember(notif, internalStkPushRequest.getMemberNumber());
+
 
                     } else {
                         Optional<Members> members1 = membersRepository.findByMemberNumber(internalStkPushRequest.getMemberNumber());
@@ -289,6 +300,13 @@ public class DarajaApiImpl implements DarajaApi {
                         transactionRepo.save(transaction);
                         String message = "Dear "+ members.getFirstName() + members.getLastName() +  " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() +  " ! " + "at Muumini Church was sucessfully recorded ";
                         emtSmsService.sendSms(new SmsDto(members.getPhoneNumber(), message));
+                            NotificationDTO notif = new NotificationDTO();
+                            notif.setMessage("Giving transaction was updated Successfully");
+                            notif.setTitle("Giving Update");
+                            notif.setNotificationtype("All");
+                            notif.setSubtitle("Giving status");
+                            System.out.println("cheking if noti---------------"+notif);
+                            notificationService.CreateServiceNotificationforMember(notif, transaction.getMemberNumber());
 
                     }  }
 //

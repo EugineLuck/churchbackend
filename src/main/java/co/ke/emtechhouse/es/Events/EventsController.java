@@ -70,6 +70,7 @@ public class EventsController {
 
         Events events = new Events();
         events.setDescription(activityRequest.getDescription());
+        events.setParticipants(activityRequest.getParticipants());
 
         events.setRequirements(activityRequest.getRequirements());
         events.setEventName(WordUtils.capitalizeFully(activityRequest.getEventName()));
@@ -181,70 +182,67 @@ public class EventsController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }
-    @GetMapping("/fetch")
-    public ResponseEntity<Object> getAllEvents() {
-        try {
-            Events saveEvents = eventsRepo.fetchEvents();
-            return new ResponseEntity<>(saveEvents, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("Error" + e);
-            return null;
-        }
-    }
-
-    @GetMapping("/fetch/{id}")
-    public ResponseEntity<Object> getEvent(@PathVariable Long id) {
-        ApiResponse response =new ApiResponse();
-        try {
-            Optional<Events> existing = eventsRepo.findById(id);
-            if(existing.isPresent()){
-                response.setStatusCode(200);
-                response.setEntity(existing.get());
-                response.setMessage("Found");
-            }else{
-                response.setStatusCode(404);
-                response.setMessage("No Event Found with id");
-            }
+    @GetMapping("/get/Active")
+    public ResponseEntity<?> fetchActive() {
+        try{
+            ApiResponse response = eventsService.getActiveEvents();
             return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }@GetMapping("/get/Upcoming")
+    public ResponseEntity<?> fetchUpcoming() {
+        try{
+            ApiResponse response = eventsService.getUpcomingActivities();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }@GetMapping("/get/Clossed")
+    public ResponseEntity<?> fetchClossed() {
+        try{
+            ApiResponse response = eventsService.getClossedActivities();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            log.info("Catched Error {} " + e);
+            return null;
+        }
+    }
+
+    @GetMapping("/get/by/id")
+    public ResponseEntity<Object> getByIdGiving(Long id) {
+        try {
+            Events allEvents = eventsService.findById(id);
+            return new ResponseEntity<>(allEvents, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
         }
     }
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<Object> updateEvent(@PathVariable Long id, @RequestBody Events events) {
-//        ApiResponse response = new ApiResponse<>();
-//        try {
-//            Optional<Events> existing = eventsRepo.findById(id);
-//            if(existing.isPresent()){
-//                existing.set
-//                response.setStatusCode(200);
-//                response.setMessage("Found");
-//            }else{
-//                response.setStatusCode(404);
-//                response.setMessage("No Event Found with id");
-//            }
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.info("Error" + e);
-//            return null;
-//        }
-//    }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Object> deleteEvent(@PathVariable Long id) {
-        ApiResponse response = new ApiResponse<>();
-        try {
-            eventsRepo.deleteById(id);
-            response.setMessage("Deleted");
+    public ResponseEntity<ApiResponse> deleteEvent(@PathVariable Long id) {
+        ApiResponse response = new ApiResponse();
+        Optional<Events> events = eventsRepo.findById(id);
+
+        if (events.isPresent()) {
+            Events events1 = events.get();
+
+
+            eventsRepo.deleteEvent( events1.getId());
+
+            response.setMessage("Event Deleted successfully!");
+            response.setStatusCode(HttpStatus.OK.value());
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("Error" + e);
-            return null;
+        } else {
+            response.setMessage("Event not found");
+            response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
-
 
 
 }
