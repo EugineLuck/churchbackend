@@ -30,4 +30,5 @@ public interface EventsRepo extends JpaRepository<Events,Long> {
 
             @Param(value = "id") Long id
     );
+
 }
