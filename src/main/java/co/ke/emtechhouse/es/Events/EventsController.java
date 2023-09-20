@@ -212,7 +212,7 @@ public class EventsController {
     }
 
     @GetMapping("/get/by/id")
-    public ResponseEntity<Object> getByIdGiving(Long id) {
+    public ResponseEntity<Object> getByIdEvents(Long id) {
         try {
             Events allEvents = eventsService.findById(id);
             return new ResponseEntity<>(allEvents, HttpStatus.OK);
