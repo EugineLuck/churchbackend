@@ -212,7 +212,7 @@ public class DatesCalculator {
             return null;
         }
     }
-        public long toMilliseconds(Date date) {
+        public Long toMilliseconds(Date date) {
 //            String dateString = "15/9/2023"; // Your date string in the format "15/9/2023"
 //            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
 

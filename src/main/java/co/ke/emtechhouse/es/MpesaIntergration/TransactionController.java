@@ -102,9 +102,10 @@ public class  TransactionController {
     @PostMapping("/fetch/daterange")
     public ResponseEntity<?> fetchDateRange(@RequestParam Date fromDate, @RequestParam Date toDate) {
         try {
-            System.out.println("Checking.........start Date....."+ datesCalculator.toMilliseconds(fromDate));
-            System.out.println("Checking.........End Date....."+ datesCalculator.toMilliseconds(toDate));
-            List<SuccessfullyTransactions> response = transactionRepo.fetchByDateRange(datesCalculator.toMilliseconds(fromDate), datesCalculator.toMilliseconds(toDate));
+            System.out.println("Checking.........start Date....."+ datesCalculator.dateFormat(fromDate));
+            System.out.println("Checking.........End Date....."+ datesCalculator.dateFormat(toDate));
+            List<Transaction> response = transactionRepo.fetchByDateRange(datesCalculator.dateFormat(fromDate), datesCalculator.dateFormat(toDate));
+//            Object response = null;
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
