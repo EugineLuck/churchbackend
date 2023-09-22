@@ -34,11 +34,14 @@ public class AnnouncementsController {
     }
     @PostMapping("/add")
     public ResponseEntity<Object> addAnnouncements(@RequestBody Announcements announcements) {
+        ApiResponse response = new ApiResponse<>();
         try {
             announcements.setStatus(true);
             Announcements savedAnnouncements = announcementsService.saveAnnouncements(announcements);
 
-
+            response.setMessage("Announcemenmt Added");
+            response.setEntity(savedAnnouncements);
+            response.setStatusCode(HttpStatus.CREATED.value());
 //            Send Notification
             NotificationDTO notif = new NotificationDTO();
             notif.setMessage(announcements.getMessage());
@@ -47,7 +50,7 @@ public class AnnouncementsController {
             notif.setSubtitle(announcements.getAnnouncementDate());
             notificationService.CreateServiceNotificationAll(notif);
 
-            return new ResponseEntity<>(savedAnnouncements, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

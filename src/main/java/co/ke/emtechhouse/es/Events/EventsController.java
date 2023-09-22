@@ -82,6 +82,10 @@ public class EventsController {
 
         Events saveActivity = eventsRepo.save(events);
 
+        response.setMessage("Event Added");
+        response.setEntity(saveActivity);
+        response.setStatusCode(HttpStatus.CREATED.value());
+
         //Send Notification
         NotificationDTO notif = new NotificationDTO();
         notif.setMessage(activityRequest.getDescription()+"\n This is scheduled to start from "+ activityRequest.getEventDate());
