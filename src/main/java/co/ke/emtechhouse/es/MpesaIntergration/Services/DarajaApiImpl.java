@@ -17,7 +17,6 @@ import co.ke.emtechhouse.es.MpesaIntergration.Register_URL.RegisterUrlRequest;
 import co.ke.emtechhouse.es.MpesaIntergration.Register_URL.RegisterUrlResponse;
 import co.ke.emtechhouse.es.MpesaIntergration.Transaction;
 import co.ke.emtechhouse.es.MpesaIntergration.TransactionRepo;
-import co.ke.emtechhouse.es.MpesaIntergration.FailedRepo;
 import co.ke.emtechhouse.es.MpesaIntergration.Utils.HelperUtility;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationDTO;
 import co.ke.emtechhouse.es.NotificationComponent.NotificationService;
@@ -71,8 +70,7 @@ public class DarajaApiImpl implements DarajaApi {
     @Autowired
     GivingRepo givingRepo;
 
-    @Autowired
-    private FailedRepo failedRepo;
+
     @Autowired
     SubsPaymentsRepository subsPaymentsRepository;
 
