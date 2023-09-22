@@ -12,6 +12,7 @@ import co.ke.emtechhouse.es.MpesaIntergration.Mpesa_Express.StkPushStatusRespons
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.criteria.internal.expression.SubqueryComparisonModifierExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +65,33 @@ public class  TransactionController {
             log.info("Catched Error {} " + e);
             return null;
         }
+    } @GetMapping("/get/filteredTransactions")
+    public ResponseEntity<?> getFiltredTransactions(
+            @RequestParam(name = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate,
+            @RequestParam(name = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate,
+            @RequestParam(name = "churchId", required = false) Long churchId,
+            @RequestParam(name = "memberNumber", required = false) String memberNumber,
+            @RequestParam(name = "familyId", required = false) Long familyId,
+            @RequestParam(name = "communityId", required = false) Long communityId,
+            @RequestParam(name = "groupsId", required = false) Long groupsId
+    ) {
+        try {
+            ApiResponse response = transactionService.getAllFilteredTransactions(
+                    fromDate,
+                    toDate,
+                    churchId,
+                    memberNumber,
+                    familyId,
+                    communityId,
+                    groupsId
+            );
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Caught Error: " + e);
+            return null;
+        }
     }
+
     @GetMapping("/get/successfullyTransactions")
     public ResponseEntity<?> getAll() {
         try {

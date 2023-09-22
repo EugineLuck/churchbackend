@@ -291,13 +291,50 @@ public class TransactionService {
                     response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
                     response.setStatusCode(HttpStatus.NOT_FOUND.value());
                 }
-//            }
+
             return response;
         } catch (Exception e) {
             log.info("Catched Error {} " + e);
             return null;
         }
     }
+    public ApiResponse<?> getAllFilteredTransactions(
+            Date fromDate,
+            Date toDate,
+            Long churchId,
+            String memberNumber,
+            Long familyId,
+            Long communityId,
+            Long groupsId
+    ) {
+
+        ApiResponse response = new ApiResponse();
+        try {
+            List<SuccessfullyTransactions> transactions = transactionRepo.findAllFilteredTransations(
+                    fromDate,
+                    toDate,
+                    churchId,
+                    memberNumber,
+                    familyId,
+                    communityId,
+                    groupsId
+            );
+            if (transactions.size() > 0) {
+                response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.FOUND.value());
+                response.setEntity(transactions);
+            } else {
+                response.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
+            }
+
+            return response;
+        } catch (Exception e) {
+            log.info("Caught Error: " + e);
+            return null;
+        }
+    }
+
 
 
     public ApiResponse<?> getMemberTransactions() {
