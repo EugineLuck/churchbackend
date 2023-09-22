@@ -141,7 +141,8 @@ public class TransactionService {
                 }
 
                 cash.setGivingId(transaction.getGivingId());
-                cash.setTransactionDate(new Date());
+//                cash.setTransactionDate(new Date());
+                cash.setDatePaid(nowDate);
                 cash.setTransactionMode(transaction.getTransactionMode());
 
 

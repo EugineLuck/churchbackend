@@ -18,22 +18,18 @@ import java.util.Optional;
 @Repository
 public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
-//    List<SuccessfullyTransactions> findByMemberNumber(String memberNumber);
-//
-//    List<SuccessfullyTransactions> findByGivingId(Long givingId);
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, CONCAT_WS(' ',  COALESCE(t.envelope_number, ''),COALESCE(t.cheque_number, ''), COALESCE(t.transaction_number, '')) AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, CONCAT_WS(' ',  COALESCE(t.envelope_number, ''),COALESCE(t.cheque_number, ''), COALESCE(t.transaction_number, '')) AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, DATE(t.date_paid) as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions> findAllTransations();
 
 
 
     @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, DATE(t.date_paid) as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where  t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions> getAllSucessfullyTransactions();
   @Transactional
-
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, t.transaction_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode,t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.member_number=:memberNumber AND t.result_code = 0")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, t.transaction_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode,DATE(t.date_paid) as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.member_number=:memberNumber AND t.result_code = 0")
 
     List<SuccessfullyTransactions>  findByMemberNumber(@Param(value = "memberNumber")String memberNumber);
 
@@ -45,21 +41,17 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 
   @Transactional
-
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, t.transaction_date as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where   t.result_code = 0 group by t.id")
+    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, IFNULL(CONCAT(t.transaction_number, ' ', t.envelope_number, ' ', t.cheque_number), '') AS  number,t.transaction_amount as amount,t.transaction_mode as transactionMode, DATE(t.date_paid) as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where   t.result_code = 0 group by t.id")
     List<SuccessfullyTransactions> findByGivingId(@Param(value = "givingId")Long givingId);
 
-//    List<Transaction> fetchByDateRange(String dateFormat, String dateFormat1);
-
-
     @Transactional
-    @Query(nativeQuery = true, value = "SELECT *\n" +
-            "FROM `transaction`\n" +
-            "WHERE transaction_date >= UNIX_TIMESTAMP('2023/09/09 00:00:00') * 1000\n" +
-            "  AND transaction_date <= UNIX_TIMESTAMP('2023/09/22 00:00:00') * 1000;\n")
-//    @Query(nativeQuery = true, value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName, m.member_number as memberNumber, g.giving_level as level, g.giving_title as title, CONCAT_WS(' ', COALESCE(t.envelope_number, ''), COALESCE(t.cheque_number, ''), COALESCE(t.transaction_number, '')) AS number, t.transaction_amount as amount, t.transaction_mode as transactionMode, t.transaction_date as postedTime, t.id as transId, g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number = t.member_number where t.result_code = 0 AND t.transaction_date between :fromDate and  :toDate ")
-    List<Transaction> fetchByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
-
+    @Query(nativeQuery = true, value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName, m.member_number AS memberNumber, g.giving_level AS level, g.giving_title AS title, CONCAT_WS(' ', COALESCE(t.envelope_number, ''), COALESCE(t.cheque_number, ''), COALESCE(t.transaction_number, '')) AS number, t.transaction_amount AS amount, t.transaction_mode AS transactionMode, DATE(t.date_paid) AS postedDate, t.id AS transId, g.id AS givingId FROM `transaction` t JOIN giving g ON g.id = t.giving_id JOIN members m ON m.member_number = t.member_number WHERE (t.result_code = 0 AND DATE(t.date_paid) BETWEEN :startDate AND :endDate ) " +
+            "AND (:memberNumber IS NULL OR t.member_number = :memberNumber) " +
+            "AND (:communityID IS NULL OR m.community_id = :communityID) " +
+            "AND (:familyID IS NULL OR m.family_id = :familyID) " +
+            "AND (:churchID IS NULL OR m.out_station_id = :churchID) " +
+            "GROUP BY t.id;")
+    List<SuccessfullyTransactions> fetchByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("memberNumber") Integer memberNumber, @Param("communityID") Integer communityID, @Param("familyID") Integer familyID, @Param("churchID") Integer churchID);
 
 
 }

@@ -53,8 +53,8 @@ public class DatesCalculator {
         return simpleDateFormat.format(date);
     }
 
-    public String fullDateFormatIDNO(String date) {
-        String pattern = "yyyy-MM-dd";
+    public String fullDateFormatx(String date) {
+        String pattern = "yyyy/MM/dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
     }

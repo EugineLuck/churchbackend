@@ -296,13 +296,14 @@ public class DarajaApiImpl implements DarajaApi {
                         transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
 
                         transaction.setGivingId(internalStkPushRequest.getGivingId());
-                        transaction.setTransactionDate(new Date());
+//                        transaction.setTransactionDate(new Date());
+                            transaction.setDatePaid(nowDate);
                         transaction.setTransactionMode("M-pesa");
                         transactionRepo.save(transaction);
                         String message = "Dear "+ members.getFirstName() + members.getLastName() +  " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() +  " ! " + "at Muumini Church was sucessfully recorded ";
                         emtSmsService.sendSms(new SmsDto(members.getPhoneNumber(), message));
                             NotificationDTO notif = new NotificationDTO();
-                            notif.setMessage("Giving transaction was updated Successfully");
+                            notif.setMessage("Your giving transaction was updated Successfully");
                             notif.setTitle("Giving Update");
                             notif.setNotificationtype("All");
                             notif.setSubtitle("Giving status");
