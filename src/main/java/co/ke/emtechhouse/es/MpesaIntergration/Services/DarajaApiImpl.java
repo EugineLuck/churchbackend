@@ -296,7 +296,7 @@ public class DarajaApiImpl implements DarajaApi {
                         transaction.setMemberNumber(internalStkPushRequest.getMemberNumber());
 
                         transaction.setGivingId(internalStkPushRequest.getGivingId());
-                        transaction.setTransactionDate(nowDate);
+                        transaction.setTransactionDate(new Date());
                         transaction.setTransactionMode("M-pesa");
                         transactionRepo.save(transaction);
                         String message = "Dear "+ members.getFirstName() + members.getLastName() +  " Giving for  " + giving.getGivingLevel() + " " + giving.getGivingTitle() +  " ! " + "at Muumini Church was sucessfully recorded ";

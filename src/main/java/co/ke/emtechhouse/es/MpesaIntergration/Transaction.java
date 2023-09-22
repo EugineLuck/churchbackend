@@ -23,7 +23,7 @@ public class Transaction {
     private Long id;
     private String transactionCode;
 
-    private String transactionDate;
+    private Date transactionDate;
     private String transactionNumber;
     private Double transactionAmount;
     private Long givingId;

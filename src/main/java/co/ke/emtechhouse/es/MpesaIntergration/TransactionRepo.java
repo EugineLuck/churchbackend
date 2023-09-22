@@ -53,7 +53,10 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
 
     @Transactional
-    @Query(nativeQuery = true, value = "SELECT * FROM transaction where transaction_date BETWEEN :startDate and :endDate")
+    @Query(nativeQuery = true, value = "SELECT *\n" +
+            "FROM `transaction`\n" +
+            "WHERE transaction_date >= UNIX_TIMESTAMP('2023/09/09 00:00:00') * 1000\n" +
+            "  AND transaction_date <= UNIX_TIMESTAMP('2023/09/22 00:00:00') * 1000;\n")
 //    @Query(nativeQuery = true, value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName, m.member_number as memberNumber, g.giving_level as level, g.giving_title as title, CONCAT_WS(' ', COALESCE(t.envelope_number, ''), COALESCE(t.cheque_number, ''), COALESCE(t.transaction_number, '')) AS number, t.transaction_amount as amount, t.transaction_mode as transactionMode, t.transaction_date as postedTime, t.id as transId, g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number = t.member_number where t.result_code = 0 AND t.transaction_date between :fromDate and  :toDate ")
     List<Transaction> fetchByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
