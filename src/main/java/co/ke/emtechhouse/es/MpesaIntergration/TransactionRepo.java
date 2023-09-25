@@ -65,7 +65,14 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
             "AND (:familyID IS NULL OR m.family_id = :familyID) " +
             "AND (:churchID IS NULL OR m.out_station_id = :churchID) " +
             "GROUP BY t.id;")
-    List<SuccessfullyTransactions> fetchByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("memberNumber") Integer memberNumber, @Param("communityID") Integer communityID, @Param("familyID") Integer familyID, @Param("churchID") Integer churchID);
+    List<SuccessfullyTransactions> fetchByDateRange(
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("memberNumber") Integer memberNumber,
+            @Param("communityID") Integer communityID,
+            @Param("familyID") Integer familyID,
+            @Param("churchID") Integer churchID
+    );
 
 
 }
