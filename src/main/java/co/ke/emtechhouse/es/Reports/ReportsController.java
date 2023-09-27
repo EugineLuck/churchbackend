@@ -20,11 +20,7 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 @RestController
@@ -250,6 +246,48 @@ public class ReportsController {
         ByteArrayResource byteArrayResource = new ByteArrayResource(data);
         return ResponseEntity.ok().headers(headers).body(byteArrayResource);
     }
+
+
+    @GetMapping("/daterange")
+    public ResponseEntity<ByteArrayResource> transactionByDate() throws FileNotFoundException, JRException {
+        // Generate dummy test data using a List of HashMaps
+        List<Map<String, Object>> dummyData = generateDummyData();
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        JasperReport compileReport = JasperCompileManager.compileReport(classLoader.getResourceAsStream("templates/test.jrxml"));
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("churchId", "Testing");
+        parameter.put("logo", "This is a logo");
+
+        // Pass the dummy data as a parameter to the report
+        parameter.put("transactionDataList", dummyData);
+
+        JasperPrint report = JasperFillManager.fillReport(compileReport, parameter, new JREmptyDataSource());
+        byte[] data = JasperExportManager.exportReportToPdf(report);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=test_statement.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+        return ResponseEntity.ok().headers(headers).body(byteArrayResource);
+    }
+
+    private List<Map<String, Object>> generateDummyData() {
+        List<Map<String, Object>> dummyData = new ArrayList<>();
+
+        // Generate some dummy transactions
+        for (int i = 1; i <= 10; i++) {
+            Map<String, Object> transaction = new HashMap<>();
+            transaction.put("name", "Transaction " + i);
+            transaction.put("amount", Math.random() * 1000); // Random amount
+            transaction.put("datePaid", new Date()); // Current date (you can adjust as needed)
+            dummyData.add(transaction);
+        }
+
+        return dummyData;
+    }
+
 
 
 
