@@ -1,4 +1,4 @@
-package co.ke.emtechhouse.es.Auth.utils.MigrationData;//package co.ke.emtechhouse.es.utils.MigrationData;
+//package co.ke.emtechhouse.es.Auth.utils.MigrationData;//package co.ke.emtechhouse.es.utils.MigrationData;
 //
 //import lombok.AllArgsConstructor;
 //import lombok.Data;
@@ -9,13 +9,12 @@ package co.ke.emtechhouse.es.Auth.utils.MigrationData;//package co.ke.emtechhous
 //
 //@Service
 //public class CountiesInit {
-//    public final CountyRepository countyRepository;
-//    public final SubCountyRepository subCountyRepository;
+////    public final CountyRepository countyRepository;
+////    public final SubCountyRepository subCountyRepository;
 //    public final CountiesJson countiesJson;
 //
-//    public CountiesInit(CountyRepository countyRepository, SubCountyRepository subCountyRepository, CountiesJson countiesJson) {
-//        this.countyRepository = countyRepository;
-//        this.subCountyRepository = subCountyRepository;
+//    public CountiesInit(CountiesJson countiesJson) {
+//
 //        this.countiesJson = countiesJson;
 //    }
 //
