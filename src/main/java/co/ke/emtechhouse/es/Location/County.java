@@ -43,7 +43,7 @@ public class County {
     private Long id;
 
     private String countyName;
-    private Long countyID;
+
 //
     @Embedded
     private Embeds others;

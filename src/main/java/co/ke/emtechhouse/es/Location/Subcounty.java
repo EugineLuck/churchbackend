@@ -22,7 +22,7 @@ public class Subcounty {
     private Long id;
 
     private String subcountyName;
-    private Long subcountyID;
+
     private Long countyID;
     //
     @Embedded
