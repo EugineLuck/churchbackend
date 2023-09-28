@@ -22,7 +22,7 @@ public class Constituency {
     private Long id;
 
     private String constituencyName;
-    private Long constituencyID;
+
     private Long subcountyID;
     //
     @Embedded

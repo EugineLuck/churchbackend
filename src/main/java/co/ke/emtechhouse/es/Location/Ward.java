@@ -22,7 +22,7 @@ public class Ward {
     private Long id;
 
     private String wardName;
-    private Long wardID;
+
     private Long constituencyID;
 
     @Embedded

@@ -47,10 +47,10 @@ public class LocationController {
     public ResponseEntity<Object> addLocation(@RequestBody LocationDTO locationDTO) {
         ApiResponse response = new ApiResponse();
         try {
-            Long countyID = locationDTO.getCountyID();
-            Long subcountyID = locationDTO.getSubcountyID();
-            Long constituencyID = locationDTO.getConstituencyID();
-            Long wardID = locationDTO.getWardID();
+            Long countyID = 0L;
+            Long subcountyID =0L;
+            Long constituencyID =0L;
+            Long wardID = 0L;
 
 
 //            Counties
@@ -59,12 +59,12 @@ public class LocationController {
             if (chckCounty.isEmpty()) {
                 County county = new County();
                 county.setCountyName(locationDTO.getCountyName());
-                county.setCountyID(locationDTO.getCountyID());
+
                 County savedcounty = countyRepo.save(county);
-                countyID = savedcounty.getCountyID();
+                countyID += savedcounty.getId();
             } else {
                 County savedcounty = chckCounty.get();
-                countyID = savedcounty.getCountyID();
+                countyID += savedcounty.getId();
             }
 
 //          Subcounties
@@ -73,13 +73,13 @@ public class LocationController {
             if (chckSubcounty.isEmpty()) {
                 Subcounty subcounty = new Subcounty();
                 subcounty.setSubcountyName(locationDTO.getSubcountyName());
+
                 subcounty.setCountyID(countyID);
-                subcounty.setSubcountyID(randomNumber);
                 Subcounty savedcounty = subcountyRepo.save(subcounty);
-                subcountyID = savedcounty.getId();
+                subcountyID += savedcounty.getId();
             } else {
                 Subcounty savedSubCounty = chckSubcounty.get();
-                subcountyID = savedSubCounty.getId();
+                subcountyID += savedSubCounty.getId();
             }
 
 
@@ -89,12 +89,12 @@ public class LocationController {
                 Constituency constituency1 = new Constituency();
                 constituency1.setConstituencyName(locationDTO.getConstituencyName());
                 constituency1.setSubcountyID(subcountyID);
-                constituency1.setConstituencyID(randomNumber);
+
                 Constituency savedcounty = constituencyRepo.save(constituency1);
-                constituencyID = savedcounty.getId();
+                constituencyID += savedcounty.getId();
             } else {
                 Constituency savedCon = chckConstituency.get();
-                constituencyID = savedCon.getId();
+                constituencyID += savedCon.getId();
             }
 
 //            Wards
@@ -103,12 +103,12 @@ public class LocationController {
                 Ward ward = new Ward();
                 ward.setWardName(locationDTO.getWardName());
                 ward.setConstituencyID(constituencyID);
-                ward.setWardID(randomNumber);
+
                 Ward savedWard = wardRepo.save(ward);
-                wardID = savedWard.getId();
+                wardID += savedWard.getId();
             } else {
                 Ward savedWard = chckWard.get();
-                wardID = savedWard.getId();
+                wardID += savedWard.getId();
             }
 
             //            Villages
@@ -133,9 +133,14 @@ public class LocationController {
 
     @GetMapping("/counties/all")
     public ResponseEntity<Object> getAllCOunties() {
+        ApiResponse response = new ApiResponse();
         try {
+
             List<County> allCounties = countyRepo.findAll();
-            return new ResponseEntity<>(allCounties, HttpStatus.OK);
+            response.setEntity(allCounties);
+            response.setMessage("All counties");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
@@ -144,9 +149,13 @@ public class LocationController {
 
     @GetMapping("/subcounties/all")
     public ResponseEntity<Object> getAllSubs() {
+        ApiResponse response = new ApiResponse();
         try {
             List<Subcounty> allSubs = subcountyRepo.findAll();
-            return new ResponseEntity<>(allSubs, HttpStatus.OK);
+            response.setEntity(allSubs);
+            response.setMessage("All Sub counties");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
@@ -155,9 +164,13 @@ public class LocationController {
 
     @GetMapping("/constituencies/all")
     public ResponseEntity<Object> getAllconstituencies() {
+        ApiResponse response = new ApiResponse();
         try {
             List<Constituency> allconstituencies = constituencyRepo.findAll();
-            return new ResponseEntity<>(allconstituencies, HttpStatus.OK);
+            response.setEntity(allconstituencies);
+            response.setMessage("All constituencies");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
@@ -166,9 +179,13 @@ public class LocationController {
 
     @GetMapping("/wards/all")
     public ResponseEntity<Object> getAllWards() {
+        ApiResponse response = new ApiResponse();
         try {
             List<Ward> allWards = wardRepo.findAll();
-            return new ResponseEntity<>(allWards, HttpStatus.OK);
+            response.setEntity(allWards);
+            response.setMessage("All Wards");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
@@ -176,9 +193,13 @@ public class LocationController {
     }
     @GetMapping("/village/all")
     public ResponseEntity<Object> getAllVillage() {
+        ApiResponse response = new ApiResponse();
         try {
             List<Village> allVillage = villageRepo.findAll();
-            return new ResponseEntity<>(allVillage, HttpStatus.OK);
+            response.setEntity(allVillage);
+            response.setMessage("All Villages");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;
@@ -188,9 +209,13 @@ public class LocationController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> allLocations() {
+        ApiResponse response = new ApiResponse();
         try {
             List<Locations> locs = countyRepo.findAllLocs();
-            return new ResponseEntity<>(locs, HttpStatus.OK);
+            response.setEntity(locs);
+            response.setMessage("All Locations");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);
             return null;

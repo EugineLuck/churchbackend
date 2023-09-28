@@ -15,8 +15,5 @@ public class LocationDTO {
     private String constituencyName;
     private String wardName;
     private String villageName;
-    private Long countyID;
-    private Long subcountyID;
-    private Long constituencyID;
-    private Long wardID;
+
 }
