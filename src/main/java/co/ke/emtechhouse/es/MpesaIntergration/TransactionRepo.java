@@ -43,9 +43,8 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
     List<SuccessfullyTransactions> getAllSucessfullyTransactions();
   @Transactional
-    @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, t.transaction_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode,DATE(t.date_paid) as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.member_number=:memberNumber AND t.result_code = 0")
-
-    List<SuccessfullyTransactions>  findByMemberNumber(@Param(value = "memberNumber")String memberNumber);
+  @Query(nativeQuery = true,value = "SELECT CONCAT(m.first_name, ' ', m.last_name) AS fullName,m.member_number as memberNumber,g.giving_level as level,g.giving_title as title, t.transaction_number as number,t.transaction_amount as amount,t.transaction_mode as transactionMode, DATE(t.date_paid) as postedTime,t.id as transId,g.id as givingId FROM `transaction` t join giving g on g.id = t.giving_id join members m on m.member_number=t.member_number where t.member_number=:memberNumber AND t.result_code = 0")
+  List<SuccessfullyTransactions>  findByMemberNumber(@Param(value = "memberNumber")String memberNumber);
 
 
     @Transactional
@@ -68,7 +67,7 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
     List<SuccessfullyTransactions> fetchByDateRange(
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
-            @Param("memberNumber") Integer memberNumber,
+            @Param("memberNumber") String memberNumber,
             @Param("communityID") Integer communityID,
             @Param("familyID") Integer familyID,
             @Param("churchID") Integer churchID

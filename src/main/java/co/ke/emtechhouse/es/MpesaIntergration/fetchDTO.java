@@ -17,7 +17,7 @@ public class fetchDTO {
     private  Date endDate;
 
     @Nullable
-    private Integer memberNumber;
+    private String memberNumber;
 
     @Nullable
     private Integer familyID;
