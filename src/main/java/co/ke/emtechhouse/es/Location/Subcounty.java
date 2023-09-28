@@ -13,17 +13,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @ToString
-@Table(name = "county")
-public class County {
+@Table(name = "subcounty")
+public class Subcounty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String countyName;
+    private String subcountyName;
+    private Long subcountyID;
     private Long countyID;
-//
+    //
     @Embedded
     private Embeds others;
 

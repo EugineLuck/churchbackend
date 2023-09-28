@@ -13,20 +13,19 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @ToString
-@Table(name = "county")
-public class County {
+@Table(name = "ward")
+public class Ward {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String countyName;
-    private Long countyID;
-//
+    private String wardName;
+    private Long wardID;
+    private Long constituencyID;
+
     @Embedded
     private Embeds others;
-
-
 
 }
