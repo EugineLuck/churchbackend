@@ -121,20 +121,15 @@ public class MembersController {
     public ResponseEntity<?> registerMember(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException, ParseException {
         ApiResponse response = new ApiResponse();
 
-        if (membersRepository.existsByUsername(signUpRequest.getPhoneNo())) {
-            response.setMessage("Username is already taken!");
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setEntity("");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+        try{
 
-        Optional<Members> existing = membersRepository.findByPhoneNumber(signUpRequest.getPhoneNo());
-        if (existing.isPresent()) {
-            response.setMessage("The Phone number is already registered to another account!");
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setEntity("");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+            Optional<Members> existing = membersRepository.findByPhoneNumber(signUpRequest.getPhoneNo());
+            if (existing.isPresent()) {
+                response.setMessage("The Phone number is already registered to another account!");
+                response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                response.setEntity("");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
 
 
 
@@ -152,83 +147,83 @@ public class MembersController {
             String familyNumber = generateFamily();
             String memberNumber = generateMemberNumber();
 
-        // Capitalize the first letter of each word in the first name and last name
-        String capitalizedFirstName = WordUtils.capitalizeFully(signUpRequest.getFirstName());
-        String capitalizedLastName = WordUtils.capitalizeFully(signUpRequest.getLastName());
-        // Save Family if familyId is not provided
-        Long familyId = signUpRequest.getFamilyId();
-        if (familyId == null) {
-            Family family = new Family();
-            family.setFamilyNumber(familyNumber);
-            family.setPostedTime(new Date());
-            family.setFamilyName(signUpRequest.getFamilyName());
-            family.setOutStationId(signUpRequest.getOutStationId());
-            family.setCommunityId(signUpRequest.getCommunityId());
-            frepo.save(family);
-            familyId = family.getId();
-            familyNumber = family.getFamilyNumber();
-        }
+            // Capitalize the first letter of each word in the first name and last name
+            String capitalizedFirstName = WordUtils.capitalizeFully(signUpRequest.getFirstName());
+            String capitalizedLastName = WordUtils.capitalizeFully(signUpRequest.getLastName());
+            // Save Family if familyId is not provided
+            Long familyId = signUpRequest.getFamilyId();
+            if (familyId == null) {
+                Family family = new Family();
+                family.setFamilyNumber(familyNumber);
+                family.setPostedTime(new Date());
+                family.setFamilyName(signUpRequest.getFamilyName());
+                family.setOutStationId(signUpRequest.getOutStationId());
+                family.setCommunityId(signUpRequest.getCommunityId());
+                frepo.save(family);
+                familyId = family.getId();
+                familyNumber = family.getFamilyNumber();
+            }
 
-        Members members = new Members();
-        Token token = new Token();
-        members.setUsername(signUpRequest.getPhoneNo());
-        members.setEmail(signUpRequest.getEmail());
-        members.setPostedTime(dtf.format(now));
-        members.setFirstName(capitalizedFirstName);
-        members.setLastName(capitalizedLastName);
-        members.setModeOfRegistration(signUpRequest.getModeOfRegistration());
-        members.setPhoneNumber(convertPhoneNumber(signUpRequest.getPhoneNo()));
-        members.setEmail(signUpRequest.getEmail());
-        members.setMemberRole(signUpRequest.getRole());
-        members.setNationalID(signUpRequest.getNationalID());
-        members.setAppId(signUpRequest.getAppId());
-        members.setIdOwnership(signUpRequest.getIdOwnership());
-        members.setCommunityId(signUpRequest.getCommunityId());
-        members.setGender(signUpRequest.getGender());
-        members.setFamilyId(familyId);
-        members.setOutStationId(signUpRequest.getOutStationId());
-        token.setDeviceToken(signUpRequest.getDeviceToken());
-        token.setMemberNumber(memberNumber);
-        members.setMemberNumber(memberNumber);
-        members.setDeletedFlag("N");
-        members.setDateOfBirth(signUpRequest.getDateOfBirth());
+            Members members = new Members();
+            Token token = new Token();
+            members.setUsername(signUpRequest.getPhoneNo());
+            members.setEmail(signUpRequest.getEmail());
+            members.setPostedTime(dtf.format(now));
+            members.setFirstName(capitalizedFirstName);
+            members.setLastName(capitalizedLastName);
+            members.setModeOfRegistration(signUpRequest.getModeOfRegistration());
+            members.setPhoneNumber(convertPhoneNumber(signUpRequest.getPhoneNo()));
+            members.setEmail(signUpRequest.getEmail());
+            members.setMemberRole(signUpRequest.getRole());
+            members.setNationalID(signUpRequest.getNationalID());
+            members.setAppId(signUpRequest.getAppId());
+            members.setIdOwnership(signUpRequest.getIdOwnership());
+            members.setCommunityId(signUpRequest.getCommunityId());
+            members.setGender(signUpRequest.getGender());
+            members.setFamilyId(familyId);
+            members.setOutStationId(signUpRequest.getOutStationId());
+            token.setDeviceToken(signUpRequest.getDeviceToken());
+            token.setMemberNumber(memberNumber);
+            members.setMemberNumber(memberNumber);
+            members.setDeletedFlag("N");
+            members.setDateOfBirth(signUpRequest.getDateOfBirth());
 
-        // Set roles
-        Set<Role> roles = new HashSet<>();
-        if (signUpRequest.getRoleFk() == null) {
-            Role memberRole = roleRepository.findByName(ERole.ROLE_MEMBER.toString())
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(memberRole);
-        } else {
-            Role memberRole = roleRepository.findById(signUpRequest.getRoleFk())
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(memberRole);
-        }
-        members.setRoles(roles);
+            // Set roles
+            Set<Role> roles = new HashSet<>();
+            if (signUpRequest.getRoleFk() == null) {
+                Role memberRole = roleRepository.findByName(ERole.ROLE_MEMBER.toString())
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(memberRole);
+            } else {
+                Role memberRole = roleRepository.findById(signUpRequest.getRoleFk())
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(memberRole);
+            }
+            members.setRoles(roles);
 
 
 
-        // Save the member without adding groups to the GroupMember table yet
+            // Save the member without adding groups to the GroupMember table yet
 
             Members savedMembers = membersRepository.save(members);
             Token saveToken = tokenRepo.save(token);
 
-        List<Long> groupsId = signUpRequest.getGroupsId();
-        if (groupsId != null && !groupsId.isEmpty()) {
-            List<GroupMember> groupMembers = new ArrayList<>();
-            for (Long groupId : groupsId) {
-                Groups group = groupsRepo.findById(groupId)
-                        .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
+            List<Long> groupsId = signUpRequest.getGroupsId();
+            if (groupsId != null && !groupsId.isEmpty()) {
+                List<GroupMember> groupMembers = new ArrayList<>();
+                for (Long groupId : groupsId) {
+                    Groups group = groupsRepo.findById(groupId)
+                            .orElseThrow(() -> new RuntimeException("Error: Group with id " + groupId + " not found."));
 
-                GroupMember groupMember = new GroupMember();
-                groupMember.setGroup(group);
-                groupMember.setMember(savedMembers);
-                groupMember.setStatus("Active");
-                groupMember = groupMemberRepo.save(groupMember);
-                groupMembers.add(groupMember);
+                    GroupMember groupMember = new GroupMember();
+                    groupMember.setGroup(group);
+                    groupMember.setMember(savedMembers);
+                    groupMember.setStatus("Active");
+                    groupMember = groupMemberRepo.save(groupMember);
+                    groupMembers.add(groupMember);
+                }
+
             }
-
-        }
 
 
 
@@ -252,9 +247,16 @@ public class MembersController {
 //        }
 
 
-        // Send SMS and create the response
+            // Send SMS and create the response
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        }catch (Exception e){
+            System.out.println("Error "+ e);
+            return  null;
+        }
+
+
     }
 
 
