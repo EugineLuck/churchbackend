@@ -128,7 +128,8 @@ public class MembersController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        if (membersRepository.existsByPhoneNumber(signUpRequest.getPhoneNo())) {
+        Optional<Members> existing = membersRepository.findByPhoneNumber(signUpRequest.getPhoneNo());
+        if (existing.isPresent()) {
             response.setMessage("The Phone number is already registered to another account!");
             response.setStatusCode(HttpStatus.BAD_REQUEST.value());
             response.setEntity("");
