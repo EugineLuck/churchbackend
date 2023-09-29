@@ -34,6 +34,13 @@ public class SignupRequest {
     private String familyName;
     private String gender;
     private String role;
+
+    private String disabilityType;
+    private String disability;
+    private String currentLocation;
+    private String profession;
+    private String stayPeriod;
+
     @NotBlank
     @Size(min = 3, max = 20)
     private String lastName;
