@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("api/v1/settings")
@@ -19,11 +22,18 @@ public class SettingsController {
     }
 
     @PostMapping("/set")
-    public ResponseEntity<Object> setSettings(@RequestBody SettingsDTO settings) {
+    public ResponseEntity<Object> setSettings(@RequestBody Settings settings) {
         ApiResponse response = new ApiResponse<>();
         try {
-            // Settings savedSettings = settingsRepository.save(settings);
-            response.setEntity(settings.getSettings());
+
+            Optional<Settings> existing = settingsRepository.findByMetaField(settings.getMetaField());
+            if(existing.isEmpty()){
+                Settings savedSettings = settingsRepository.save(settings);
+            }else{
+                Settings existingSetting = existing.get();
+                existingSetting.setMetaValue(settings.getMetaValue());
+                Settings save = settingsRepository.save(existingSetting);
+            }
             response.setMessage("Settings Saved");
             response.setStatusCode(200);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -33,20 +43,20 @@ public class SettingsController {
         }
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<Object> updateSettings(@RequestBody Settings settings) {
-//        ApiResponse response = new ApiResponse<>();
-//        try {
-//            Settings savedSettings = settingsRepository.save(settings);
-//            response.setEntity(savedSettings);
-//            response.setMessage("Settings Saved");
-//            response.setStatusCode(200);
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.info("Error" + e);
-//            return null;
-//        }
-//    }
+    @GetMapping("/")
+    public ResponseEntity<Object> loadSettings() {
+        ApiResponse response = new ApiResponse<>();
+        try {
+            List<Settings> savedSettings = settingsRepository.findAll();
+            response.setEntity(savedSettings);
+            response.setMessage("Found");
+            response.setStatusCode(200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error "+ e);
+            return null;
+        }
+    }
 
 
 

@@ -14,12 +14,10 @@ import javax.persistence.*;
 @ToString
 @Table(name="systemconfig")
 public class Settings {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private String metaField;
     private String metaValue;
 
