@@ -186,6 +186,15 @@ public class MembersController {
             token.setMemberNumber(memberNumber);
             members.setMemberNumber(memberNumber);
             members.setDeletedFlag("N");
+
+            members.setDisabilityType(signUpRequest.getDisabilityType());
+            members.setDisability(signUpRequest.getDisability());
+            members.setCurrentLocation(signUpRequest.getCurrentLocation());
+            members.setProfession(signUpRequest.getProfession());
+            members.setStayPeriod(signUpRequest.getStayPeriod());
+
+
+//            members.setD("N");
             members.setDateOfBirth(signUpRequest.getDateOfBirth());
 
             // Set roles
@@ -896,6 +905,11 @@ public class MembersController {
     @GetMapping(path = "/all/members")
     public List<MemberDetails> getAllActiveMembers() {
         return membersRepository.getAllActiveMembers();
+    }
+
+    @GetMapping(path = "/all/members/disability")
+    public List<MemberDetails> getAllMemberswithDisability() {
+        return membersRepository.getAllDisabledMembers();
     }
     @GetMapping(path = "/all/members/deleted")
     public List<MemberDetails> getAllDeletedMembers() {

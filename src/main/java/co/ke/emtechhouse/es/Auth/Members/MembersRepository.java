@@ -201,4 +201,5 @@ public interface MembersRepository extends JpaRepository<Members, Long> {
 
     boolean findByNationalID(String nationalID);
 
+    List<MemberDetails> getAllDisabledMembers();
 }

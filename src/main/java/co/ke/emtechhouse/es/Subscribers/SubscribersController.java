@@ -126,27 +126,32 @@ public class SubscribersController {
         try {
             List allsubs = new ArrayList<>();
             Subscibers subscriptions1 = subscribersRepository.findBymemberNumber(memberNumber);
-            System.out.println(subscriptions1);
-            subscriberDTO dto = new subscriberDTO();
-            dto.setId(subscriptions1.getId());
-            dto.setPhoneNumber(subscriptions1.getPhoneNumber());
-            dto.setMemberNumber(subscriptions1.getMemberNumber());
-            dto.setDateSubscribed(subscriptions1.getDateSubscribed());
-            dto.setSubscriptionItemId(subscriptions1.getSubscriptionItemId());
+            if(subscriptions1 != null) {
+                System.out.println(subscriptions1);
+                subscriberDTO dto = new subscriberDTO();
+                dto.setId(subscriptions1.getId());
+                dto.setPhoneNumber(subscriptions1.getPhoneNumber());
+                dto.setMemberNumber(subscriptions1.getMemberNumber());
+                dto.setDateSubscribed(subscriptions1.getDateSubscribed());
+                dto.setSubscriptionItemId(subscriptions1.getSubscriptionItemId());
 
-            List<subscribersSubscriptions> subscriptionsItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getSubscriptionItemId());
-            List<Subscriptions> subscriptions = new ArrayList<>(); // Create a list to store subscriptions
-            if (subscriptionsItems.size() > 0) {
-                for (subscribersSubscriptions item : subscriptionsItems) {
-                    List<Subscriptions> itemSubscriptions = subscriptionsRepo.searchById(item.getSubscriptionId());
-                    subscriptions.addAll(itemSubscriptions);
+                List<subscribersSubscriptions> subscriptionsItems = subscribersSubscriptionsRepo.findBySubscriptionId(subscriptions1.getSubscriptionItemId());
+                List<Subscriptions> subscriptions = new ArrayList<>(); // Create a list to store subscriptions
+                if (subscriptionsItems.size() > 0) {
+                    for (subscribersSubscriptions item : subscriptionsItems) {
+                        List<Subscriptions> itemSubscriptions = subscriptionsRepo.searchById(item.getSubscriptionId());
+                        subscriptions.addAll(itemSubscriptions);
+                    }
                 }
+                dto.setSubscriptions(subscriptions);
+                allsubs.add(dto);
+                response.setEntity(allsubs);
+                response.setMessage("Found");
+                response.setStatusCode(HttpStatus.FOUND.value());
+            }else{
+                response.setMessage("Subscriber not found");
+                response.setStatusCode(HttpStatus.NOT_FOUND.value());
             }
-            dto.setSubscriptions(subscriptions);
-            allsubs.add(dto);
-            response.setEntity(allsubs);
-            response.setMessage("Found");
-            response.setStatusCode(HttpStatus.FOUND.value());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Error" + e);

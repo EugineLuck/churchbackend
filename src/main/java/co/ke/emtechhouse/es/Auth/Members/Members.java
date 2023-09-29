@@ -66,6 +66,12 @@ public class Members {
     private String idOwnership;
     private String gender;
 
+    private String disabilityType;
+    private String disability;
+    private String currentLocation;
+    private String profession;
+    private String stayPeriod;
+
 
 
     @Column(name = "loggedIn")
