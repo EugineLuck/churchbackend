@@ -56,40 +56,63 @@ public class SubscriptionController {
     public ResponseEntity<Object> addSubscription(@RequestBody Subscriptions subS) {
         ApiResponse response = new ApiResponse();
         try {
-            subS.setDateCreated(nowDate);
+            
+            Optional<Subscriptions> existing = subscriptionsRepo.findBymemberNumber(subS.getMemberNumber());
+            if(existing.isPresent()){
 
-            InternalStkPushRequest data = new InternalStkPushRequest();
-            data.setMemberNumber(subS.getMemberNumber());
-            data.setTransactionAmount(subS.getCharges());
-            data.setTransactionNumber(subS.getPhoneNumber());
-            data.setTransactionType("subscription");
-
-            StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
-            subS.setDateCreated(String.valueOf(new Date()));
-
-            if(response1.getResultCode().equals("0")){
                 Subscriptions save = subscriptionService.saveSubscription(subS);
+
+                NotificationDTO notificationsDTO = new NotificationDTO();
+                notificationsDTO.setTitle("New Post");
+                notificationsDTO.setMessage("A church member has joined our Ads/Mentor Program. Visit career page to explore.\n");
+                notificationsDTO.setSubtitle("Subscription Notice");
+                notificationService.CreateServiceNotificationAll(notificationsDTO);
+
                 response.setMessage("Subscription Added");
                 response.setEntity(save);
                 response.setStatusCode(HttpStatus.CREATED.value());
 
-                NotificationDTO notificationsDTO = new NotificationDTO();
-                notificationsDTO.setTitle("New Post");
-                notificationsDTO.setMessage("A church member has joined our Ads/Mentor Program. Visit career page to explore.\n");
-                notificationsDTO.setSubtitle("Subscription Notice");
-                notificationService.CreateServiceNotificationAll(notificationsDTO);
 
             }else{
-                response.setMessage(response1.getResultDesc());
-                response.setStatusCode(HttpStatus.NOT_FOUND.value());
 
-                NotificationDTO notificationsDTO = new NotificationDTO();
-                notificationsDTO.setTitle("New Post");
-                notificationsDTO.setMessage("A church member has joined our Ads/Mentor Program. Visit career page to explore.\n");
-                notificationsDTO.setSubtitle("Subscription Notice");
-                notificationService.CreateServiceNotificationAll(notificationsDTO);
+                subS.setDateCreated(nowDate);
+                InternalStkPushRequest data = new InternalStkPushRequest();
+                data.setMemberNumber(subS.getMemberNumber());
+                data.setTransactionAmount(subS.getCharges());
+                data.setTransactionNumber(subS.getPhoneNumber());
+                data.setTransactionType("subscription");
+
+
+
+                StkPushSyncResponse response1 = darajaImplementation.stkPushTransaction(data);
+                subS.setDateCreated(String.valueOf(new Date()));
+
+                if(response1.getResultCode().equals("0")){
+                    Subscriptions save = subscriptionService.saveSubscription(subS);
+                    response.setMessage("Subscription Added");
+                    response.setEntity(save);
+                    response.setStatusCode(HttpStatus.CREATED.value());
+
+                    NotificationDTO notificationsDTO = new NotificationDTO();
+                    notificationsDTO.setTitle("New Post");
+                    notificationsDTO.setMessage("A church member has joined our Ads/Mentor Program. Visit career page to explore.\n");
+                    notificationsDTO.setSubtitle("Subscription Notice");
+                    notificationService.CreateServiceNotificationAll(notificationsDTO);
+
+                }else{
+                    response.setMessage(response1.getResultDesc());
+                    response.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+
+
+                }
 
             }
+
+
+
+
+
             return new ResponseEntity<>(response, HttpStatus.OK);
 
 
