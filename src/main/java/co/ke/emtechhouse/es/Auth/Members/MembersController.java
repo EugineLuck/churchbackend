@@ -187,6 +187,8 @@ public class MembersController {
             members.setMemberNumber(memberNumber);
             members.setDeletedFlag("N");
 
+
+
             members.setDisabilityType(signUpRequest.getDisabilityType());
             members.setDisability(signUpRequest.getDisability());
             members.setCurrentLocation(signUpRequest.getCurrentLocation());
@@ -710,46 +712,25 @@ public class MembersController {
 
 
 
-    @GetMapping(path = "/find/by/memberNumber/{member}")
-    public ApiResponse getMemberByMemberNumber(@PathVariable String member) {
+    @GetMapping(path = "/find/by/memberNumber/{memberNumber}")
+    public ResponseEntity getMemberByMemberNumber(@PathVariable String memberNumber) {
         ApiResponse response = new ApiResponse<>();
-        Optional<Members> members1 = membersRepository.findByMemberNumber(member);
+        Optional<Members> members1 = membersRepository.findByMemberNumber(memberNumber);
         if (members1.isPresent()) {
             Members members = members1.get();
             response.setMessage(HttpStatus.FOUND.getReasonPhrase());
             response.setStatusCode(HttpStatus.FOUND.value());
             response.setEntity(members);
-            return response;
-//            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             response.setMessage("MemberNumber not found");
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-
-
     }
 
-    @GetMapping(path = "/memberdetails/findbyNumber/{number}")
-    public ApiResponse getMemberByNumber(@PathVariable String number) {
-        ApiResponse response = new ApiResponse<>();
-        Optional<MemberDetails> members1 = membersRepository.searchByNumber(number);
-        if (members1.isPresent()) {
-            MemberDetails members = members1.get();
-            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
-            response.setStatusCode(HttpStatus.FOUND.value());
-            response.setEntity(members);
-            return response;
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            response.setMessage("MemberNumber not found");
-            response.setStatusCode(HttpStatus.NOT_FOUND.value());
-            return response;
-        }
 
-
-
-    }   @GetMapping(path = "/systemUsersDetails")
+    @GetMapping(path = "/systemUsersDetails")
     public ApiResponse getSystemUsers() {
         ApiResponse response = new ApiResponse<>();
         List<MemberDetails> members1 = membersRepository.getAllUsers();
@@ -770,20 +751,20 @@ public class MembersController {
 
     }
     @GetMapping(path = "/find/by/appId/{appId}")
-    public ApiResponse getMemberByAppUser(@PathVariable Long appId) {
+    public ResponseEntity getMemberByAppUser(@PathVariable Long appId) {
         ApiResponse response = new ApiResponse<>();
         Optional<Members> members1 = membersRepository.findByAppId(appId);
         if (members1.isPresent()) {
+            response.setMessage("Found");
             Members members = members1.get();
-            response.setMessage(HttpStatus.FOUND.getReasonPhrase());
+            List<Members> member =  membersRepository.searchByNumber(members.getMemberNumber());
             response.setStatusCode(HttpStatus.FOUND.value());
-            response.setEntity(members);
-            return response;
-//            return new ResponseEntity<>(response, HttpStatus.OK);
+            response.setEntity(member);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             response.setMessage("AppUser not found");
             response.setStatusCode(HttpStatus.NOT_FOUND.value());
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
     }
@@ -819,6 +800,7 @@ public class MembersController {
         }
 
     }
+
 
     @GetMapping(path = "memberDetails/find/by/formData")
     public ApiResponse getMemberByFormData( @RequestParam String memberNumber, @RequestParam String phoneNumber ) {

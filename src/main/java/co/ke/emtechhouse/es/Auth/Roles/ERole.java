@@ -6,5 +6,10 @@ public enum ERole {
     ROLE_ADMIN,
     ROLE_SECRETARY,
     ROLE_TREASURER,
-    ROLE_APP_USER
+    ROLE_APP_USER,
+
+    ROLE_SMALL_GROUP_LEADER
+
+
+
 }
